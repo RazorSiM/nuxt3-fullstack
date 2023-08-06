@@ -10,6 +10,10 @@
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix"
   },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.11",
+    "@unocss/nuxt": "^0.54.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.40.0",
     "@nuxt/devtools": "latest",
