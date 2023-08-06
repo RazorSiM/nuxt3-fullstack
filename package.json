@@ -8,17 +8,29 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint:check": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "migration:generate": "drizzle-kit generate:pg",
+    "migration:introspect": "drizzle-kit introspect:pg",
+    "migration:push": "drizzle-kit push:pg",
+    "migration:drop": "drizzle-kit drop",
+    "migration:up": "drizzle-kit up:pg",
+    "migration:check": "drizzle-kit check:pg",
+    "studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
-    "@unocss/nuxt": "^0.54.1"
+    "@unocss/nuxt": "^0.54.1",
+    "drizzle-orm": "^0.27.2",
+    "postgres": "^3.3.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.40.0",
     "@nuxt/devtools": "latest",
     "@types/node": "^18.17.1",
+    "dotenv": "^16.3.1",
+    "drizzle-kit": "^0.19.12",
     "eslint": "^8.46.0",
-    "nuxt": "^3.6.5"
+    "nuxt": "^3.6.5",
+    "pg": "^8.11.2"
   }
 }
