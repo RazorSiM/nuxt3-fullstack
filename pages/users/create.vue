@@ -7,8 +7,8 @@ interface ErrorResponse {
   statusMessage: string
   message: string
   stack: string
-
 }
+
 const name = ref('')
 const address = ref('0x')
 const userData = ref<User | null>(null)
