@@ -27,5 +27,6 @@
   "nuxtr.vueFiles.script.defaultLanguage": "ts",
   "nuxtr.vueFiles.style.addStyleTag": false,
   "nuxtr.openItemsAfterCreation": true,
-  "nuxtr.defaultPackageManager": "pnpm"
+  "nuxtr.defaultPackageManager": "pnpm",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
