@@ -4,8 +4,8 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  name: text('name'),
-  address: varchar('address', { length: 42 }),
+  name: text('name').unique().notNull(),
+  address: varchar('address', { length: 42 }).unique().notNull(),
 })
 
 export type User = InferModel<typeof users, 'select'>

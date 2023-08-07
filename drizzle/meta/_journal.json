@@ -8,6 +8,20 @@
       "when": 1691403458241,
       "tag": "0000_nifty_prodigy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1691417806202,
+      "tag": "0001_chubby_molten_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1691418262525,
+      "tag": "0002_bumpy_night_thrasher",
+      "breakpoints": true
     }
   ]
 }

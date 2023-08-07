@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (!params.success) {
     const validationError = fromZodError(params.error)
     throw createError({
-      statusCode: 400,
+      statusCode: 422,
       message: validationError.toString(),
     })
   }
