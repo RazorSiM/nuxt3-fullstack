@@ -5,6 +5,11 @@ export default defineNuxtConfig({
     shim: false,
   },
   modules: ['@pinia/nuxt', '@unocss/nuxt'],
+  nitro: {
+    experimental: {
+      openAPI: true,
+    },
+  },
   runtimeConfig: {
     public: {},
     app: {
