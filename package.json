@@ -19,6 +19,7 @@
     "db:migrate": "ts-node ./scripts/migrate.ts"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^0.2.1",
     "@pinia/nuxt": "^0.4.11",
     "@sidebase/nuxt-auth": "0.6.0-beta.3",
     "@unocss/nuxt": "^0.54.1",

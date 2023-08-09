@@ -10,7 +10,7 @@ const updateSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const params = await zh.useSafeValidatedParams(event, {
-    id: zh.intAsString,
+    id: z.string().uuid(),
   })
   const body = await zh.useSafeValidatedBody(event, updateSchema)
 

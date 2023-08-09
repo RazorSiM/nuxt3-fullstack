@@ -7,23 +7,23 @@ interface ErrorResponse {
   stack: string
 }
 
-const route = useRoute()
-const { data: user, execute } = await useFetch(`/api/users/${route.params.id}`)
-if (!user.value)
+const { data: session } = useAuth()
+const { data: user, refresh: refreshUser } = useFetch('/api/user')
+
+if (!session.value)
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found', message: 'User Not Found' })
 
-const address = ref(user.value.address)
+const address = ref(user.value?.address)
 const errorResponse = ref<ErrorResponse | null>(null)
+
 async function handleUpdateUser() {
   try {
-    await $fetch(`/api/users/${route.params.id}`, {
+    await $fetch(`/api/users/${user.value?.id}`, {
       method: 'PUT',
-      body: JSON.stringify({
-        address: address.value,
-      }),
+      body: JSON.stringify({ address: address.value }),
     })
     errorResponse.value = null
-    await execute()
+    await refreshUser()
   }
   catch (error) {
     errorResponse.value = (error as { data: ErrorResponse }).data

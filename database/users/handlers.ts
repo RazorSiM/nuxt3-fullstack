@@ -1,10 +1,10 @@
 import { asc, desc, eq } from 'drizzle-orm'
 import { drizzleClient } from '../index'
-import type { NewUser, User } from './schema'
+import type { User } from './schema'
 import { users } from './schema'
 
-export async function selectUser(id: number): Promise<User> {
-  const result = await drizzleClient.select().from(users).where(eq(users.id, id))
+export async function selectUser(email: string): Promise<User> {
+  const result = await drizzleClient.select().from(users).where(eq(users.email, email))
   return result[0]
 }
 export async function selectUsers(): Promise<User[]> {
@@ -22,11 +22,8 @@ export async function selectUsersPaginated(
   else
     return await drizzleClient.select().from(sq)
 }
-export async function createUser(newUser: NewUser): Promise<User> {
-  const result = await drizzleClient.insert(users).values(newUser).onConflictDoNothing({ target: users.email }).returning()
-  return result[0]
-}
-export async function updateUser(id: number, address: string): Promise<User> {
-  const result = await drizzleClient.update(users).set({ address, updated_at: new Date() }).where(eq(users.id, id)).returning()
+
+export async function updateUser(id: string, address: string): Promise<User> {
+  const result = await drizzleClient.update(users).set({ address }).where(eq(users.id, id)).returning()
   return result[0]
 }
