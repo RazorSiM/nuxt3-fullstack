@@ -2,7 +2,6 @@
 export default defineNuxtConfig({
   devtools: {
     enabled: true,
-
     timeline: {
       enabled: true,
     },
@@ -10,7 +9,7 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@unocss/nuxt'],
+  modules: ['@pinia/nuxt', '@unocss/nuxt', '@sidebase/nuxt-auth'],
   nitro: {
     experimental: {
       openAPI: true,
@@ -18,12 +17,19 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {},
-    app: {
-      postgresPassword: '',
-      postgresUser: '',
-      postgresDatabase: '',
-      postgresHost: '',
-      postgresPort: '',
+    postgresPassword: '',
+    postgresUser: '',
+    postgresDatabase: '',
+    postgresHost: '',
+    postgresPort: '',
+    authSecret: '',
+    discordClientId: '',
+    discordClientSecret: '',
+
+  },
+  auth: {
+    provider: {
+      type: 'authjs',
     },
   },
 })
