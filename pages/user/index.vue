@@ -18,7 +18,7 @@ const errorResponse = ref<ErrorResponse | null>(null)
 
 async function handleUpdateUser() {
   try {
-    await $fetch(`/api/users/${user.value?.id}`, {
+    await $fetch('/api/user', {
       method: 'PUT',
       body: JSON.stringify({ address: address.value }),
     })

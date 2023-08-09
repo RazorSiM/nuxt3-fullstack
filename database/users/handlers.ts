@@ -23,7 +23,7 @@ export async function selectUsersPaginated(
     return await drizzleClient.select().from(sq)
 }
 
-export async function updateUser(id: string, address: string): Promise<User> {
-  const result = await drizzleClient.update(users).set({ address }).where(eq(users.id, id)).returning()
+export async function updateUser(email: string, address: string): Promise<User> {
+  const result = await drizzleClient.update(users).set({ address }).where(eq(users.email, email)).returning()
   return result[0]
 }
