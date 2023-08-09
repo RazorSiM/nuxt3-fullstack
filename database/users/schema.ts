@@ -1,11 +1,14 @@
-import { pgTable, serial, text, varchar } from 'drizzle-orm/pg-core'
+import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core'
 import type { InferModel } from 'drizzle-orm'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   name: text('name').unique().notNull(),
-  address: varchar('address', { length: 42 }).unique().notNull(),
+  email: text('email').unique().notNull(),
+  address: varchar('address', { length: 42 }).unique(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
 })
 
 export type User = InferModel<typeof users, 'select'>

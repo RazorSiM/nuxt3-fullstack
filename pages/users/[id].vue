@@ -12,15 +12,13 @@ const { data: user, execute } = await useFetch(`/api/users/${route.params.id}`)
 if (!user.value)
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found', message: 'User Not Found' })
 
-const name = ref(user.value.name)
 const address = ref(user.value.address)
 const errorResponse = ref<ErrorResponse | null>(null)
 async function handleUpdateUser() {
   try {
-    await fetch(`/api/users/${route.params.id}`, {
+    await $fetch(`/api/users/${route.params.id}`, {
       method: 'PUT',
       body: JSON.stringify({
-        name: name.value,
         address: address.value,
       }),
     })
@@ -38,8 +36,7 @@ async function handleUpdateUser() {
     <h1>User Page</h1>
     <p>Name {{ user?.name }}</p>
     <p>Address {{ user?.address }}</p>
-    <h2>Update</h2>
-    <input v-model="name" type="text">
+    <h2>Update Address</h2>
     <input v-model="address" type="text">
     <button @click="handleUpdateUser()">
       Update User

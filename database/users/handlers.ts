@@ -22,11 +22,11 @@ export async function selectUsersPaginated(
   else
     return await drizzleClient.select().from(sq)
 }
-export async function addUser(newUser: NewUser): Promise<User> {
-  const result = await drizzleClient.insert(users).values(newUser).returning()
+export async function createUser(newUser: NewUser): Promise<User> {
+  const result = await drizzleClient.insert(users).values(newUser).onConflictDoNothing({ target: users.email }).returning()
   return result[0]
 }
-export async function updateUser(id: number, newUser: NewUser): Promise<User> {
-  const result = await drizzleClient.update(users).set(newUser).where(eq(users.id, id)).returning()
+export async function updateUser(id: number, address: string): Promise<User> {
+  const result = await drizzleClient.update(users).set({ address, updated_at: new Date() }).where(eq(users.id, id)).returning()
   return result[0]
 }

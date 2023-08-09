@@ -1,6 +1,6 @@
 import { zh } from 'h3-zod'
 import { fromZodError } from 'zod-validation-error'
-import { addUser } from '@/database/users/handlers'
+import { createUser } from '@/database/users/handlers'
 import { insertUserSchema } from '@/database/users/schema'
 
 export default defineEventHandler(async (event) => {
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     })
   }
   else {
-    const newUser = await addUser(body.data)
+    const newUser = await createUser(body.data)
     return newUser
   }
 })
