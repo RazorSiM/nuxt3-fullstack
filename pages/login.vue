@@ -7,8 +7,11 @@ definePageMeta({ auth: false })
   <div>
     <pre>{{ status }}</pre>
     <pre>{{ data }}</pre>
+    <button @click="signIn('github')">
+      Sign In with GitHub
+    </button>
     <button @click="signIn('discord')">
-      Sign In
+      Sign In with Discord
     </button>
     <button @click="signOut()">
       Sign Out

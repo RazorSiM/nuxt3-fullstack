@@ -25,9 +25,12 @@ export default defineNuxtConfig({
     authSecret: '',
     discordClientId: '',
     discordClientSecret: '',
+    githubClientId: '',
+    githubClientSecret: '',
 
   },
   auth: {
+    baseURL: 'http://localhost:3000',
     provider: {
       type: 'authjs',
     },
