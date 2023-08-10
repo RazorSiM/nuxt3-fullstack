@@ -1,6 +1,6 @@
+import 'dotenv/config'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { drizzle } from 'drizzle-orm/postgres-js'
-import 'dotenv/config'
 import postgres from 'postgres'
 
 const runtimeConfig = useRuntimeConfig()
@@ -13,12 +13,13 @@ const postgresConnectionOptions = {
   database: runtimeConfig.postgresDatabase,
 }
 
-const queryClient = postgres(
-  postgresConnectionOptions,
-)
+const sql = postgres({
+  ...postgresConnectionOptions,
+})
 
-const drizzleClient: PostgresJsDatabase = drizzle(queryClient)
+const db: PostgresJsDatabase = drizzle(sql)
 
 export {
-  drizzleClient,
+  sql,
+  db,
 }

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@unocss/nuxt', '@sidebase/nuxt-auth'],
+  modules: ['@pinia/nuxt', '@unocss/nuxt'],
   nitro: {
     experimental: {
       openAPI: true,
@@ -27,13 +27,5 @@ export default defineNuxtConfig({
     discordClientSecret: '',
     githubClientId: '',
     githubClientSecret: '',
-
-  },
-  auth: {
-    baseURL: 'http://localhost:3000',
-    provider: {
-      type: 'authjs',
-    },
-    globalAppMiddleware: true,
   },
 })
