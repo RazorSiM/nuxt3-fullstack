@@ -30,4 +30,5 @@ export default defineNuxtConfig({
     googleClientId: '',
     googleClientSecret: '',
   },
+  css: ['@unocss/reset/tailwind-compat.css'],
 })
