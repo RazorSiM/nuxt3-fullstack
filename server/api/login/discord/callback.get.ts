@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (session)
     return sendRedirect(event, '/')
 
-  const storedState = getCookie(event, 'github_oauth_state')
+  const storedState = getCookie(event, 'discord_oauth_state')
   const query = getQuery(event)
   const state = query.state?.toString()
   const code = query.code?.toString()
@@ -16,26 +16,34 @@ export default defineEventHandler(async (event) => {
       event,
       createError({
         statusCode: 400,
-        statusMessage: 'Invalid state',
       }),
     )
   }
   try {
-    const { existingUser, githubUser, createUser, createKey } = await githubAuth.validateCallback(code)
+    const { existingUser, discordUser, createUser, createKey } = await discordAuth.validateCallback(code)
 
     async function getUser() {
       if (existingUser)
         return existingUser
-      if (!githubUser.email) {
+      if (!discordUser.verified) {
         return sendError(
           event,
           createError({
             statusCode: 400,
-            statusMessage: 'Github account is not verified',
+            message: 'Discord account is not verified',
           }),
         )
       }
-      const dbUser = await selectUserByEmail(githubUser.email)
+      if (!discordUser.email) {
+        return sendError(
+          event,
+          createError({
+            statusCode: 400,
+            message: 'Discord account does not have an email',
+          }),
+        )
+      }
+      const dbUser = await selectUserByEmail(discordUser.email)
       if (dbUser) {
         const user = auth.transformDatabaseUser(dbUser)
         await createKey(user.userId)
@@ -44,8 +52,8 @@ export default defineEventHandler(async (event) => {
 
       const user = await createUser({
         attributes: {
-          username: githubUser.login,
-          email: githubUser.email,
+          username: discordUser.username,
+          email: discordUser.email,
         },
       })
       return user
@@ -57,7 +65,7 @@ export default defineEventHandler(async (event) => {
         event,
         createError({
           statusCode: 500,
-          statusMessage: 'Github account has no email or email is not verified',
+          message: 'Discord account has no email or email is not verified',
         }),
       )
     }
@@ -75,7 +83,6 @@ export default defineEventHandler(async (event) => {
         event,
         createError({
           statusCode: 400,
-          statusMessage: e.message,
         }),
       )
     }
@@ -83,7 +90,6 @@ export default defineEventHandler(async (event) => {
       event,
       createError({
         statusCode: 500,
-        statusMessage: `Error: ${e}`,
       }),
     )
   }

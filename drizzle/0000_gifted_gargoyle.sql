@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS "auth_session" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "auth_user" (
 	"id" text PRIMARY KEY NOT NULL,
-	"github_username" text
+	"username" text NOT NULL,
+	"email" text NOT NULL,
+	CONSTRAINT "auth_user_username_unique" UNIQUE("username"),
+	CONSTRAINT "auth_user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 DO $$ BEGIN

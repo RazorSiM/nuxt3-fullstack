@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (session)
     return sendRedirect(event, '/')
 
-  const storedState = getCookie(event, 'github_oauth_state')
+  const storedState = getCookie(event, 'google_oauth_state')
   const query = getQuery(event)
   const state = query.state?.toString()
   const code = query.code?.toString()
@@ -16,26 +16,33 @@ export default defineEventHandler(async (event) => {
       event,
       createError({
         statusCode: 400,
-        statusMessage: 'Invalid state',
       }),
     )
   }
   try {
-    const { existingUser, githubUser, createUser, createKey } = await githubAuth.validateCallback(code)
-
+    const { existingUser, googleUser, createUser, createKey } = await googleAuth.validateCallback(code)
     async function getUser() {
       if (existingUser)
         return existingUser
-      if (!githubUser.email) {
+      if (!googleUser.email_verified) {
         return sendError(
           event,
           createError({
             statusCode: 400,
-            statusMessage: 'Github account is not verified',
+            statusMessage: 'Google account is not verified',
           }),
         )
       }
-      const dbUser = await selectUserByEmail(githubUser.email)
+      if (!googleUser.email) {
+        return sendError(
+          event,
+          createError({
+            statusCode: 400,
+            statusMessage: 'Google account does not have an email',
+          }),
+        )
+      }
+      const dbUser = await selectUserByEmail(googleUser.email)
       if (dbUser) {
         const user = auth.transformDatabaseUser(dbUser)
         await createKey(user.userId)
@@ -44,8 +51,8 @@ export default defineEventHandler(async (event) => {
 
       const user = await createUser({
         attributes: {
-          username: githubUser.login,
-          email: githubUser.email,
+          username: googleUser.name,
+          email: googleUser.email,
         },
       })
       return user
@@ -57,7 +64,7 @@ export default defineEventHandler(async (event) => {
         event,
         createError({
           statusCode: 500,
-          statusMessage: 'Github account has no email or email is not verified',
+          statusMessage: 'Google account has no email or email is not verified',
         }),
       )
     }
@@ -83,7 +90,7 @@ export default defineEventHandler(async (event) => {
       event,
       createError({
         statusCode: 500,
-        statusMessage: `Error: ${e}`,
+        statusMessage: `Internal Server Error: ${e}`,
       }),
     )
   }

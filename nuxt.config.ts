@@ -27,5 +27,7 @@ export default defineNuxtConfig({
     discordClientSecret: '',
     githubClientId: '',
     githubClientSecret: '',
+    googleClientId: '',
+    googleClientSecret: '',
   },
 })

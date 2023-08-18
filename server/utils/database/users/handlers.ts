@@ -1,29 +1,9 @@
-import { asc, desc, eq } from 'drizzle-orm'
-import { drizzleClient } from '../index'
+import { eq } from 'drizzle-orm'
+import { db } from '../index'
 import type { User } from './schema'
-import { users } from './schema'
+import { user } from './schema'
 
-export async function selectUser(email: string): Promise<User> {
-  const result = await drizzleClient.select().from(users).where(eq(users.email, email))
-  return result[0]
-}
-export async function selectUsers(): Promise<User[]> {
-  return await drizzleClient.select().from(users)
-}
-export async function selectUsersPaginated(
-  page: 1,
-  perPage: 10,
-  orderBy?: keyof User,
-  orderDirection?: 'asc' | 'desc',
-): Promise<User[]> {
-  const sq = drizzleClient.select().from(users).limit(perPage).offset(page * perPage).as('sq')
-  if (orderBy)
-    return await drizzleClient.select().from(sq).orderBy(orderDirection === 'asc' ? asc(users[orderBy]) : desc(users[orderBy]))
-  else
-    return await drizzleClient.select().from(sq)
-}
-
-export async function updateUser(email: string, address: string): Promise<User> {
-  const result = await drizzleClient.update(users).set({ address }).where(eq(users.email, email)).returning()
+export async function selectUserByEmail(email: string): Promise<User> {
+  const result = await db.select().from(user).where(eq(user.email, email))
   return result[0]
 }

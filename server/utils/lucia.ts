@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { lucia } from 'lucia'
 import { h3 } from 'lucia/middleware'
 import { postgres } from '@lucia-auth/adapter-postgresql'
-import { github } from '@lucia-auth/oauth/providers'
+import { discord, github, google } from '@lucia-auth/oauth/providers'
 import { sql } from './database'
 
 const config = useRuntimeConfig()
@@ -20,7 +20,8 @@ export const auth = lucia({
   env: 'DEV',
   getUserAttributes: (data) => {
     return {
-      githubUsername: data.github_username,
+      username: data.username,
+      email: data.email,
     }
   },
 })
@@ -28,6 +29,17 @@ export const auth = lucia({
 export const githubAuth = github(auth, {
   clientId: config.githubClientId,
   clientSecret: config.githubClientSecret,
+})
+export const discordAuth = discord(auth, {
+  clientId: config.discordClientId,
+  clientSecret: config.discordClientSecret,
+  redirectUri: 'http://localhost:3000/api/login/discord/callback',
+})
+export const googleAuth = google(auth, {
+  clientId: config.googleClientId,
+  clientSecret: config.googleClientSecret,
+  redirectUri: 'http://localhost:3000/api/login/google/callback',
+  scope: ['email', 'profile', 'openid'],
 })
 
 export type Auth = typeof auth

@@ -1,3 +1,4 @@
+import type { InferModel } from 'drizzle-orm'
 import { bigint, pgTable, text } from 'drizzle-orm/pg-core'
 
 /**
@@ -6,7 +7,8 @@ import { bigint, pgTable, text } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('auth_user', {
   id: text('id').primaryKey(),
-  githubUsername: text('github_username'),
+  username: text('username').unique().notNull(),
+  email: text('email').unique().notNull(),
 })
 
 export const key = pgTable('auth_key', {
@@ -25,3 +27,5 @@ export const session = pgTable('auth_session', {
   activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
   idleExpires: bigint('idle_expires', { mode: 'number' }).notNull(),
 })
+
+export type User = InferModel<typeof user>
