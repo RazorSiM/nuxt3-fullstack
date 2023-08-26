@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
     })
   }
   try {
-    const { existingUser, githubUser, createUser, createKey } = await githubAuth.validateCallback(code)
+    const { getExistingUser, githubUser, createUser, createKey } = await githubAuth.validateCallback(code)
+    const existingUser = await getExistingUser()
 
     async function getUser() {
       if (existingUser)

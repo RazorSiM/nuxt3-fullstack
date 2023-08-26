@@ -17,7 +17,9 @@ export default defineEventHandler(async (event) => {
     })
   }
   try {
-    const { existingUser, googleUser, createUser, createKey } = await googleAuth.validateCallback(code)
+    const { getExistingUser, googleUser, createUser, createKey } = await googleAuth.validateCallback(code)
+    const existingUser = await getExistingUser()
+
     async function getUser() {
       if (existingUser)
         return existingUser

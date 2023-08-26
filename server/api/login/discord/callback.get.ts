@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
     })
   }
   try {
-    const { existingUser, discordUser, createUser, createKey } = await discordAuth.validateCallback(code)
+    const { getExistingUser, discordUser, createUser, createKey } = await discordAuth.validateCallback(code)
+    const existingUser = await getExistingUser()
 
     async function getUser() {
       if (existingUser)
