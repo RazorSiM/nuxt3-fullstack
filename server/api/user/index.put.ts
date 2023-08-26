@@ -3,7 +3,9 @@ import { z } from 'zod'
 const usernameSchema = z.object({
   username: z.string().min(3).max(20),
 })
-export default defineEventHandler(async (event) => {
+type UsernameSchema = z.infer<typeof usernameSchema>
+
+export default defineEventHandler<{ body: UsernameSchema }>(async (event) => {
   const authRequest = auth.handleRequest(event)
   const session = await authRequest.validate()
   const body = await readValidatedBody(event, usernameSchema.safeParse)

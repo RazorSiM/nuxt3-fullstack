@@ -27,7 +27,6 @@
     "@unocss/reset": "^0.55.3",
     "drizzle-orm": "^0.28.5",
     "drizzle-zod": "^0.5.1",
-    "h3-zod": "^0.5.1",
     "lucia": "^2.4.0",
     "pg": "8.11.3",
     "postgres": "^3.3.5",
