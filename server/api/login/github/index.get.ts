@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const authRequest = auth.handleRequest(event)
   const session = await authRequest.validate()
   if (session)
-    return sendRedirect(event, '/')
+    return sendRedirect(event, '/user')
 
   const [url, state] = await githubAuth.getAuthorizationUrl()
   setCookie(event, 'github_oauth_state', state, {

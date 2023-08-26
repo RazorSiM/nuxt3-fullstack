@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const authRequest = auth.handleRequest(event)
   const session = await authRequest.validate()
   if (session)
-    return sendRedirect(event, '/')
+    return sendRedirect(event, '/user')
 
   const [url, state] = await googleAuth.getAuthorizationUrl()
   setCookie(event, 'google_oauth_state', state, {

@@ -5,7 +5,7 @@ const usernameSchema = z.object({
 })
 type UsernameSchema = z.infer<typeof usernameSchema>
 
-export default defineEventHandler<{ body: UsernameSchema }>(async (event) => {
+export default defineEventHandler(async (event) => {
   const authRequest = auth.handleRequest(event)
   const session = await authRequest.validate()
   const body = await readValidatedBody(event, usernameSchema.safeParse)

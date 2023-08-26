@@ -2,12 +2,7 @@ import type { User } from 'lucia'
 
 export function useUser() {
   const user = useState<User | null>('user', () => null)
-  return user
-}
-
-export function useAuthenticatedUser() {
-  const user = useUser()
-  return computed(() => {
+  const authenticatedUser = computed(() => {
     const userValue = unref(user)
     if (!userValue) {
       throw createError(
@@ -16,4 +11,8 @@ export function useAuthenticatedUser() {
     }
     return userValue
   })
+  return {
+    user,
+    authenticatedUser,
+  }
 }

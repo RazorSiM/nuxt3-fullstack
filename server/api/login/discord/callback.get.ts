@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const authRequest = auth.handleRequest(event)
   const session = await authRequest.validate()
   if (session)
-    return sendRedirect(event, '/')
+    return sendRedirect(event, '/user')
 
   const storedState = getCookie(event, 'discord_oauth_state')
   const query = getQuery(event)
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
       attributes: {},
     })
     authRequest.setSession(session)
-    return sendRedirect(event, '/')
+    return sendRedirect(event, '/user')
   }
   catch (e) {
     if (e instanceof OAuthRequestError) {
