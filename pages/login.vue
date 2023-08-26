@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const user = await useUser()
 if (user.value)
-  await navigateTo('/') // redirect to profile page
+  await navigateTo('/user') // redirect to profile page
 </script>
 
 <template>

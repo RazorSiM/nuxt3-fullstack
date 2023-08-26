@@ -1,11 +1,16 @@
 <template>
-  <div>
-    <NuxtLink to="/">
-      Home
-    </NuxtLink>
-    <NuxtLink to="/login">
-      Login
-    </NuxtLink>
+  <main>
+    <header class="p-3 max-w-lg mx-auto flex gap-4 justify-center font-bold">
+      <NuxtLink to="/">
+        Home
+      </NuxtLink>
+      <NuxtLink to="/user">
+        User
+      </NuxtLink>
+      <NuxtLink to="/login">
+        Login
+      </NuxtLink>
+    </header>
     <NuxtPage />
-  </div>
+  </main>
 </template>

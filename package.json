@@ -1,6 +1,13 @@
 {
-  "name": "nuxt-app",
+  "name": "nuxt3-fullstack",
   "private": true,
+  "description": "Nuxt3 fullstack template with database and authentication",
+  "author": {
+    "name": "Simone Colabufalo",
+    "email": "me@simonecolabufalo.com",
+    "url": "https://simonecolabufalo.com"
+  },
+  "keywords": ["nuxt3", "vue", "fullstack", "drizzle", "lucia-auth"],
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

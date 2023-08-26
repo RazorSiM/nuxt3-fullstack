@@ -1,6 +1,7 @@
 import {
   defineConfig,
   presetIcons,
+  presetTypography,
   presetUno,
   presetWebFonts,
   transformerVariantGroup,
@@ -14,6 +15,7 @@ export default defineConfig({
       provider: 'google',
       fonts: { sans: 'Roboto', mono: 'Fira Code' },
     }),
+    presetTypography(),
   ],
   transformers: [transformerVariantGroup()],
 })

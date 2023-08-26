@@ -1,39 +1,22 @@
 <script lang="ts" setup>
-definePageMeta({
-  middleware: ['protected'],
-})
-
-const user = useAuthenticatedUser()
-
-async function handleLogout(e: Event) {
-  if (!(e.target instanceof HTMLFormElement))
-    return
-  await $fetch('/api/logout', {
-    method: 'POST',
-    redirect: 'manual',
-  })
-  await navigateTo('/login')
-}
-const username = ref(user.value.username)
-async function handleUpdateUsername() {
-  await $fetch('/api/user', {
-    method: 'PUT',
-    body: {
-      username: username.value,
-    },
-  })
-}
 </script>
 
 <template>
-  <h1>Profile</h1>
-  <p>User id: {{ user.userId }}</p>
-  <p>Username: {{ user.username }}</p>
-  <input v-model="username" type="text">
-  <button @click="handleUpdateUsername()">
-    Update Username
-  </button>
-  <form method="post" action="/api/logout" @submit.prevent="handleLogout">
-    <input type="submit" value="Sign out">
-  </form>
+  <article class="text-lg prose prose-truegray mx-auto">
+    <h1 id="nuxt-3-full-stack">
+      Nuxt 3 Full-Stack
+    </h1>
+    <p>Simple starter with Nuxt 3, PostgreSQL, and OAuth for the authentication layer.</p>
+    <h2 id="stack">
+      Stack
+    </h2>
+    <ul>
+      <li><a href="https://v3.nuxtjs.org/">Nuxt 3</a> deals with frontend and backend.</li>
+      <li><a href="https://postgresql.org/">PostgreSQL</a> as a database.</li>
+      <li><a href="https://orm.drizzle.team/">Drizzle ORM</a> as an ORM, migrator and query builder.</li>
+      <li><a href="https://zod.dev/">Zod</a> for schema validation and type safety, both on the frontend and backend.</li>
+      <li><a href="https://lucia-auth.com/">Lucia Auth</a> for the authentication layer.</li>
+      <li><a href="https://unocss.dev/">UnoCSS</a> for styling.</li>
+    </ul>
+  </article>
 </template>
