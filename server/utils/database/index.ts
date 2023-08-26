@@ -19,7 +19,7 @@ const sql = postgres({
 
 const db: PostgresJsDatabase = drizzle(sql)
 
-export { selectUserByEmail } from './users/handlers'
+export { selectUserByEmail, modifyUsername } from './users/handlers'
 export type { User } from './users/schema'
 export {
   sql,

@@ -14,12 +14,25 @@ async function handleLogout(e: Event) {
   })
   await navigateTo('/login')
 }
+const username = ref(user.value.username)
+async function handleUpdateUsername() {
+  await $fetch('/api/user', {
+    method: 'PUT',
+    body: {
+      username: username.value,
+    },
+  })
+}
 </script>
 
 <template>
   <h1>Profile</h1>
   <p>User id: {{ user.userId }}</p>
   <p>Username: {{ user.username }}</p>
+  <input v-model="username" type="text">
+  <button @click="handleUpdateUsername()">
+    Update Username
+  </button>
   <form method="post" action="/api/logout" @submit.prevent="handleLogout">
     <input type="submit" value="Sign out">
   </form>

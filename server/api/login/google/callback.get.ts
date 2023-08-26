@@ -12,12 +12,9 @@ export default defineEventHandler(async (event) => {
   const code = query.code?.toString()
   // validate state
   if (!storedState || !state || storedState !== state || !code) {
-    return sendError(
-      event,
-      createError({
-        statusCode: 400,
-      }),
-    )
+    throw createError({
+      statusCode: 400,
+    })
   }
   try {
     const { existingUser, googleUser, createUser, createKey } = await googleAuth.validateCallback(code)
@@ -25,22 +22,16 @@ export default defineEventHandler(async (event) => {
       if (existingUser)
         return existingUser
       if (!googleUser.email_verified) {
-        return sendError(
-          event,
-          createError({
-            statusCode: 400,
-            statusMessage: 'Google account is not verified',
-          }),
-        )
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Google account is not verified',
+        })
       }
       if (!googleUser.email) {
-        return sendError(
-          event,
-          createError({
-            statusCode: 400,
-            statusMessage: 'Google account does not have an email',
-          }),
-        )
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Google account does not have an email',
+        })
       }
       const dbUser = await selectUserByEmail(googleUser.email)
       if (dbUser) {
@@ -60,13 +51,10 @@ export default defineEventHandler(async (event) => {
 
     const user = await getUser()
     if (!user) {
-      return sendError(
-        event,
-        createError({
-          statusCode: 500,
-          statusMessage: 'Google account has no email or email is not verified',
-        }),
-      )
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Google account has no email or email is not verified',
+      })
     }
     const session = await auth.createSession({
       userId: user.userId,
@@ -78,20 +66,14 @@ export default defineEventHandler(async (event) => {
   catch (e) {
     if (e instanceof OAuthRequestError) {
       // invalid code
-      return sendError(
-        event,
-        createError({
-          statusCode: 400,
-          statusMessage: e.message,
-        }),
-      )
+      throw createError({
+        statusCode: 400,
+        statusMessage: e.message,
+      })
     }
-    return sendError(
-      event,
-      createError({
-        statusCode: 500,
-        statusMessage: `Internal Server Error: ${e}`,
-      }),
-    )
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Internal Server Error: ${e}`,
+    })
   }
 })

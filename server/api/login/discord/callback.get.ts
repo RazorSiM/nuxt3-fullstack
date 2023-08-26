@@ -12,12 +12,10 @@ export default defineEventHandler(async (event) => {
   const code = query.code?.toString()
   // validate state
   if (!storedState || !state || storedState !== state || !code) {
-    return sendError(
-      event,
-      createError({
-        statusCode: 400,
-      }),
-    )
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+    })
   }
   try {
     const { existingUser, discordUser, createUser, createKey } = await discordAuth.validateCallback(code)
@@ -26,22 +24,16 @@ export default defineEventHandler(async (event) => {
       if (existingUser)
         return existingUser
       if (!discordUser.verified) {
-        return sendError(
-          event,
-          createError({
-            statusCode: 400,
-            message: 'Discord account is not verified',
-          }),
-        )
+        throw createError({
+          statusCode: 400,
+          message: 'Discord account is not verified',
+        })
       }
       if (!discordUser.email) {
-        return sendError(
-          event,
-          createError({
-            statusCode: 400,
-            message: 'Discord account does not have an email',
-          }),
-        )
+        throw createError({
+          statusCode: 400,
+          message: 'Discord account does not have an email',
+        })
       }
       const dbUser = await selectUserByEmail(discordUser.email)
       if (dbUser) {
@@ -61,13 +53,10 @@ export default defineEventHandler(async (event) => {
 
     const user = await getUser()
     if (!user) {
-      return sendError(
-        event,
-        createError({
-          statusCode: 500,
-          message: 'Discord account has no email or email is not verified',
-        }),
-      )
+      throw createError({
+        statusCode: 500,
+        message: 'Discord account has no email or email is not verified',
+      })
     }
     const session = await auth.createSession({
       userId: user.userId,
@@ -79,18 +68,15 @@ export default defineEventHandler(async (event) => {
   catch (e) {
     if (e instanceof OAuthRequestError) {
       // invalid code
-      return sendError(
-        event,
-        createError({
-          statusCode: 400,
-        }),
-      )
+
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+      })
     }
-    return sendError(
-      event,
-      createError({
-        statusCode: 500,
-      }),
-    )
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Internal Server Error: ${e}`,
+    })
   }
 })

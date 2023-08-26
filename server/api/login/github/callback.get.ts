@@ -12,13 +12,10 @@ export default defineEventHandler(async (event) => {
   const code = query.code?.toString()
   // validate state
   if (!storedState || !state || storedState !== state || !code) {
-    return sendError(
-      event,
-      createError({
-        statusCode: 400,
-        statusMessage: 'Invalid state',
-      }),
-    )
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Invalid state',
+    })
   }
   try {
     const { existingUser, githubUser, createUser, createKey } = await githubAuth.validateCallback(code)
@@ -27,13 +24,10 @@ export default defineEventHandler(async (event) => {
       if (existingUser)
         return existingUser
       if (!githubUser.email) {
-        return sendError(
-          event,
-          createError({
-            statusCode: 400,
-            statusMessage: 'Github account is not verified',
-          }),
-        )
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Github account is not verified',
+        })
       }
       const dbUser = await selectUserByEmail(githubUser.email)
       if (dbUser) {
@@ -53,13 +47,10 @@ export default defineEventHandler(async (event) => {
 
     const user = await getUser()
     if (!user) {
-      return sendError(
-        event,
-        createError({
-          statusCode: 500,
-          statusMessage: 'Github account has no email or email is not verified',
-        }),
-      )
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Github account has no email or email is not verified',
+      })
     }
     const session = await auth.createSession({
       userId: user.userId,
@@ -71,20 +62,14 @@ export default defineEventHandler(async (event) => {
   catch (e) {
     if (e instanceof OAuthRequestError) {
       // invalid code
-      return sendError(
-        event,
-        createError({
-          statusCode: 400,
-          statusMessage: e.message,
-        }),
-      )
+      throw createError({
+        statusCode: 400,
+        statusMessage: e.message,
+      })
     }
-    return sendError(
-      event,
-      createError({
-        statusCode: 500,
-        statusMessage: `Error: ${e}`,
-      }),
-    )
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Error: ${e}`,
+    })
   }
 })
