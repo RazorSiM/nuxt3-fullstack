@@ -7,7 +7,13 @@
     "email": "me@simonecolabufalo.com",
     "url": "https://simonecolabufalo.com"
   },
-  "keywords": ["nuxt3", "vue", "fullstack", "drizzle", "lucia-auth"],
+  "keywords": [
+    "nuxt3",
+    "vue",
+    "fullstack",
+    "drizzle",
+    "lucia-auth"
+  ],
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -34,6 +40,7 @@
     "@unocss/reset": "^0.55.3",
     "drizzle-orm": "^0.28.5",
     "drizzle-zod": "^0.5.1",
+    "lefthook": "^1.4.9",
     "lucia": "^2.4.0",
     "pg": "8.11.3",
     "postgres": "^3.3.5",
