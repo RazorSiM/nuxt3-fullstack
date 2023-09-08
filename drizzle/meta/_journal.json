@@ -8,6 +8,13 @@
       "when": 1692197178713,
       "tag": "0000_gifted_gargoyle",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1694209030860,
+      "tag": "0001_zippy_mister_fear",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,8 @@
 import 'dotenv/config'
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
+import { todos } from './todos'
+import { users } from './users'
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -17,10 +18,10 @@ const sql = postgres({
   ...postgresConnectionOptions,
 })
 
-const db: PostgresJsDatabase = drizzle(sql)
+const db = drizzle(sql, { schema: { ...users, ...todos } })
 
-export { selectUserByEmail, modifyUsername } from './users/handlers'
-export type { User } from './users/schema'
+export * from './users'
+export * from './todos'
 export {
   sql,
   db,
