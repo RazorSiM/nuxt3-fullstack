@@ -16,7 +16,7 @@
       <li><a href="https://orm.drizzle.team/">Drizzle ORM</a> as an ORM, migrator and query builder.</li>
       <li><a href="https://zod.dev/">Zod</a> for schema validation and type safety, both on the frontend and backend.</li>
       <li><a href="https://lucia-auth.com/">Lucia Auth</a> for the authentication layer.</li>
-      <li><a href="https://unocss.dev/">UnoCSS</a> for styling.</li>
+      <li><a href="https://ui.nuxt.com/">Nuxt UI</a> for styles and components.</li>
     </ul>
   </article>
 </template>
