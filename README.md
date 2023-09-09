@@ -7,7 +7,7 @@ Simple starter with Nuxt 3, PostgreSQL, and OAuth for the authentication layer.
 - [Drizzle ORM](https://orm.drizzle.team/) as an ORM, migrator and query builder.
 - [Zod](https://zod.dev/) for schema validation and type safety, both on the frontend and backend.
 - [Lucia Auth](https://lucia-auth.com/) for the authentication layer.
-- [UnoCSS](https://unocss.dev/) for styling.
+- [Nuxt UI](https://ui.nuxt.com/) for styling.
 
 ## Prerequisites
 In order to run the project, you need:
@@ -46,6 +46,11 @@ Configure the environment variables:
 cp .env.example .env
 ```
 And edit the `.env` file to match your environment.
+
+Startup postgresql:
+```bash
+docker-compose up -d
+```
 
 Run the migrations:
 ```bash
