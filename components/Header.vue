@@ -1,4 +1,14 @@
 <script lang="ts" setup>
+const { user } = useUser()
+
+async function handleLogout() {
+  await $fetch('/api/logout', {
+    method: 'POST',
+    redirect: 'manual',
+  })
+  await navigateTo('/login')
+}
+
 const colorMode = useColorMode()
 const isDark = computed({
   get() {
@@ -26,8 +36,8 @@ const navigation = [
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-4 py-2">
-    <header class="p-3 max-w-lg mx-auto flex gap-4 justify-center font-bold">
+  <div class="">
+    <header class="p-3 max-w-lg mx-auto flex gap-4 justify-center items-center font-bold">
       <ULink v-for="link in navigation" :key="link.name" :to="link.href" active-class="text-primary">
         {{ link.name }}
       </ULink>
@@ -43,6 +53,7 @@ const navigation = [
           <div class="w-8 h-8" />
         </template>
       </ClientOnly>
+      <UButton v-if="user" icon="i-heroicons-arrow-left-on-rectangle-solid" square variant="ghost" color="red" @click="handleLogout" />
     </header>
   </div>
 </template>

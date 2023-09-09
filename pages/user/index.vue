@@ -1,26 +1,38 @@
 <script lang="ts" setup>
+import { z } from 'zod'
+import type { FormSubmitEvent } from '@nuxt/ui/dist/runtime/types/form'
+
 definePageMeta({
   middleware: ['protected'],
 })
 
 const { user, authenticatedUser } = useUser()
 
-async function handleLogout(e: Event) {
-  if (!(e.target instanceof HTMLFormElement))
-    return
-  await $fetch('/api/logout', {
-    method: 'POST',
-    redirect: 'manual',
-  })
-  await navigateTo('/login')
-}
-const username = ref(authenticatedUser.value.username)
-async function handleUpdateUsername() {
+const userSchema = z.object({
+  username: z.string().min(3).max(20),
+})
+type UserSchema = z.output<typeof userSchema>
+
+const userState = ref({
+  username: user.value?.username ?? '',
+})
+
+const isUserFormValid = computed(() => {
+  try {
+    userSchema.parse(userState.value)
+    return true
+  }
+  catch {
+    return false
+  }
+})
+
+async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
   try {
     const response = await $fetch('/api/user', {
       method: 'PUT',
       body: {
-        username: username.value,
+        username: event.data.username,
       },
     })
     user.value = { userId: response.id, ...response }
@@ -35,13 +47,28 @@ async function handleUpdateUsername() {
 
 const { data: todos, refresh } = useFetch('/api/todos')
 
-const title = ref('')
-const description = ref('')
-
-async function createTodo(payload: { title: string; description: string }) {
+const todoSchema = z.object({
+  title: z.string().min(3).max(20),
+  description: z.string().min(1),
+})
+type TodoSchema = z.output<typeof todoSchema>
+const todoState = ref({
+  title: '',
+  description: '',
+})
+const isTodoFormValid = computed(() => {
+  try {
+    todoSchema.parse(todoState.value)
+    return true
+  }
+  catch {
+    return false
+  }
+})
+async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
   const body = {
-    title: payload.title,
-    description: payload.description,
+    title: event.data.title,
+    description: event.data.description,
     userId: authenticatedUser.value.userId,
   }
   try {
@@ -61,28 +88,45 @@ async function createTodo(payload: { title: string; description: string }) {
 </script>
 
 <template>
-  <div class="mx-auto flex flex-col gap-2 w-fit mt-10 border-1 border-zinc-400 rounded-lg p-5">
-    <p>User id: {{ authenticatedUser.userId }}</p>
-    <p>Username: {{ authenticatedUser.username }}</p>
-    <input v-model="username" type="text" class="ring-1 ring-zinc-400 rounded px-2 py-1 transition">
-    <BaseButton color="warning" @click="handleUpdateUsername()">
-      Update Username
-    </BaseButton>
-    <form method="post" action="/api/logout" @submit.prevent="handleLogout">
-      <BaseButton color="danger" type="submit">
-        Sign Out
-      </BaseButton>
-    </form>
-  </div>
-  <div class="max-w-lg mx-auto mt-30">
-    <h2>New Todo</h2>
-    <input v-model="title" type="text" placeholder="title" class="ring-1 ring-zinc-400 rounded px-2 py-1 transition">
-    <input v-model="description" type="text" placeholder="description" class="ring-1 ring-zinc-400 rounded px-2 py-1 transition">
-    <BaseButton color="primary" @click="createTodo({ title, description })">
-      Add
-    </BaseButton>
-  </div>
-  <div class="max-w-lg mx-auto mt-30">
+  <UCard class="mt-20 max-w-lg mx-auto">
+    <template #header>
+      Profile
+    </template>
+
+    <UForm :schema="userSchema" :state="userState" @submit="handleUpdateUsername">
+      <div class="grid grid-cols-1 gap-5">
+        <UFormGroup label="User ID" description="This is your User ID" hint="Not Editable">
+          <UInput icon="i-heroicons-hashtag" :value="authenticatedUser.userId" disabled />
+        </UFormGroup>
+        <UFormGroup name="username" label="Username" description="This is your username" required>
+          <UInput v-model="userState.username" icon="i-heroicons-user" />
+        </UFormGroup>
+        <UButton :disabled="!isUserFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
+          Update Username
+        </UButton>
+      </div>
+    </UForm>
+  </UCard>
+  <UCard class="mt-20 max-w-lg mx-auto">
+    <template #header>
+      Todos
+    </template>
+    <UForm :schema="todoSchema" :state="todoState" @submit="handleCreateTodo">
+      <div class="grid grid-cols-1 gap-5">
+        <UFormGroup label="Title" description="ToDo Title" name="title" required>
+          <UInput v-model="todoState.title" />
+        </UFormGroup>
+        <UFormGroup name="description" label="Description" description="Todo content" required>
+          <UTextarea v-model="todoState.description" />
+        </UFormGroup>
+        <UButton :disabled="!isTodoFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
+          Add ToDo
+        </UButton>
+      </div>
+    </UForm>
+  </UCard>
+
+  <div class="max-w-lg mx-auto mt-20">
     <h1>Todos</h1>
     <p v-if="!todos || todos.length === 0">
       No Todos available
