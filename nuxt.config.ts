@@ -9,7 +9,10 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@unocss/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxt/ui'],
+  ui: {
+    icons: 'all',
+  },
   nitro: {
     experimental: {
       openAPI: true,
@@ -30,5 +33,4 @@ export default defineNuxtConfig({
     googleClientId: '',
     googleClientSecret: '',
   },
-  css: ['@unocss/reset/tailwind-compat.css'],
 })

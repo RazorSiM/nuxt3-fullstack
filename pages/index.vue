@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <article class="text-lg prose prose-truegray mx-auto">
+  <article class="text-lg mx-auto prose prose-neutral dark:prose-invert">
     <h1 id="nuxt-3-full-stack">
       Nuxt 3 Full-Stack
     </h1>

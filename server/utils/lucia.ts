@@ -1,11 +1,12 @@
 import 'dotenv/config'
+import process from 'node:process'
 import { lucia } from 'lucia'
 import { h3 } from 'lucia/middleware'
 import { postgres } from '@lucia-auth/adapter-postgresql'
 import { discord, github, google } from '@lucia-auth/oauth/providers'
 import { sql } from './database'
 
-const config = useRuntimeConfig()
+const config = process.env
 // expect error
 export const auth = lucia({
   adapter: postgres(
@@ -27,17 +28,17 @@ export const auth = lucia({
 })
 
 export const githubAuth = github(auth, {
-  clientId: config.githubClientId,
-  clientSecret: config.githubClientSecret,
+  clientId: config.NUXT_GITHUB_CLIENT_ID ?? '',
+  clientSecret: config.NUXT_GITHUB_CLIENT_SECRET ?? '',
 })
 export const discordAuth = discord(auth, {
-  clientId: config.discordClientId,
-  clientSecret: config.discordClientSecret,
+  clientId: config.NUXT_DISCORD_CLIENT_ID ?? '',
+  clientSecret: config.NUXT_DISCORD_CLIENT_SECRET ?? '',
   redirectUri: 'http://localhost:3000/api/login/discord/callback',
 })
 export const googleAuth = google(auth, {
-  clientId: config.googleClientId,
-  clientSecret: config.googleClientSecret,
+  clientId: config.NUXT_GOOGLE_CLIENT_ID ?? '',
+  clientSecret: config.NUXT_GOOGLE_CLIENT_SECRET ?? '',
   redirectUri: 'http://localhost:3000/api/login/google/callback',
   scope: ['email', 'profile', 'openid'],
 })

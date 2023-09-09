@@ -1,17 +1,17 @@
 import 'dotenv/config'
+import process from 'node:process'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
-import { todos } from './todos'
-import { users } from './users'
+import { todos, users } from './schema'
 
-const runtimeConfig = useRuntimeConfig()
+const config = process.env
 
 const postgresConnectionOptions = {
-  host: runtimeConfig.postgresHost,
-  port: Number(runtimeConfig.postgresPort),
-  user: runtimeConfig.postgresUser,
-  password: runtimeConfig.postgresPassword,
-  database: runtimeConfig.postgresDatabase,
+  host: config.NUXT_POSTGRES_HOST,
+  port: Number(config.NUXT_POSTGRES_PORT),
+  user: config.NUXT_POSTGRES_USER,
+  password: config.NUXT_POSTGRES_PASSWORD,
+  database: config.NUXT_POSTGRES_DATABASE,
 }
 
 const sql = postgres({
@@ -20,8 +20,8 @@ const sql = postgres({
 
 const db = drizzle(sql, { schema: { ...users, ...todos } })
 
-export * from './users'
-export * from './todos'
+export * from './handlers'
+export * from './schema'
 export {
   sql,
   db,
