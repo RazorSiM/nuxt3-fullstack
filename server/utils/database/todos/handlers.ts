@@ -1,13 +1,18 @@
-import { eq, sql } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { db } from '../index'
 import type { Todo } from './schema'
 import { todos } from './schema'
 
-export async function selectTodosFromUser(userId: string): Promise<Todo[]> {
+export async function selectTodosFromUser(userId: string) {
   const prepared = db
-    .select()
+    .select({ id: todos.id, title: todos.title, completed: todos.completed, createdAt: todos.createdAt, updatedAt: todos.updatedAt })
     .from(todos)
-    .where(eq(todos.userId, sql.placeholder('userId')))
+    .where(
+      and(
+        eq(todos.userId, sql.placeholder('userId')),
+        eq(todos.deleted, false),
+      ),
+    )
     .prepare('selectTodosFromUser')
 
   const result = await prepared.execute({ userId })
