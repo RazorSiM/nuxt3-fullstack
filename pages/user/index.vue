@@ -98,6 +98,9 @@ async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
         <UFormGroup label="User ID" description="This is your User ID" hint="Not Editable">
           <UInput icon="i-heroicons-hashtag" :value="authenticatedUser.userId" disabled />
         </UFormGroup>
+        <UFormGroup label="Email" description="This is your E-Mail" hint="Not Editable">
+          <UInput icon="i-heroicons-envelope" :value="authenticatedUser.email" disabled />
+        </UFormGroup>
         <UFormGroup name="username" label="Username" description="This is your username" required>
           <UInput v-model="userState.username" icon="i-heroicons-user" />
         </UFormGroup>
@@ -113,14 +116,14 @@ async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
     </template>
     <UForm :schema="todoSchema" :state="todoState" @submit="handleCreateTodo">
       <div class="grid grid-cols-1 gap-5">
-        <UFormGroup label="Title" description="ToDo Title" name="title" required>
+        <UFormGroup label="Title" description="Todo Title" name="title" required>
           <UInput v-model="todoState.title" />
         </UFormGroup>
         <UFormGroup name="description" label="Description" description="Todo content" required>
           <UTextarea v-model="todoState.description" />
         </UFormGroup>
         <UButton :disabled="!isTodoFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
-          Add ToDo
+          Add Todo
         </UButton>
       </div>
     </UForm>
