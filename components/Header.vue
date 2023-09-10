@@ -29,6 +29,10 @@ const navigation = [
     href: '/user',
   },
   {
+    name: 'Todos',
+    href: '/todo',
+  },
+  {
     name: 'Login',
     href: '/login',
   },

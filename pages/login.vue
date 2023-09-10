@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+defineOptions({
+  name: 'LoginView',
+})
 const { user } = useUser()
 if (user.value)
   await navigateTo('/user') // redirect to profile page
@@ -6,9 +9,7 @@ if (user.value)
 function loginTo(provider: string) {
   window.location.href = `/api/login/${provider}`
 }
-const ui = {
-  base: 'w-fit mx-auto',
-}
+
 const logins = [
   {
     provider: 'github',
@@ -29,7 +30,7 @@ const logins = [
 </script>
 
 <template>
-  <UCard :ui="ui" class="mt-20">
+  <UCard class="mt-20 w-fit mx-auto">
     <template #header>
       Login with
     </template>

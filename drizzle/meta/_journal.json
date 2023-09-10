@@ -15,6 +15,20 @@
       "when": 1694209030860,
       "tag": "0001_zippy_mister_fear",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1694341518985,
+      "tag": "0002_sleepy_forgotten_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1694341548279,
+      "tag": "0003_lazy_spirit",
+      "breakpoints": true
     }
   ]
 }

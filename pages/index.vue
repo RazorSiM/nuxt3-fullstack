@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+defineOptions({
+  name: 'HomeView',
+})
 </script>
 
 <template>

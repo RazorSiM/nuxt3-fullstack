@@ -16,7 +16,7 @@ export const todos = pgTable('todos', {
   id: serial('id').primaryKey(),
   userId: text('user_id').references(() => users.id).notNull(),
   title: text('title').notNull().unique(),
-  description: text('description'),
+  description: text('description').notNull().default(''),
   completed: boolean('completed').notNull().default(false),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),

@@ -2,6 +2,10 @@
 import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui/dist/runtime/types/form'
 
+defineOptions({
+  name: 'UserView',
+})
+
 definePageMeta({
   middleware: ['protected'],
 })
@@ -44,47 +48,6 @@ async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
     })
   }
 }
-
-const { data: todos, refresh } = useFetch('/api/todos')
-
-const todoSchema = z.object({
-  title: z.string().min(3).max(20),
-  description: z.string().min(1),
-})
-type TodoSchema = z.output<typeof todoSchema>
-const todoState = ref({
-  title: '',
-  description: '',
-})
-const isTodoFormValid = computed(() => {
-  try {
-    todoSchema.parse(todoState.value)
-    return true
-  }
-  catch {
-    return false
-  }
-})
-async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
-  const body = {
-    title: event.data.title,
-    description: event.data.description,
-    userId: authenticatedUser.value.userId,
-  }
-  try {
-    await $fetch('/api/todos', {
-      method: 'POST',
-      body,
-    })
-    await refresh()
-  }
-  catch (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Failed to create todo: ${error}`,
-    })
-  }
-}
 </script>
 
 <template>
@@ -110,34 +73,4 @@ async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
       </div>
     </UForm>
   </UCard>
-  <UCard class="mt-20 max-w-lg mx-auto">
-    <template #header>
-      Todos
-    </template>
-    <UForm :schema="todoSchema" :state="todoState" @submit="handleCreateTodo">
-      <div class="grid grid-cols-1 gap-5">
-        <UFormGroup label="Title" description="Todo Title" name="title" required>
-          <UInput v-model="todoState.title" />
-        </UFormGroup>
-        <UFormGroup name="description" label="Description" description="Todo content" required>
-          <UTextarea v-model="todoState.description" />
-        </UFormGroup>
-        <UButton :disabled="!isTodoFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
-          Add Todo
-        </UButton>
-      </div>
-    </UForm>
-  </UCard>
-
-  <div class="max-w-lg mx-auto mt-20">
-    <h1>Todos</h1>
-    <p v-if="!todos || todos.length === 0">
-      No Todos available
-    </p>
-    <ul v-else>
-      <li v-for="todo in todos" :key="todo.id">
-        {{ todo }}
-      </li>
-    </ul>
-  </div>
 </template>

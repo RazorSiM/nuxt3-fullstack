@@ -32,7 +32,7 @@ export async function modifyUsername(userId: string, username: string): Promise<
 
 export async function selectTodosFromUser(userId: string) {
   const prepared = db
-    .select({ id: todos.id, title: todos.title, completed: todos.completed, createdAt: todos.createdAt, updatedAt: todos.updatedAt })
+    .select({ id: todos.id, title: todos.title, description: todos.description, completed: todos.completed, createdAt: todos.createdAt, updatedAt: todos.updatedAt })
     .from(todos)
     .where(
       and(
