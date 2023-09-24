@@ -59,7 +59,7 @@
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.49.0",
     "lefthook": "^1.4.10",
-    "nuxt": "^3.7.1",
+    "nuxt": "npm:nuxt3@latest",
     "pg": "8.11.3",
     "ts-node": "^10.9.1"
   }
