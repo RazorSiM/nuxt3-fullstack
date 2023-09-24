@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
-import { bigint, boolean, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import { bigint, boolean, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 /**
@@ -14,9 +14,10 @@ export const users = pgTable('auth_user', {
 })
 export const todos = pgTable('todos', {
   id: serial('id').primaryKey(),
+  position: integer('position'),
   userId: text('user_id').references(() => users.id).notNull(),
   title: text('title').notNull().unique(),
-  description: text('description').notNull().default(''),
+  description: text('description'),
   completed: boolean('completed').notNull().default(false),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),

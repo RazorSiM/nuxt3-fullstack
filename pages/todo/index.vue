@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui/dist/runtime/types/form'
+import Sortable from 'sortablejs'
 
 defineOptions({
   name: 'TodoView',
@@ -15,9 +16,48 @@ const { data: todos, refresh } = useFetch('/api/todos', {
   method: 'GET',
 })
 
+const sortableElement = ref<HTMLElement | null>(null)
+
+async function handleMoveTodo(todoId: number, oldIndex: number, newIndex: number) {
+  try {
+    $fetch('/api/todos/', {
+      method: 'PUT',
+      body: {
+        id: todoId,
+        oldIndex,
+        newIndex,
+        userId: authenticatedUser.value.userId,
+      },
+    })
+  }
+  catch (e) {
+    console.error(e)
+  }
+}
+watch(sortableElement, () => {
+  if (sortableElement.value) {
+    Sortable.create(sortableElement.value, {
+      animation: 150,
+      async onEnd(e) {
+        const newIndex = e.newIndex as number + 1
+        const oldIndex = e.oldIndex as number + 1
+
+        if (todos.value === null) {
+          return false
+        }
+        else {
+          const movedItem = todos.value.splice(oldIndex, 1)[0]
+          todos.value.splice(newIndex, 0, movedItem)
+          await handleMoveTodo(movedItem.id, oldIndex, newIndex)
+        }
+      },
+    })
+  }
+})
+
 const todoSchema = z.object({
-  title: z.string().min(3).max(20),
-  description: z.string().min(1),
+  title: z.string(),
+  description: z.string().optional().or(z.literal('')),
 })
 type TodoSchema = z.output<typeof todoSchema>
 const todoState = ref({
@@ -88,16 +128,18 @@ const isOpen = ref(false)
           </UButton>
         </div>
       </template>
-      <p v-if="!todos || todos.length === 0">
+      <p v-if="!todos || todos.length === 0" ref="sortableElement">
         No Todos available
       </p>
       <template v-else>
-        <div v-for="todo in todos" :key="todo.id" class="grid grid-cols-1 gap-2 py-2 border-b">
-          <div class="flex w-full justify-between">
-            <p>{{ todo.title }}</p>
-            <p>{{ todo.createdAt }}</p>
+        <div ref="sortableElement">
+          <div v-for="todo in todos" :key="todo.id" class="grid grid-cols-1 gap-2 py-2 border-b">
+            <div class="flex w-full justify-between">
+              <p>{{ todo.title }}</p>
+              <p>{{ todo.createdAt }}</p>
+            </div>
+            <p>{{ todo.description }}</p>
           </div>
-          <p>{{ todo.description }}</p>
         </div>
       </template>
     </UCard>

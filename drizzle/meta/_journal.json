@@ -29,6 +29,27 @@
       "when": 1694341548279,
       "tag": "0003_lazy_spirit",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1694369316978,
+      "tag": "0004_nappy_nocturne",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1694369549435,
+      "tag": "0005_glossy_daimon_hellstrom",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1694375135876,
+      "tag": "0006_stiff_random",
+      "breakpoints": true
     }
   ]
 }

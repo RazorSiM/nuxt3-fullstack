@@ -18,7 +18,7 @@ const sql = postgres({
   ...postgresConnectionOptions,
 })
 
-const db = drizzle(sql, { schema: { ...users, ...todos } })
+const db = drizzle(sql, { schema: { ...users, ...todos }, logger: true })
 
 export * from './handlers'
 export * from './schema'
