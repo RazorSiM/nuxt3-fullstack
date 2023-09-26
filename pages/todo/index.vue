@@ -41,19 +41,19 @@ watch(sortableElement, () => {
       animation: 150,
       handle: '.sortable-handler',
       async onEnd(e) {
-        const newIndex = e.newIndex as number + 1
-        const oldIndex = e.oldIndex as number + 1
+        const newIndex = e.newIndex as number
+        const oldIndex = e.oldIndex as number
         if (todos.value === null) {
           return false
         }
         else {
-          const newPosition = todos.value[newIndex - 1].position
-          const oldPosition = todos.value[oldIndex - 1].position
+          const newPosition = todos.value[newIndex].position
+          const oldPosition = todos.value[oldIndex].position
           if (!newPosition || !oldPosition)
             return false
 
-          const movedItem = todos.value.splice(oldIndex - 1, 1)[0]
-          todos.value.splice(newIndex - 1, 0, movedItem)
+          const movedItem = todos.value.splice(oldIndex, 1)[0]
+          todos.value.splice(newIndex, 0, movedItem)
           await handleMoveTodo(movedItem.id, oldPosition, newPosition)
         }
       },
