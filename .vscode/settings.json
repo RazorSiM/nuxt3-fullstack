@@ -45,6 +45,9 @@
     "className",
     "ngClass",
     "ui"
+  ],
+  "cSpell.words": [
+    "todos"
   ]
 
 }

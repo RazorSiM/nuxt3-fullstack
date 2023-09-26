@@ -1,0 +1,1 @@
+ALTER TABLE "todos" ALTER COLUMN "position" SET NOT NULL;

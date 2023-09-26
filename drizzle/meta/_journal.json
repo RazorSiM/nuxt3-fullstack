@@ -50,6 +50,20 @@
       "when": 1694375135876,
       "tag": "0006_stiff_random",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1695752339402,
+      "tag": "0007_mute_vivisector",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1695753227937,
+      "tag": "0008_fuzzy_exiles",
+      "breakpoints": true
     }
   ]
 }

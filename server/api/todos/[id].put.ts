@@ -3,15 +3,27 @@ import { fromZodError } from 'zod-validation-error'
 export default defineEventHandler(async (event) => {
   const authRequest = auth.handleRequest(event)
   const session = await authRequest.validate()
-  // if user is not authenticated, throw an error
+
   if (!session) {
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
     })
   }
-  const body = await readValidatedBody(event, updateTodoPositionSchema.safeParse)
-  // if body is not valid, throw an error
+
+  const id = await getRouterParam(event, 'id')
+  if (!id) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+    })
+  }
+
+  // const body = await readValidatedBody(event, updateTodoSchema.safeParse)
+  const partialBody = await readBody(event)
+  partialBody.id = Number.parseInt(id)
+
+  const body = updateTodoSchema.safeParse(partialBody)
   if (!body.success) {
     const zodError = fromZodError(body.error)
     throw createError({
@@ -19,7 +31,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: zodError.toString(),
     })
   }
-  // if user is not the owner of the todo, throw an error
+
   if (body.data.userId !== session.user.userId) {
     throw createError({
       statusCode: 403,
@@ -28,8 +40,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const res = await updateTodoPosition(body.data)
-    return res
+    const updatedTodo = await updateTodo(body.data)
+    return updatedTodo
   }
   catch (e) {
     if (e instanceof Error) {
