@@ -19,32 +19,40 @@ const isDark = computed({
   },
 })
 
-const navigation = [
-  {
-    name: 'Home',
-    href: '/',
-  },
-  {
-    name: 'User',
-    href: '/user',
-  },
-  {
-    name: 'Todos',
-    href: '/todo',
-  },
-  {
-    name: 'Login',
-    href: '/login',
-  },
-]
+const navigation = computed(() => {
+  return [
+    {
+      name: 'Home',
+      href: '/',
+      show: true,
+    },
+    {
+      name: 'User',
+      href: '/user',
+      show: !!user.value,
+    },
+    {
+      name: 'Todos',
+      href: '/todo',
+      show: !!user.value,
+    },
+    {
+      name: 'Login',
+      href: '/login',
+      show: !user.value,
+    },
+  ]
+})
 </script>
 
 <template>
   <div class="">
     <header class="p-3 max-w-lg mx-auto flex gap-4 justify-center items-center font-bold">
-      <ULink v-for="link in navigation" :key="link.name" :to="link.href" active-class="text-primary">
-        {{ link.name }}
-      </ULink>
+      <template v-for="link in navigation" :key="link.name">
+        <ULink v-if="link.show" :to="link.href" active-class="text-primary">
+          {{ link.name }}
+        </ULink>
+      </template>
       <ClientOnly>
         <UButton
           :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
