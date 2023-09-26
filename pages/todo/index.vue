@@ -47,9 +47,14 @@ watch(sortableElement, () => {
           return false
         }
         else {
+          const newPosition = todos.value[newIndex - 1].position
+          const oldPosition = todos.value[oldIndex - 1].position
+          if (!newPosition || !oldPosition)
+            return false
+
           const movedItem = todos.value.splice(oldIndex - 1, 1)[0]
           todos.value.splice(newIndex - 1, 0, movedItem)
-          await handleMoveTodo(movedItem.id, oldIndex, newIndex)
+          await handleMoveTodo(movedItem.id, oldPosition, newPosition)
         }
       },
     })
