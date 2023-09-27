@@ -1,16 +1,6 @@
 import { selectTodo } from '~/server/utils/database'
 
 export default defineEventHandler(async (event) => {
-  const authRequest = auth.handleRequest(event)
-  const session = await authRequest.validate()
-
-  if (!session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
-
   const id = await getRouterParam(event, 'id')
   if (!id) {
     throw createError({
@@ -27,7 +17,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Not Found',
       })
     }
-    if (todo.userId !== session.user.userId) {
+    if (todo.userId !== event.context.userId) {
       throw createError({
         statusCode: 403,
         statusMessage: 'Forbidden',

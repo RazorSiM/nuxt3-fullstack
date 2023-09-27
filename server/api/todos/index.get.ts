@@ -1,16 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const authRequest = auth.handleRequest(event)
-  const session = await authRequest.validate()
-  // if user is not authenticated, throw an error
-  if (!session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
-
   try {
-    const todos = await selectTodosFromUser(session.user.userId)
+    const todos = await selectTodosFromUser(event.context.userId)
     return todos
   }
   catch (e) {

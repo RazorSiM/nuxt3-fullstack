@@ -1,16 +1,6 @@
 import { fromZodError } from 'zod-validation-error'
 
 export default defineEventHandler(async (event) => {
-  const authRequest = auth.handleRequest(event)
-  const session = await authRequest.validate()
-
-  if (!session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
-
   const id = await getRouterParam(event, 'id')
   if (!id) {
     throw createError({
@@ -19,7 +9,6 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // const body = await readValidatedBody(event, updateTodoSchema.safeParse)
   const partialBody = await readBody(event)
   partialBody.id = Number.parseInt(id)
 
@@ -29,13 +18,6 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: zodError.toString(),
-    })
-  }
-
-  if (body.data.userId !== session.user.userId) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
     })
   }
 

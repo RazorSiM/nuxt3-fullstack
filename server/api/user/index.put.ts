@@ -5,15 +5,7 @@ const usernameSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const authRequest = auth.handleRequest(event)
-  const session = await authRequest.validate()
   const body = await readValidatedBody(event, usernameSchema.safeParse)
-  if (!session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
   if (!body.success) {
     throw createError({
       statusCode: 400,
@@ -22,7 +14,7 @@ export default defineEventHandler(async (event) => {
   }
   else {
     try {
-      const newUser = await modifyUsername(session.user.userId, body.data.username)
+      const newUser = await modifyUsername(event.context.userId, body.data.username)
       return newUser
     }
     catch (e) {
