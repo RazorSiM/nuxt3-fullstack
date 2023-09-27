@@ -18,7 +18,7 @@ export const auth = lucia({
     },
   ),
   middleware: h3(),
-  env: 'DEV',
+  env: config.NODE_ENV === 'production' ? 'PROD' : 'DEV',
   getUserAttributes: (data) => {
     return {
       username: data.username,

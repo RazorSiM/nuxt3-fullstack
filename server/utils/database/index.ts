@@ -5,7 +5,6 @@ import postgres from 'postgres'
 import { todos, users } from './schema'
 
 const config = process.env
-
 const postgresConnectionOptions = {
   host: config.NUXT_POSTGRES_HOST,
   port: Number(config.NUXT_POSTGRES_PORT),
@@ -18,7 +17,7 @@ const sql = postgres({
   ...postgresConnectionOptions,
 })
 
-const db = drizzle(sql, { schema: { ...users, ...todos }, logger: true })
+const db = drizzle(sql, { schema: { ...users, ...todos }, logger: config.NODE_ENV === 'development' })
 
 export * from './handlers'
 export * from './schema'
