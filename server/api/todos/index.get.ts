@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   try {
-    const todos = await selectTodosFromUser(event.context.userId)
+    const todos = await selectTodosFromUser(event.context.session.user.userId)
     return todos
   }
   catch (e) {

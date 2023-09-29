@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="dark:bg-neutral-950 bg-neutral-100 h-screen w-screen overflow-auto">
+  <div class="dark:bg-neutral-950 bg-neutral-100 h-screen w-screen overflow-auto pb-36">
     <Header />
     <main>
       <UContainer>

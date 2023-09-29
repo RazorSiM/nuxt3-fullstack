@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Not Found',
       })
     }
-    if (todo.userId !== event.context.userId) {
+    if (todo.userId !== event.context.session.user.userId) {
       throw createError({
         statusCode: 403,
         statusMessage: 'Forbidden',

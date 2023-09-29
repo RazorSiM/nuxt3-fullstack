@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui/dist/runtime/types/form'
+import type { Session } from 'lucia'
 
 defineOptions({
   name: 'UserView',
@@ -33,13 +34,19 @@ const isUserFormValid = computed(() => {
 
 async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
   try {
-    const response = await $fetch('/api/user', {
+    if (!user.value) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'User not found',
+      })
+    }
+    const response = await $fetch(`/api/users/${user.value.userId}`, {
       method: 'PUT',
       body: {
         username: event.data.username,
       },
     })
-    user.value = { userId: response.id, ...response }
+    user.value = { userId: user.value.userId, ...response }
   }
   catch (error) {
     createError({
@@ -47,6 +54,49 @@ async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
       statusMessage: `Failed to update username: ${error}`,
     })
   }
+}
+
+const sessions = ref<Session[]>([])
+async function getUserSessions() {
+  if (!user.value) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'User not found',
+    })
+  }
+  const response = await $fetch(`/api/users/${user.value.userId}/sessions`, {
+    method: 'GET',
+  }) as Session[]
+  sessions.value = response
+}
+async function createUserSession() {
+  if (!user.value) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'User not found',
+    })
+  }
+  await $fetch(`/api/users/${user.value.userId}/sessions`, {
+    method: 'POST',
+  }) as Session
+  await getUserSessions()
+}
+
+onMounted(async () => {
+  await getUserSessions()
+})
+
+async function invalidateUserSession(sessionId: string) {
+  if (!user.value) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'User not found',
+    })
+  }
+  await $fetch(`/api/users/${user.value.userId}/sessions/${sessionId}`, {
+    method: 'DELETE',
+  })
+  await getUserSessions()
 }
 </script>
 
@@ -73,4 +123,61 @@ async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
       </div>
     </UForm>
   </UCard>
+  <div class="flex gap-5 mt-20">
+    <p class="text-2xl font-bold">
+      Sessions
+    </p>
+    <UButton size="xs" color="green" icon="i-heroicons-plus-circle" @click="createUserSession">
+      Create Session
+    </UButton>
+  </div>
+  <div class="grid grid-cols-3 gap-10 mt-10">
+    <UCard v-for="session in sessions" :key="session.sessionId">
+      <div class="w-full flex justify-end">
+        <UButton color="red" size="xs" square variant="solid" icon="i-heroicons-trash" @click="invalidateUserSession(session.sessionId)" />
+      </div>
+      <div class="flex flex-col gap-4">
+        <div>
+          <p class="font-bold">
+            Session ID
+          </p>
+          <p class="break-words">
+            {{ session.sessionId }}
+          </p>
+        </div>
+        <div>
+          <p class="font-bold">
+            Active Expiration
+          </p>
+          <p>
+            {{ session.activePeriodExpiresAt }}
+          </p>
+        </div>
+        <div>
+          <p class="font-bold">
+            Idle Expiration
+          </p>
+          <p>
+            {{ session.idlePeriodExpiresAt }}
+          </p>
+        </div>
+        <div>
+          <p class="font-bold">
+            State
+          </p>
+          <p>
+            {{ session.state }}
+          </p>
+        </div>
+        <div>
+          <p class="font-bold">
+            Fresh
+          </p>
+          <p>
+            {{ session.fresh }}
+          </p>
+        </div>
+      </div>
+    </UCard>
+  </div>
 </template>

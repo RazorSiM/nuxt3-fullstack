@@ -5,6 +5,13 @@ const usernameSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const userId = getRouterParam(event, 'userId')
+  if (userId !== event.context.session.user.userId) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+    })
+  }
   const body = await readValidatedBody(event, usernameSchema.safeParse)
   if (!body.success) {
     throw createError({
@@ -14,7 +21,7 @@ export default defineEventHandler(async (event) => {
   }
   else {
     try {
-      const newUser = await modifyUsername(event.context.userId, body.data.username)
+      const newUser = await modifyUsername(event.context.session.user.userId, body.data.username)
       return newUser
     }
     catch (e) {

@@ -1,15 +1,24 @@
-export default defineEventHandler(async (event) => {
-  function checkPath(path: string, paths: string[]): boolean {
-    return paths.some(p => path.startsWith(p))
-  }
-  const protectedPaths = [
-    '/api/todos',
-    '/api/user',
-  ]
-  const authRequest = auth.handleRequest(event)
-  const session = await authRequest.validate()
+import type { Session } from 'lucia'
 
+function checkPath(path: string, paths: string[]): boolean {
+  return paths.some(p => path.startsWith(p))
+}
+const protectedPaths = [
+  '/api/todos',
+  '/api/users',
+]
+
+export default defineEventHandler(async (event) => {
+  const authRequest = auth.handleRequest(event)
   if (checkPath(event.path, protectedPaths)) {
+    const authorizationHeader = getHeader(event, 'Authorization')
+    let session: Session | null = null
+
+    if (authorizationHeader)
+      session = await authRequest.validateBearerToken()
+    else
+      session = await authRequest.validate()
+
     if (!session) {
       throw createError({
         statusCode: 401,
@@ -17,7 +26,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     else {
-      event.context.userId = session.user.userId
+      event.context.session = session
     }
   }
 })
