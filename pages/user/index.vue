@@ -45,7 +45,7 @@ async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
       body: {
         username: event.data.username,
       },
-    })
+    }) as User
     user.value = { userId: user.value.userId, ...response }
   }
   catch (error) {
@@ -66,8 +66,8 @@ async function getUserSessions() {
   }
   const response = await $fetch(`/api/users/${user.value.userId}/sessions`, {
     method: 'GET',
-  }) as Session[]
-  sessions.value = response
+  })
+  sessions.value = response as Session[]
 }
 async function createUserSession() {
   if (!user.value) {
@@ -78,7 +78,7 @@ async function createUserSession() {
   }
   await $fetch(`/api/users/${user.value.userId}/sessions`, {
     method: 'POST',
-  }) as Session
+  })
   await getUserSessions()
 }
 
