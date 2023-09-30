@@ -12,7 +12,6 @@ definePageMeta({
   middleware: ['protected'],
 })
 
-const { authenticatedUser } = useUser()
 const { data: todos, refresh } = useFetch('/api/todos', {
   method: 'GET',
 })
@@ -25,7 +24,6 @@ async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: nu
       method: 'PUT',
       body: {
         id: todoId,
-        userId: authenticatedUser.value.userId,
         currentIndex,
         newIndex,
       },
@@ -92,7 +90,6 @@ async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
   const body = {
     title: event.data.title,
     description: event.data.description,
-    userId: authenticatedUser.value.userId,
   }
   try {
     await $fetch('/api/todos', {
@@ -114,7 +111,6 @@ async function handleEditTodo(event: FormSubmitEvent<EditTodoSchema>) {
     title: event.data.title,
     completed: event.data.completed,
     description: event.data.description,
-    userId: authenticatedUser.value.userId,
   }
   try {
     await $fetch(`/api/todos/${event.data.id}`, {

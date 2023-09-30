@@ -9,12 +9,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const partialBody = await readBody(event)
-  partialBody.id = Number.parseInt(id)
+  const userId = event.context.session.user.userId
+  const body = await readBody(event)
+  body.id = Number.parseInt(id)
+  body.userId = userId
 
-  const body = updateTodoSchema.safeParse(partialBody)
-  if (!body.success) {
-    const zodError = fromZodError(body.error)
+  const payload = updateTodoSchema.safeParse(body)
+
+  if (!payload.success) {
+    const zodError = fromZodError(payload.error)
     throw createError({
       statusCode: 400,
       statusMessage: zodError.toString(),
@@ -22,7 +25,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const updatedTodo = await updateTodo(body.data)
+    const updatedTodo = await updateTodo(payload.data)
     return updatedTodo
   }
   catch (e) {

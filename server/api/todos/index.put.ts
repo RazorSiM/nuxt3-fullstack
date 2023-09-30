@@ -1,10 +1,14 @@
 import { fromZodError } from 'zod-validation-error'
 
 export default defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, updateTodoPositionSchema.safeParse)
+  const userId = event.context.session.user.userId
+  const body = await readBody(event)
+  body.userId = userId
+
+  const payload = await updateTodoPositionSchema.safeParse(body)
   // if body is not valid, throw an error
-  if (!body.success) {
-    const zodError = fromZodError(body.error)
+  if (!payload.success) {
+    const zodError = fromZodError(payload.error)
     throw createError({
       statusCode: 400,
       statusMessage: zodError.toString(),
@@ -12,7 +16,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const res = await updateTodoPosition(body.data)
+    const res = await updateTodoPosition(payload.data)
     return res
   }
   catch (e) {
