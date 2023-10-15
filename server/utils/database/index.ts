@@ -5,17 +5,9 @@ import postgres from 'postgres'
 import { todos, users } from './schema'
 
 const config = process.env
-const postgresConnectionOptions = {
-  host: config.NUXT_POSTGRES_HOST,
-  port: Number(config.NUXT_POSTGRES_PORT),
-  user: config.NUXT_POSTGRES_USER,
-  password: config.NUXT_POSTGRES_PASSWORD,
-  database: config.NUXT_POSTGRES_DATABASE,
-}
+const connectionString = `postgresql://${config.NUXT_POSTGRES_USER}:${config.NUXT_POSTGRES_PASSWORD}@${config.NUXT_POSTGRES_HOST}:${config.NUXT_POSTGRES_PORT}/${config.NUXT_POSTGRES_DATABASE}`
 
-const sql = postgres({
-  ...postgresConnectionOptions,
-})
+const sql = postgres(connectionString)
 
 const db = drizzle(sql, { schema: { ...users, ...todos }, logger: config.NODE_ENV === 'development' })
 

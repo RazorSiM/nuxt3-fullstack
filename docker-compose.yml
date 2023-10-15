@@ -5,7 +5,7 @@ services:
     image: postgres
     restart: always
     ports:
-      - 5432:5432
+      - '${NUXT_POSTGRES_PORT:-5432}:5432'
     environment:
       POSTGRES_PASSWORD: $NUXT_POSTGRES_PASSWORD
       POSTGRES_USER: $NUXT_POSTGRES_USER
