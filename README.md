@@ -64,7 +64,7 @@ degit https://github.com/RazorSiM/nuxt3-fullstack my-project
 # or
 git clone https://github.com/RazorSiM/nuxt3-fullstack
 ```
-    
+
 Then, install the dependencies:
 ```bash
 cd my-project
