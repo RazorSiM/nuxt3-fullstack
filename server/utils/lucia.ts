@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import process from 'node:process'
 import { lucia } from 'lucia'
 import { h3 } from 'lucia/middleware'
