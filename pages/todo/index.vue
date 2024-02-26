@@ -127,10 +127,16 @@ async function handleEditTodo(event: FormSubmitEvent<EditTodoSchema>) {
   }
 }
 
+interface TodoEditable {
+  id: number
+  title: string
+  description: string | undefined
+  completed: boolean
+}
 const isOpen = ref(false)
 const isEditOpen = ref(false)
-const todoToEditState = ref({
-  id: null,
+const todoToEditState = ref<TodoEditable>({
+  id: 0,
   title: '',
   description: '',
   completed: false,
@@ -144,9 +150,18 @@ const isEditTodoFormValid = computed(() => {
     return false
   }
 })
-function openEditModal(todo: Todo) {
+function openEditModal(id: number) {
   isEditOpen.value = true
-  todoToEditState.value = todo
+  const todo = todos.value?.find(todo => todo.id === id)
+  if (!todo)
+    return
+
+  todoToEditState.value = {
+    id: todo.id,
+    title: todo.title,
+    description: todo.description ?? '',
+    completed: todo.completed,
+  }
 }
 
 async function handleDeleteTodo(id: number) {
@@ -242,7 +257,9 @@ async function handleDeleteTodo(id: number) {
               <p>{{ todo.description }}</p>
             </div>
             <div class="flex gap-2">
-              <UButton color="primary" square size="xs" variant="ghost" icon="i-heroicons-pencil" class="w-fit" @click="openEditModal(todo)" />
+              <UButton
+                color="primary" square size="xs" variant="ghost" icon="i-heroicons-pencil" class="w-fit" @click="openEditModal(todo.id)"
+              />
               <UButton color="red" square size="xs" variant="ghost" icon="i-heroicons-trash" class="w-fit" @click="handleDeleteTodo(todo.id)" />
             </div>
           </div>

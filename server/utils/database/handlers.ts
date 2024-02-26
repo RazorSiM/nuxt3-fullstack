@@ -31,8 +31,13 @@ export async function modifyUsername(userId: string, username: string): Promise<
   return result[0]
 }
 
-export async function deleteTodo(id: number) {
-  const result = await db.update(todos).set({ deleted: true }).where(eq(todos.id, id)).returning()
+export async function deleteTodoFromUser(id: number, userId: string) {
+  const result = await db.update(todos).set({ deleted: true, deletedAt: new Date() }).where(
+    and(
+      eq(todos.id, id),
+      eq(todos.userId, userId),
+    ),
+  ).returning()
   return result[0]
 }
 export async function selectTodo(id: number) {
@@ -40,7 +45,16 @@ export async function selectTodo(id: number) {
   return result[0]
 }
 
-export async function selectTodosFromUser(userId: string) {
+export interface SelectTodoFromUserReturn {
+  id: number
+  title: string
+  description: string | null
+  completed: boolean
+  position: number | null
+  createdAt: Date
+  updatedAt: Date
+}
+export async function selectTodosFromUser(userId: string): Promise<SelectTodoFromUserReturn[]> {
   const prepared = db
     .select({ id: todos.id, title: todos.title, description: todos.description, completed: todos.completed, position: todos.position, createdAt: todos.createdAt, updatedAt: todos.updatedAt })
     .from(todos)
@@ -123,7 +137,20 @@ export const updateTodoSchema = z.object({
   completed: z.boolean().optional(),
 })
 export type UpdateTodoSchema = z.infer<typeof updateTodoSchema>
-export async function updateTodo(todo: UpdateTodoSchema) {
-  const result = db.update(todos).set({ ...todo, updatedAt: new Date() }).where(eq(todos.id, todo.id)).returning()
-  return result
+export async function updateTodo(todo: UpdateTodoSchema, userId: string) {
+  try {
+    const result = db.update(todos).set({ ...todo, updatedAt: new Date() }).where(
+      and(
+        eq(todos.id, todo.id),
+        eq(todos.userId, userId),
+      ),
+    ).returning()
+    return result
+  }
+  catch (e) {
+    if (e instanceof Error)
+      throw new Error(e.message)
+    else
+      throw new Error('Internal Server Error: Unknown error occurred')
+  }
 }
