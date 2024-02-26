@@ -1,6 +1,5 @@
-import { selectTodo } from '~/server/utils/database'
-
 export default defineEventHandler(async (event) => {
+  const userId = event.context.session.user.userId
   const id = await getRouterParam(event, 'id')
   if (!id) {
     throw createError({
@@ -10,37 +9,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const todo = await selectTodo(Number.parseInt(id))
-    if (!todo) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Not Found',
-      })
-    }
-    if (todo.userId !== event.context.session.user.userId) {
-      throw createError({
-        statusCode: 403,
-        statusMessage: 'Forbidden',
-      })
-    }
-  }
-  catch (e) {
-    if (e instanceof Error) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: `Internal Server Error: ${e.message}`,
-      })
-    }
-    else {
-      throw createError({
-        statusCode: 500,
-        statusMessage: `Internal Server Error: ${e}`,
-      })
-    }
-  }
-
-  try {
-    const deletedTodo = await deleteTodo(Number.parseInt(id))
+    const deletedTodo = await deleteTodoFromUser(Number.parseInt(id), userId)
     return deletedTodo
   }
   catch (e) {

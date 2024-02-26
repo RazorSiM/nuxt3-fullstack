@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const updatedTodo = await updateTodo(payload.data)
+    const updatedTodo = await updateTodo(payload.data, userId)
     return updatedTodo
   }
   catch (e) {
