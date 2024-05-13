@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { z } from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui/dist/runtime/types/form'
 import Sortable from 'sortablejs'
 import { format, parseISO } from 'date-fns'
+import type { FormSubmitEvent } from '#ui/types'
 
 defineOptions({
   name: 'TodoView',

@@ -3,20 +3,32 @@ import { createRouter, defineEventHandler, useBase } from 'h3'
 const router = createRouter()
 
 router.get('/:userId/sessions', defineEventHandler(async (event) => {
+  if (!event.context.user) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    })
+  }
   const userId = getRouterParam(event, 'userId')
-  if (userId !== event.context.session?.user?.userId) {
+  if (userId !== event.context.user?.id) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
     })
   }
   else {
-    const sessions = await auth.getAllUserSessions(event.context.session.user.userId)
+    const sessions = await lucia.getUserSessions(event.context.user.id)
     return sessions
   }
 }))
 
 router.post('/:userId/sessions', defineEventHandler(async (event) => {
+  if (!event.context.user) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    })
+  }
   const userId = getRouterParam(event, 'userId')
   if (!userId) {
     throw createError({
@@ -24,14 +36,14 @@ router.post('/:userId/sessions', defineEventHandler(async (event) => {
       statusMessage: 'Bad Request',
     })
   }
-  if (userId !== event.context.session?.user?.userId) {
+  if (userId !== event.context.user?.id) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
     })
   }
   else {
-    const session = await auth.createSession({ userId, attributes: {} })
+    const session = await lucia.createSession(userId, {})
     return session
   }
 }))
@@ -45,14 +57,20 @@ router.delete('/:userId/sessions/:sessionId', defineEventHandler(async (event) =
       statusMessage: 'Bad Request',
     })
   }
-  if (userId !== event.context.session?.user?.userId) {
+  if (!event.context.user || !event.context.session) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    })
+  }
+  if (userId !== event.context.user.id) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
     })
   }
   else {
-    await auth.invalidateSession(sessionId)
+    await lucia.invalidateSession(sessionId)
     return {
       success: true,
     }

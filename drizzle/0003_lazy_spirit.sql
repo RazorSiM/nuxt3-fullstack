@@ -1,1 +1,0 @@
-ALTER TABLE "todos" ALTER COLUMN "description" SET DEFAULT '';

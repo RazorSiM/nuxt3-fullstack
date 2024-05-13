@@ -1,5 +1,12 @@
 export default defineEventHandler(async (event) => {
-  const userId = event.context.session.user.userId
+  if (!event.context.session || !event.context.user) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    })
+  }
+  const userId = event.context.user?.id
+
   const id = await getRouterParam(event, 'id')
   if (!id) {
     throw createError({

@@ -1,21 +1,39 @@
 import { relations } from 'drizzle-orm'
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
-import { bigint, boolean, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, integer, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
-/**
- * This schema is taken from https://v2.lucia-auth.com/database-adapters/pg
- */
-
-export const users = pgTable('auth_user', {
+export const userTable = pgTable('user', {
   id: text('id').primaryKey(),
-  username: text('username').unique().notNull(),
-  email: text('email').unique().notNull(),
+  username: text('username').notNull().unique(),
+  email: text('email').notNull().unique(),
 })
-export const todos = pgTable('todos', {
+
+export const sessionTable = pgTable('session', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => userTable.id),
+  expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
+})
+
+export const oauthAccountTable = pgTable('oauth_account', {
+  providerId: text('provider_id').notNull(),
+  providerUserId: text('provider_user_id').notNull(),
+  userId: text('user_id').notNull().references(() => userTable.id),
+}, (table) => {
+  return {
+    pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
+  }
+})
+
+export const todoTable = pgTable('todo', {
   id: serial('id').primaryKey(),
   position: integer('position'),
-  userId: text('user_id').references(() => users.id).notNull(),
+  userId: text('user_id').references(() => userTable.id).notNull(),
   title: text('title').notNull().unique(),
   description: text('description'),
   completed: boolean('completed').notNull().default(false),
@@ -25,39 +43,22 @@ export const todos = pgTable('todos', {
   deletedAt: timestamp('deleted_at'),
 })
 
-export const todoRelations = relations(todos, ({ one }) => ({
-  user: one(users, {
-    fields: [todos.userId],
-    references: [users.id],
+export const todoRelations = relations(todoTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [todoTable.userId],
+    references: [userTable.id],
   }),
 }))
 
-export type Todo = InferSelectModel<typeof todos>
-export type TodoInsert = InferInsertModel<typeof todos>
+export type Todo = InferSelectModel<typeof todoTable>
+export type TodoInsert = InferInsertModel<typeof todoTable>
 
-export const insertTodoSchema = createInsertSchema(todos)
-export const selectTodoSchema = createSelectSchema(todos)
+export const insertTodoSchema = createInsertSchema(todoTable)
+export const selectTodoSchema = createSelectSchema(todoTable)
 
-export const usersRelations = relations(users, ({ many }) => ({
-  todo: many(todos),
+export const usersRelations = relations(userTable, ({ many }) => ({
+  todo: many(todoTable),
 }))
 
-export const key = pgTable('auth_key', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id),
-  hashedPassword: text('hashed_password'),
-})
-
-export const session = pgTable('auth_session', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id),
-  activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
-  idleExpires: bigint('idle_expires', { mode: 'number' }).notNull(),
-})
-
-export type User = InferSelectModel<typeof users>
-export type UserInsert = InferInsertModel<typeof users>
+export type User = InferSelectModel<typeof userTable>
+export type UserInsert = InferInsertModel<typeof userTable>
