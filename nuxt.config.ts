@@ -10,13 +10,17 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@nuxt/ui'],
+  modules: ['@pinia/nuxt', '@nuxt/ui', '@nuxt/eslint'],
   ui: {
     icons: 'all',
   },
-  nitro: {
-    experimental: {
-      openAPI: true,
+  eslint: {
+    config: {
+      stylistic: {
+        indent: 2,
+        semi: false,
+        quotes: 'single',
+      },
     },
   },
   runtimeConfig: {

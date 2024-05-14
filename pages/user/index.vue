@@ -91,70 +91,123 @@ function cardClasses(session: Session, sessionCookie: string | null | undefined)
 </script>
 
 <template>
-  <UCard class="mt-20 max-w-lg mx-auto">
-    <template #header>
-      Profile
-    </template>
-
-    <UForm :schema="userSchema" :state="userState" @submit="handleUpdateUsername">
-      <div class="grid grid-cols-1 gap-5">
-        <UFormGroup label="User ID" description="This is your User ID" hint="Not Editable">
-          <UInput icon="i-heroicons-hashtag" :value="authenticatedUser.id" disabled />
-        </UFormGroup>
-        <UFormGroup label="Email" description="This is your E-Mail" hint="Not Editable">
-          <UInput icon="i-heroicons-envelope" :value="authenticatedUser.email" disabled />
-        </UFormGroup>
-        <UFormGroup name="username" label="Username" description="This is your username" required>
-          <UInput v-model="userState.username" icon="i-heroicons-user" />
-        </UFormGroup>
-        <UButton :disabled="!isUserFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
-          Update Username
-        </UButton>
-      </div>
-    </UForm>
-  </UCard>
-  <div class="flex gap-5 mt-20">
-    <p class="text-2xl font-bold">
-      Sessions
-    </p>
-    <UButton size="xs" color="green" icon="i-heroicons-plus-circle" @click="createUserSession">
-      Create Session
-    </UButton>
-  </div>
-  <div class="grid grid-cols-3 gap-10 mt-10">
-    <UCard v-for="(session) in sessions" :key="session.id" :ui="cardClasses(session, sessionCookie)">
+  <div>
+    <UCard class="mt-20 max-w-lg mx-auto">
       <template #header>
-        <div class="flex items-center justify-between">
-          <p>{{ isCurrentSession(session, sessionCookie) ? 'Current Session' : 'Api Session' }}</p>
-          <UButton :disabled="isCurrentSession(session, sessionCookie)" color="red" size="xs" square variant="solid" icon="i-heroicons-trash" @click="invalidateUserSession(session.id)" />
-        </div>
+        Profile
       </template>
-      <div class="flex flex-col gap-4">
-        <div>
-          <p class="font-bold">
-            Session ID
-          </p>
-          <p class="break-words">
-            {{ session.id }}
-          </p>
+
+      <UForm
+        :schema="userSchema"
+        :state="userState"
+        @submit="handleUpdateUsername"
+      >
+        <div class="grid grid-cols-1 gap-5">
+          <UFormGroup
+            label="User ID"
+            description="This is your User ID"
+            hint="Not Editable"
+          >
+            <UInput
+              icon="i-heroicons-hashtag"
+              :value="authenticatedUser.id"
+              disabled
+            />
+          </UFormGroup>
+          <UFormGroup
+            label="Email"
+            description="This is your E-Mail"
+            hint="Not Editable"
+          >
+            <UInput
+              icon="i-heroicons-envelope"
+              :value="authenticatedUser.email"
+              disabled
+            />
+          </UFormGroup>
+          <UFormGroup
+            name="username"
+            label="Username"
+            description="This is your username"
+            required
+          >
+            <UInput
+              v-model="userState.username"
+              icon="i-heroicons-user"
+            />
+          </UFormGroup>
+          <UButton
+            :disabled="!isUserFormValid"
+            color="green"
+            icon="i-heroicons-pencil-square"
+            class="w-fit"
+            type="submit"
+          >
+            Update Username
+          </UButton>
         </div>
-        <div>
-          <p class="font-bold">
-            Active Expiration
-          </p>
-          <p>
-            {{ session.expiresAt }}
-          </p>
-        </div>
-        <div>
-          <p class="font-bold">
-            Fresh
-          </p>
-          <p>
-            {{ session.fresh }}
-          </p>
-        </div>
-      </div>
+      </UForm>
     </UCard>
+    <div class="flex gap-5 mt-20">
+      <p class="text-2xl font-bold">
+        Sessions
+      </p>
+      <UButton
+        size="xs"
+        color="green"
+        icon="i-heroicons-plus-circle"
+        @click="createUserSession"
+      >
+        Create Session
+      </UButton>
+    </div>
+    <div class="grid grid-cols-3 gap-10 mt-10">
+      <UCard
+        v-for="(session) in sessions"
+        :key="session.id"
+        :ui="cardClasses(session, sessionCookie)"
+      >
+        <template #header>
+          <div class="flex items-center justify-between">
+            <p>{{ isCurrentSession(session, sessionCookie) ? 'Current Session' : 'Api Session' }}</p>
+            <UButton
+              :disabled="isCurrentSession(session, sessionCookie)"
+              color="red"
+              size="xs"
+              square
+              variant="solid"
+              icon="i-heroicons-trash"
+              @click="invalidateUserSession(session.id)"
+            />
+          </div>
+        </template>
+        <div class="flex flex-col gap-4">
+          <div>
+            <p class="font-bold">
+              Session ID
+            </p>
+            <p class="break-words">
+              {{ session.id }}
+            </p>
+          </div>
+          <div>
+            <p class="font-bold">
+              Active Expiration
+            </p>
+            <p>
+              {{ session.expiresAt }}
+            </p>
+          </div>
+          <div>
+            <p class="font-bold">
+              Fresh
+            </p>
+            <p>
+              {{ session.fresh }}
+            </p>
+          </div>
+        </div>
+      </UCard>
+    </div>
   </div>
 </template>

@@ -48,8 +48,15 @@ const navigation = computed(() => {
 <template>
   <div class="">
     <header class="p-3 max-w-lg mx-auto flex gap-4 justify-center items-center font-bold">
-      <template v-for="link in navigation" :key="link.name">
-        <ULink v-if="link.show" :to="link.href" active-class="text-primary">
+      <template
+        v-for="link in navigation"
+        :key="link.name"
+      >
+        <ULink
+          v-if="link.show"
+          :to="link.href"
+          active-class="text-primary"
+        >
           {{ link.name }}
         </ULink>
       </template>
@@ -65,7 +72,14 @@ const navigation = computed(() => {
           <div class="w-8 h-8" />
         </template>
       </ClientOnly>
-      <UButton v-if="user" icon="i-heroicons-arrow-left-on-rectangle-solid" square variant="ghost" color="red" @click="handleLogout" />
+      <UButton
+        v-if="user"
+        icon="i-heroicons-arrow-left-on-rectangle-solid"
+        square
+        variant="ghost"
+        color="red"
+        @click="handleLogout"
+      />
     </header>
   </div>
 </template>

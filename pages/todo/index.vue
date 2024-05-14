@@ -183,19 +183,42 @@ async function handleDeleteTodo(id: number) {
 <template>
   <div>
     <USlideover v-model="isOpen">
-      <UCard class="flex flex-col flex-1" :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+      <UCard
+        class="flex flex-col flex-1"
+        :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }"
+      >
         <template #header>
           Todos
         </template>
-        <UForm :schema="todoSchema" :state="todoState" @submit="handleCreateTodo">
+        <UForm
+          :schema="todoSchema"
+          :state="todoState"
+          @submit="handleCreateTodo"
+        >
           <div class="grid grid-cols-1 gap-5">
-            <UFormGroup label="Title" description="Todo Title" name="title" required>
+            <UFormGroup
+              label="Title"
+              description="Todo Title"
+              name="title"
+              required
+            >
               <UInput v-model="todoState.title" />
             </UFormGroup>
-            <UFormGroup name="description" label="Description" description="Todo content" required>
+            <UFormGroup
+              name="description"
+              label="Description"
+              description="Todo content"
+              required
+            >
               <UTextarea v-model="todoState.description" />
             </UFormGroup>
-            <UButton :disabled="!isTodoFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
+            <UButton
+              :disabled="!isTodoFormValid"
+              color="green"
+              icon="i-heroicons-pencil-square"
+              class="w-fit"
+              type="submit"
+            >
               Add Todo
             </UButton>
           </div>
@@ -203,22 +226,48 @@ async function handleDeleteTodo(id: number) {
       </UCard>
     </USlideover>
     <USlideover v-model="isEditOpen">
-      <UCard class="flex flex-col flex-1" :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+      <UCard
+        class="flex flex-col flex-1"
+        :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }"
+      >
         <template #header>
           Todos
         </template>
-        <UForm :schema="editTodoSchema" :state="todoToEditState" @submit="handleEditTodo">
+        <UForm
+          :schema="editTodoSchema"
+          :state="todoToEditState"
+          @submit="handleEditTodo"
+        >
           <div class="grid grid-cols-1 gap-5">
-            <UFormGroup label="Title" description="Todo Title" name="title" required>
+            <UFormGroup
+              label="Title"
+              description="Todo Title"
+              name="title"
+              required
+            >
               <UInput v-model="todoToEditState.title" />
             </UFormGroup>
-            <UFormGroup name="description" label="Description" description="Todo content" required>
+            <UFormGroup
+              name="description"
+              label="Description"
+              description="Todo content"
+              required
+            >
               <UTextarea v-model="todoToEditState.description" />
             </UFormGroup>
-            <UFormGroup name="completed" description="Completed">
+            <UFormGroup
+              name="completed"
+              description="Completed"
+            >
               <UToggle v-model="todoToEditState.completed" />
             </UFormGroup>
-            <UButton :disabled="!isEditTodoFormValid" color="green" icon="i-heroicons-pencil-square" class="w-fit" type="submit">
+            <UButton
+              :disabled="!isEditTodoFormValid"
+              color="green"
+              icon="i-heroicons-pencil-square"
+              class="w-fit"
+              type="submit"
+            >
               Edit Todo
             </UButton>
           </div>
@@ -230,24 +279,49 @@ async function handleDeleteTodo(id: number) {
       <template #header>
         <div class="flex justify-between items-center">
           <p>Todos</p>
-          <UButton color="green" icon="i-heroicons-plus" @click="isOpen = true">
+          <UButton
+            color="green"
+            icon="i-heroicons-plus"
+            @click="isOpen = true"
+          >
             New Todo
           </UButton>
         </div>
       </template>
-      <p v-if="!todos || todos.length === 0" ref="sortableElement">
+      <p
+        v-if="!todos || todos.length === 0"
+        ref="sortableElement"
+      >
         No Todos available
       </p>
       <template v-else>
-        <div ref="sortableElement" class="divide-y dark:divide-gray-800">
-          <div v-for="todo in todos" :key="todo.id" class="flex items-start justify-between gap-x-6 py-5">
-            <UButton color="white" square variant="ghost" icon="i-heroicons-bars-3" class="sortable-handler" />
+        <div
+          ref="sortableElement"
+          class="divide-y dark:divide-gray-800"
+        >
+          <div
+            v-for="todo in todos"
+            :key="todo.id"
+            class="flex items-start justify-between gap-x-6 py-5"
+          >
+            <UButton
+              color="white"
+              square
+              variant="ghost"
+              icon="i-heroicons-bars-3"
+              class="sortable-handler"
+            />
             <div class="min-w-0 flex-grow">
               <div class="flex items-center gap-x-3">
                 <p class="text-sm font-semibold leading-6">
                   {{ todo.title }}
                 </p>
-                <UBadge :color="todo.completed === true ? 'green' : 'amber'" variant="soft" size="xs" :label="todo.completed ? 'Completed' : 'In Progress'" />
+                <UBadge
+                  :color="todo.completed === true ? 'green' : 'amber'"
+                  variant="soft"
+                  size="xs"
+                  :label="todo.completed ? 'Completed' : 'In Progress'"
+                />
               </div>
               <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
                 <p class="whitespace-nowrap">
@@ -258,9 +332,23 @@ async function handleDeleteTodo(id: number) {
             </div>
             <div class="flex gap-2">
               <UButton
-                color="primary" square size="xs" variant="ghost" icon="i-heroicons-pencil" class="w-fit" @click="openEditModal(todo.id)"
+                color="primary"
+                square
+                size="xs"
+                variant="ghost"
+                icon="i-heroicons-pencil"
+                class="w-fit"
+                @click="openEditModal(todo.id)"
               />
-              <UButton color="red" square size="xs" variant="ghost" icon="i-heroicons-trash" class="w-fit" @click="handleDeleteTodo(todo.id)" />
+              <UButton
+                color="red"
+                square
+                size="xs"
+                variant="ghost"
+                icon="i-heroicons-trash"
+                class="w-fit"
+                @click="handleDeleteTodo(todo.id)"
+              />
             </div>
           </div>
         </div>

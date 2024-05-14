@@ -8,5 +8,3 @@ pre-commit:
   commands:
     lint-check:
       run: pnpm eslint {staged_files}
-    lint-fix:
-      run: pnpm eslint {staged_files} --fix

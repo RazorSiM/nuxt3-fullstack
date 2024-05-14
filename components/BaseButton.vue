@@ -14,7 +14,10 @@ const colorToClass = new Map([
 </script>
 
 <template>
-  <button :class="colorToClass.get(props.color)" class="transition rounded px-2 py-1 w-full">
+  <button
+    :class="colorToClass.get(props.color)"
+    class="transition rounded px-2 py-1 w-full"
+  >
     <slot />
   </button>
 </template>
