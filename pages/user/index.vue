@@ -10,6 +10,8 @@ defineOptions({
 definePageMeta({
   middleware: ['protected'],
 })
+const config = useRuntimeConfig()
+const sessionCookie = useCookie(config.public.sessionCookieName)
 
 const { user, authenticatedUser } = useUser()
 
@@ -74,6 +76,18 @@ async function invalidateUserSession(sessionId: string) {
   })
   await getUserSessions()
 }
+
+function isCurrentSession(session: Session, sessionCookie: string | null | undefined) {
+  return session.id === sessionCookie
+}
+function cardClasses(session: Session, sessionCookie: string | null | undefined) {
+  if (isCurrentSession(session, sessionCookie)) {
+    return {
+      ring: 'ring-green-200 dark:ring-green-200',
+    }
+  }
+  return {}
+}
 </script>
 
 <template>
@@ -108,10 +122,13 @@ async function invalidateUserSession(sessionId: string) {
     </UButton>
   </div>
   <div class="grid grid-cols-3 gap-10 mt-10">
-    <UCard v-for="session in sessions" :key="session.id">
-      <div class="w-full flex justify-end">
-        <UButton color="red" size="xs" square variant="solid" icon="i-heroicons-trash" @click="invalidateUserSession(session.id)" />
-      </div>
+    <UCard v-for="(session) in sessions" :key="session.id" :ui="cardClasses(session, sessionCookie)">
+      <template #header>
+        <div class="flex items-center justify-between">
+          <p>{{ isCurrentSession(session, sessionCookie) ? 'Current Session' : 'Api Session' }}</p>
+          <UButton :disabled="isCurrentSession(session, sessionCookie)" color="red" size="xs" square variant="solid" icon="i-heroicons-trash" @click="invalidateUserSession(session.id)" />
+        </div>
+      </template>
       <div class="flex flex-col gap-4">
         <div>
           <p class="font-bold">

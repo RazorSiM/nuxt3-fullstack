@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const state = generateState()
-  const url = await discordAuthProvider.createAuthorizationURL(state)
+  const url = await discordAuthProvider.createAuthorizationURL(state, { scopes: ['identify', 'email'] })
 
   setCookie(event, 'discord_oauth_state', state, {
     path: '/',

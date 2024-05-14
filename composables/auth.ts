@@ -1,6 +1,11 @@
-import type { User } from 'lucia'
+import type { UserId } from 'lucia'
 
 export function useUser() {
+  interface User {
+    username: string
+    email: string
+    id: UserId
+  }
   const user = useState<User | null>('user', () => null)
   const authenticatedUser = computed(() => {
     if (!user.value)

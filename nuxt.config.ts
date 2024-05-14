@@ -20,17 +20,18 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    public: {},
+    public: {
+      sessionCookieName: '',
+    },
     postgresPassword: '',
     postgresUser: '',
     postgresDatabase: '',
     postgresHost: '',
     postgresPort: '',
-    authSecret: '',
     discordClientId: '',
     discordClientSecret: '',
-    discordRedirectUri: '',
     githubClientId: '',
     githubClientSecret: '',
+    origin: '',
   },
 })

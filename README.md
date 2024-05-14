@@ -69,3 +69,19 @@ Finally, run Nuxt:
 ```bash
 pnpm dev
 ```
+
+## Setup OAuth
+This project supports OAuth via Discord and Github. To set it up, you need to create an OAuth application on the respective platforms.
+
+### Discord
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
+2. Create a new application.
+3. Go to the OAuth2 section.
+4. Add `http://localhost:3000/auth/discord/callback` as a redirect URL.
+5. Copy the client ID and client secret to the `.env` file.
+
+### Github
+1. Go to the [Github Developer Settings/OAuth Apps](https://github.com/settings/developers)
+2. Create a new OAuth App.
+3. Add `http://localhost:3000/auth/github/callback` as a callback URL.
+4. Copy the client ID and client secret to the `.env` file.

@@ -1,5 +1,4 @@
 import { OAuth2RequestError } from 'arctic'
-import { createOauthAccount } from '~~/server/utils/database/handlers'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -48,32 +47,14 @@ export default defineEventHandler(async (event) => {
         message: 'Primary email address is not verified.',
       })
     }
-    // check if user exists in the database
-    const existingUser = await selectUserByEmail(primaryEmail.email)
+    await authenticateOauthUser({
+      providerName: 'github',
+      providerUserEmail: primaryEmail.email,
+      providerUsername: githubUser.login,
+      providerUserId: githubUser.id,
+    }, event)
 
-    if (existingUser) {
-      // check if the user has an existing oauth account
-      const existingOauthAccount = await getExistingOauthAccount('github', existingUser.id)
-      if (!existingOauthAccount) {
-        // if the user already exists, create an oauth account with the user id and github provider info
-        await createOauthAccount('github', githubUser.id, existingUser.id)
-      }
-      // create a session for the user
-      const session = await lucia.createSession(existingUser.id, {})
-      // create the session cookie
-      const sessionCookie = lucia.createSessionCookie(session.id)
-      // set the session cookie
-      setCookie(event, sessionCookie.name, sessionCookie.value)
-      return sendRedirect(event, '/user')
-    }
-    else {
-      const user = await createUser(githubUser.login, primaryEmail.email)
-      await createOauthAccount('github', githubUser.id, user.id)
-      const session = await lucia.createSession(user.id, {})
-      const sessionCookie = lucia.createSessionCookie(session.id)
-      setCookie(event, sessionCookie.name, sessionCookie.value)
-      return sendRedirect(event, '/user')
-    }
+    return sendRedirect(event, '/user')
   }
   catch (e) {
     if (e instanceof OAuth2RequestError && e.message === 'bad_verification_code') {
