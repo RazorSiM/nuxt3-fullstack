@@ -2,7 +2,7 @@
 const { user } = useUser()
 
 async function handleLogout() {
-  await $fetch('/api/logout', {
+  await $fetch('/logout', {
     method: 'POST',
     redirect: 'manual',
   })

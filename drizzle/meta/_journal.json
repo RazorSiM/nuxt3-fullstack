@@ -1,68 +1,12 @@
 {
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1692197178713,
-      "tag": "0000_gifted_gargoyle",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1694209030860,
-      "tag": "0001_zippy_mister_fear",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1694341518985,
-      "tag": "0002_sleepy_forgotten_one",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1694341548279,
-      "tag": "0003_lazy_spirit",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1694369316978,
-      "tag": "0004_nappy_nocturne",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1694369549435,
-      "tag": "0005_glossy_daimon_hellstrom",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "5",
-      "when": 1694375135876,
-      "tag": "0006_stiff_random",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "5",
-      "when": 1695752339402,
-      "tag": "0007_mute_vivisector",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "5",
-      "when": 1695753227937,
-      "tag": "0008_fuzzy_exiles",
+      "version": "6",
+      "when": 1715449371459,
+      "tag": "0000_rich_tombstone",
       "breakpoints": true
     }
   ]

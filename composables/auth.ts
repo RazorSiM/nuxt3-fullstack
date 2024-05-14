@@ -1,15 +1,17 @@
-import type { User } from 'lucia'
+import type { UserId } from 'lucia'
 
 export function useUser() {
+  interface User {
+    username: string
+    email: string
+    id: UserId
+  }
   const user = useState<User | null>('user', () => null)
   const authenticatedUser = computed(() => {
-    const userValue = unref(user)
-    if (!userValue) {
-      throw createError(
-        'useAuthenticatedUser() can only be used in protected pages',
-      )
-    }
-    return userValue
+    if (!user.value)
+      throw createError('authenticatedUser can only be used in protected pages')
+
+    return user.value
   })
   return {
     user,

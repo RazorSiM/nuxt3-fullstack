@@ -7,7 +7,7 @@ if (user.value)
   await navigateTo('/user') // redirect to profile page
 
 function loginTo(provider: string) {
-  window.location.href = `/api/login/${provider}`
+  window.location.href = `/auth/${provider}`
 }
 
 const logins = [

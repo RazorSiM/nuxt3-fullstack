@@ -1,47 +1,87 @@
 import { and, asc, eq, gte, lte, ne, sql } from 'drizzle-orm'
 import { z } from 'zod'
+import { generateIdFromEntropySize } from 'lucia'
 import type { User } from './schema'
-import { todos, users } from './schema'
+import { oauthAccountTable, todoTable, userTable } from './schema'
 import { db } from './index'
 
-export async function selectUserByEmail(email: string): Promise<User> {
-  const prepared = db
-    .select()
-    .from(users)
-    .where(eq(users.email, sql.placeholder('email')))
-    .prepare('selectUserByEmail')
-
-  const result = await prepared.execute({ email })
+export async function createOauthAccount(providerId: string, providerUserId: string, userId: string) {
+  const result = await db.insert(oauthAccountTable).values({ providerId, providerUserId, userId })
   return result[0]
 }
 
-export async function selectUserByID(id: string): Promise<User> {
+export async function getExistingOauthAccount(providerId: string, userId: string) {
   const prepared = db
     .select()
-    .from(users)
-    .where(eq(users.id, sql.placeholder('id')))
+    .from(oauthAccountTable)
+    .where(
+      and(
+        eq(oauthAccountTable.providerId, sql.placeholder('providerId')),
+        eq(oauthAccountTable.userId, sql.placeholder('userId')),
+      ),
+    )
+    .prepare('getExistingOauthAccount')
+
+  const result = await prepared.execute({ providerId, userId })
+  if (result.length === 0)
+    return null
+
+  return result[0]
+}
+
+export async function createUser(username: string, email: string) {
+  const id = generateIdFromEntropySize(10)
+  const result = await db.insert(userTable).values({ id, username, email }).returning()
+  return result[0]
+}
+
+export async function selectUserByEmail(email: string) {
+  const prepared = db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.email, sql.placeholder('email')))
+    .prepare('selectUserByEmail')
+
+  const result = await prepared.execute({ email })
+  if (result.length === 0)
+    return null
+
+  return result[0]
+}
+
+export async function selectUserByID(id: string) {
+  const prepared = db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.id, sql.placeholder('id')))
     .prepare('selectUserByID')
 
   const result = await prepared.execute({ id })
+  if (result.length === 0)
+    return null
+
   return result[0]
 }
 
 export async function modifyUsername(userId: string, username: string): Promise<User> {
-  const result = await db.update(users).set({ username }).where(eq(users.id, userId)).returning()
+  const result = await db.update(userTable).set({ username }).where(eq(userTable.id, userId)).returning()
   return result[0]
 }
 
 export async function deleteTodoFromUser(id: number, userId: string) {
-  const result = await db.update(todos).set({ deleted: true, deletedAt: new Date() }).where(
+  const result = await db.update(todoTable).set({ deleted: true, deletedAt: new Date() }).where(
     and(
-      eq(todos.id, id),
-      eq(todos.userId, userId),
+      eq(todoTable.id, id),
+      eq(todoTable.userId, userId),
     ),
   ).returning()
   return result[0]
 }
 export async function selectTodo(id: number) {
-  const result = await db.select().from(todos).where(eq(todos.id, id))
+  const result = await db.select().from(todoTable).where(eq(todoTable.id, id))
+  if (result.length === 0)
+    return null
+
   return result[0]
 }
 
@@ -56,15 +96,15 @@ export interface SelectTodoFromUserReturn {
 }
 export async function selectTodosFromUser(userId: string): Promise<SelectTodoFromUserReturn[]> {
   const prepared = db
-    .select({ id: todos.id, title: todos.title, description: todos.description, completed: todos.completed, position: todos.position, createdAt: todos.createdAt, updatedAt: todos.updatedAt })
-    .from(todos)
+    .select({ id: todoTable.id, title: todoTable.title, description: todoTable.description, completed: todoTable.completed, position: todoTable.position, createdAt: todoTable.createdAt, updatedAt: todoTable.updatedAt })
+    .from(todoTable)
     .where(
       and(
-        eq(todos.userId, sql.placeholder('userId')),
-        eq(todos.deleted, false),
+        eq(todoTable.userId, sql.placeholder('userId')),
+        eq(todoTable.deleted, false),
       ),
     )
-    .orderBy(asc(todos.position))
+    .orderBy(asc(todoTable.position))
     .prepare('selectTodosFromUser')
 
   const result = await prepared.execute({ userId })
@@ -73,11 +113,11 @@ export async function selectTodosFromUser(userId: string): Promise<SelectTodoFro
 
 export async function createTodo(todo: TodoInsert) {
   const result = await db.transaction(async (tx) => {
-    const findNextPosition = tx.select({ position: sql<number>`coalesce(max(${todos.position}), 0) + 1` }).from(todos).where(eq(todos.userId, todo.userId))
+    const findNextPosition = tx.select({ position: sql<number>`coalesce(max(${todoTable.position}), 0) + 1` }).from(todoTable).where(eq(todoTable.userId, todo.userId))
     const nextPositionQueryResult = await findNextPosition.execute()
     const nextPosition = nextPositionQueryResult[0].position
 
-    const result = await tx.insert(todos).values({ ...todo, position: nextPosition }).returning()
+    const result = await tx.insert(todoTable).values({ ...todo, position: nextPosition }).returning()
     return result[0]
   })
 
@@ -99,24 +139,24 @@ export async function updateTodoPosition(payload: UpdateTodoPositionSchema) {
     }
   }
   const result = await db.transaction(async (tx) => {
-    const updatedCurrentPosition = await tx.update(todos).set({ position: payload.newIndex }).where(and(eq(todos.id, payload.id), eq(todos.userId, payload.userId))).returning()
+    const updatedCurrentPosition = await tx.update(todoTable).set({ position: payload.newIndex }).where(and(eq(todoTable.id, payload.id), eq(todoTable.userId, payload.userId))).returning()
     let updatedAffectedPosition = null
     if (payload.newIndex < payload.currentIndex) {
-      updatedAffectedPosition = await db.update(todos).set({ position: sql<number>`${todos.position} + 1` }).where(
+      updatedAffectedPosition = await tx.update(todoTable).set({ position: sql<number>`${todoTable.position} + 1` }).where(
         and(
-          eq(todos.userId, payload.userId),
-          ne(todos.id, payload.id),
-          gte(todos.position, payload.newIndex),
+          eq(todoTable.userId, payload.userId),
+          ne(todoTable.id, payload.id),
+          gte(todoTable.position, payload.newIndex),
         ),
       ).returning()
     }
     else {
-      updatedAffectedPosition = await db.update(todos).set({ position: sql<number>`${todos.position} - 1` }).where(
+      updatedAffectedPosition = await tx.update(todoTable).set({ position: sql<number>`${todoTable.position} - 1` }).where(
         and(
-          eq(todos.userId, payload.userId),
-          ne(todos.id, payload.id),
-          ne(todos.position, 1),
-          lte(todos.position, payload.newIndex),
+          eq(todoTable.userId, payload.userId),
+          ne(todoTable.id, payload.id),
+          ne(todoTable.position, 1),
+          lte(todoTable.position, payload.newIndex),
         ),
       ).returning()
     }
@@ -125,7 +165,6 @@ export async function updateTodoPosition(payload: UpdateTodoPositionSchema) {
       updateAffectedPositions: updatedAffectedPosition,
     }
   })
-
   return result
 }
 
@@ -139,10 +178,10 @@ export const updateTodoSchema = z.object({
 export type UpdateTodoSchema = z.infer<typeof updateTodoSchema>
 export async function updateTodo(todo: UpdateTodoSchema, userId: string) {
   try {
-    const result = db.update(todos).set({ ...todo, updatedAt: new Date() }).where(
+    const result = db.update(todoTable).set({ ...todo, updatedAt: new Date() }).where(
       and(
-        eq(todos.id, todo.id),
-        eq(todos.userId, userId),
+        eq(todoTable.id, todo.id),
+        eq(todoTable.userId, userId),
       ),
     ).returning()
     return result

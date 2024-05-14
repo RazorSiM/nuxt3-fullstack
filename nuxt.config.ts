@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  telemetry: false,
   devtools: {
     enabled: true,
     timeline: {
@@ -19,18 +20,18 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    public: {},
+    public: {
+      sessionCookieName: '',
+    },
     postgresPassword: '',
     postgresUser: '',
     postgresDatabase: '',
     postgresHost: '',
     postgresPort: '',
-    authSecret: '',
     discordClientId: '',
     discordClientSecret: '',
     githubClientId: '',
     githubClientSecret: '',
-    googleClientId: '',
-    googleClientSecret: '',
+    origin: '',
   },
 })

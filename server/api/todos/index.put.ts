@@ -1,7 +1,13 @@
 import { fromZodError } from 'zod-validation-error'
 
 export default defineEventHandler(async (event) => {
-  const userId = event.context.session.user.userId
+  if (!event.context.session || !event.context.user) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    })
+  }
+  const userId = event.context.user.id
   const body = await readBody(event)
   body.userId = userId
 

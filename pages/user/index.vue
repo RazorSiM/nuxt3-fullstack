@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { z } from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui/dist/runtime/types/form'
 import type { Session } from 'lucia'
+import type { FormSubmitEvent } from '#ui/types'
 
 defineOptions({
   name: 'UserView',
@@ -10,6 +10,8 @@ defineOptions({
 definePageMeta({
   middleware: ['protected'],
 })
+const config = useRuntimeConfig()
+const sessionCookie = useCookie(config.public.sessionCookieName)
 
 const { user, authenticatedUser } = useUser()
 
@@ -19,7 +21,7 @@ const userSchema = z.object({
 type UserSchema = z.output<typeof userSchema>
 
 const userState = ref({
-  username: user.value?.username ?? '',
+  username: authenticatedUser.value.username,
 })
 
 const isUserFormValid = computed(() => {
@@ -34,19 +36,13 @@ const isUserFormValid = computed(() => {
 
 async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
   try {
-    if (!user.value) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'User not found',
-      })
-    }
-    const response = await $fetch(`/api/users/${user.value.userId}`, {
+    const response = await $fetch(`/api/users/${authenticatedUser.value.id}`, {
       method: 'PUT',
       body: {
         username: event.data.username,
       },
     }) as User
-    user.value = { userId: user.value.userId, ...response }
+    user.value = { ...response }
   }
   catch (error) {
     createError({
@@ -58,25 +54,13 @@ async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
 
 const sessions = ref<Session[]>([])
 async function getUserSessions() {
-  if (!user.value) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'User not found',
-    })
-  }
-  const response = await $fetch(`/api/users/${user.value.userId}/sessions`, {
+  const response = await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
     method: 'GET',
   })
   sessions.value = response as Session[]
 }
 async function createUserSession() {
-  if (!user.value) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'User not found',
-    })
-  }
-  await $fetch(`/api/users/${user.value.userId}/sessions`, {
+  await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
     method: 'POST',
   })
   await getUserSessions()
@@ -87,16 +71,22 @@ onMounted(async () => {
 })
 
 async function invalidateUserSession(sessionId: string) {
-  if (!user.value) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'User not found',
-    })
-  }
-  await $fetch(`/api/users/${user.value.userId}/sessions/${sessionId}`, {
+  await $fetch(`/api/users/${authenticatedUser.value.id}/sessions/${sessionId}`, {
     method: 'DELETE',
   })
   await getUserSessions()
+}
+
+function isCurrentSession(session: Session, sessionCookie: string | null | undefined) {
+  return session.id === sessionCookie
+}
+function cardClasses(session: Session, sessionCookie: string | null | undefined) {
+  if (isCurrentSession(session, sessionCookie)) {
+    return {
+      ring: 'ring-green-200 dark:ring-green-200',
+    }
+  }
+  return {}
 }
 </script>
 
@@ -109,7 +99,7 @@ async function invalidateUserSession(sessionId: string) {
     <UForm :schema="userSchema" :state="userState" @submit="handleUpdateUsername">
       <div class="grid grid-cols-1 gap-5">
         <UFormGroup label="User ID" description="This is your User ID" hint="Not Editable">
-          <UInput icon="i-heroicons-hashtag" :value="authenticatedUser.userId" disabled />
+          <UInput icon="i-heroicons-hashtag" :value="authenticatedUser.id" disabled />
         </UFormGroup>
         <UFormGroup label="Email" description="This is your E-Mail" hint="Not Editable">
           <UInput icon="i-heroicons-envelope" :value="authenticatedUser.email" disabled />
@@ -132,17 +122,20 @@ async function invalidateUserSession(sessionId: string) {
     </UButton>
   </div>
   <div class="grid grid-cols-3 gap-10 mt-10">
-    <UCard v-for="session in sessions" :key="session.sessionId">
-      <div class="w-full flex justify-end">
-        <UButton color="red" size="xs" square variant="solid" icon="i-heroicons-trash" @click="invalidateUserSession(session.sessionId)" />
-      </div>
+    <UCard v-for="(session) in sessions" :key="session.id" :ui="cardClasses(session, sessionCookie)">
+      <template #header>
+        <div class="flex items-center justify-between">
+          <p>{{ isCurrentSession(session, sessionCookie) ? 'Current Session' : 'Api Session' }}</p>
+          <UButton :disabled="isCurrentSession(session, sessionCookie)" color="red" size="xs" square variant="solid" icon="i-heroicons-trash" @click="invalidateUserSession(session.id)" />
+        </div>
+      </template>
       <div class="flex flex-col gap-4">
         <div>
           <p class="font-bold">
             Session ID
           </p>
           <p class="break-words">
-            {{ session.sessionId }}
+            {{ session.id }}
           </p>
         </div>
         <div>
@@ -150,23 +143,7 @@ async function invalidateUserSession(sessionId: string) {
             Active Expiration
           </p>
           <p>
-            {{ session.activePeriodExpiresAt }}
-          </p>
-        </div>
-        <div>
-          <p class="font-bold">
-            Idle Expiration
-          </p>
-          <p>
-            {{ session.idlePeriodExpiresAt }}
-          </p>
-        </div>
-        <div>
-          <p class="font-bold">
-            State
-          </p>
-          <p>
-            {{ session.state }}
+            {{ session.expiresAt }}
           </p>
         </div>
         <div>
