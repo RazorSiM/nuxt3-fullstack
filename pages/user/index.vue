@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-import { z } from 'zod'
-import type { Session } from 'lucia'
-import type { FormSubmitEvent } from '#ui/types'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 defineOptions({
   name: 'UserView',
@@ -10,36 +14,18 @@ defineOptions({
 definePageMeta({
   middleware: ['protected'],
 })
+
 const config = useRuntimeConfig()
 const sessionCookie = useCookie(config.public.sessionCookieName)
 
 const { user, authenticatedUser } = useUser()
 
-const userSchema = z.object({
-  username: z.string().min(3).max(20),
-})
-type UserSchema = z.output<typeof userSchema>
-
-const userState = ref({
-  username: authenticatedUser.value.username,
-})
-
-const isUserFormValid = computed(() => {
-  try {
-    userSchema.parse(userState.value)
-    return true
-  }
-  catch {
-    return false
-  }
-})
-
-async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
+async function updateUsername(values: UserUpdateForm) {
   try {
     const response = await $fetch(`/api/users/${authenticatedUser.value.id}`, {
       method: 'PUT',
       body: {
-        username: event.data.username,
+        username: values.username,
       },
     }) as User
     user.value = { ...response }
@@ -52,12 +38,22 @@ async function handleUpdateUsername(event: FormSubmitEvent<UserSchema>) {
   }
 }
 
-const sessions = ref<Session[]>([])
+async function onSubmit(values: UserUpdateForm) {
+  await updateUsername(values)
+}
+
+interface ResponseSession {
+  id: string
+  expiresAt: string
+  userId: string
+  fresh: boolean
+}
+const sessions = ref<ResponseSession[]>([])
 async function getUserSessions() {
-  const response = await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
+  const response = await $fetch<ResponseSession[]>(`/api/users/${authenticatedUser.value.id}/sessions`, {
     method: 'GET',
   })
-  sessions.value = response as Session[]
+  sessions.value = response
 }
 async function createUserSession() {
   await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
@@ -77,137 +73,51 @@ async function invalidateUserSession(sessionId: string) {
   await getUserSessions()
 }
 
-function isCurrentSession(session: Session, sessionCookie: string | null | undefined) {
+function isCurrentSession(session: ResponseSession, sessionCookie: string | null | undefined) {
   return session.id === sessionCookie
-}
-function cardClasses(session: Session, sessionCookie: string | null | undefined) {
-  if (isCurrentSession(session, sessionCookie)) {
-    return {
-      ring: 'ring-green-200 dark:ring-green-200',
-    }
-  }
-  return {}
 }
 </script>
 
 <template>
   <div>
-    <UCard class="mt-20 max-w-lg mx-auto">
-      <template #header>
-        Profile
-      </template>
-
-      <UForm
-        :schema="userSchema"
-        :state="userState"
-        @submit="handleUpdateUsername"
-      >
-        <div class="grid grid-cols-1 gap-5">
-          <UFormGroup
-            label="User ID"
-            description="This is your User ID"
-            hint="Not Editable"
-          >
-            <UInput
-              icon="i-heroicons-hashtag"
-              :value="authenticatedUser.id"
-              disabled
-            />
-          </UFormGroup>
-          <UFormGroup
-            label="Email"
-            description="This is your E-Mail"
-            hint="Not Editable"
-          >
-            <UInput
-              icon="i-heroicons-envelope"
-              :value="authenticatedUser.email"
-              disabled
-            />
-          </UFormGroup>
-          <UFormGroup
-            name="username"
-            label="Username"
-            description="This is your username"
-            required
-          >
-            <UInput
-              v-model="userState.username"
-              icon="i-heroicons-user"
-            />
-          </UFormGroup>
-          <UButton
-            :disabled="!isUserFormValid"
-            color="green"
-            icon="i-heroicons-pencil-square"
-            class="w-fit"
-            type="submit"
-          >
-            Update Username
-          </UButton>
-        </div>
-      </UForm>
-    </UCard>
-    <div class="flex gap-5 mt-20">
+    <Card class="mt-20 max-w-lg mx-auto min-h-96">
+      <CardHeader>
+        <CardTitle>Profile</CardTitle>
+        <CardDescription>
+          This is your profile, you can update your username here.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <FormUserUpdate
+          :form-initial-values="{
+            username: authenticatedUser.username,
+          }"
+          :authenticated-user="authenticatedUser"
+          @submit="onSubmit"
+        />
+      </CardContent>
+    </Card>
+    <div class="flex gap-5 mt-20 items-center">
       <p class="text-2xl font-bold">
         Sessions
       </p>
-      <UButton
+      <UiButton
         size="xs"
-        color="green"
         icon="i-heroicons-plus-circle"
         @click="createUserSession"
       >
+        <Icon name="heroicons:plus-circle" />
         Create Session
-      </UButton>
+      </UiButton>
     </div>
-    <div class="grid grid-cols-3 gap-10 mt-10">
-      <UCard
+    <div class="grid lg:grid-cols-3 gap-10 mt-10 sm:grid-cols-2 grid-cols-1 items-stretch">
+      <SessionCard
         v-for="(session) in sessions"
         :key="session.id"
-        :ui="cardClasses(session, sessionCookie)"
-      >
-        <template #header>
-          <div class="flex items-center justify-between">
-            <p>{{ isCurrentSession(session, sessionCookie) ? 'Current Session' : 'Api Session' }}</p>
-            <UButton
-              :disabled="isCurrentSession(session, sessionCookie)"
-              color="red"
-              size="xs"
-              square
-              variant="solid"
-              icon="i-heroicons-trash"
-              @click="invalidateUserSession(session.id)"
-            />
-          </div>
-        </template>
-        <div class="flex flex-col gap-4">
-          <div>
-            <p class="font-bold">
-              Session ID
-            </p>
-            <p class="break-words">
-              {{ session.id }}
-            </p>
-          </div>
-          <div>
-            <p class="font-bold">
-              Active Expiration
-            </p>
-            <p>
-              {{ session.expiresAt }}
-            </p>
-          </div>
-          <div>
-            <p class="font-bold">
-              Fresh
-            </p>
-            <p>
-              {{ session.fresh }}
-            </p>
-          </div>
-        </div>
-      </UCard>
+        v-bind="session"
+        :is-current-session="isCurrentSession(session, sessionCookie)"
+        @invalidate-user-session="invalidateUserSession"
+      />
     </div>
   </div>
 </template>
