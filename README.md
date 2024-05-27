@@ -7,7 +7,8 @@ Simple starter with Nuxt 3, PostgreSQL, and OAuth for the authentication layer.
 - [Drizzle ORM](https://orm.drizzle.team/) as an ORM, migrator and query builder.
 - [Zod](https://zod.dev/) for schema validation and type safety, both on the frontend and backend.
 - [Lucia Auth](https://lucia-auth.com/) for the authentication layer.
-- [Nuxt UI](https://ui.nuxt.com/) for styling.
+- [Arctic](https://arctic.js.org/) for the OAuth api layer.
+- [Shadcn Vue](https://www.shadcn-vue.com/) for the component library.
 
 ## Prerequisites
 In order to run the project, you need:
@@ -21,7 +22,7 @@ Optional:
 To install pnpm, you can use corepack:
 ```bash
 corepack enable
-corepack prepare pnpm@latest --activate
+corepack install
 ```
 
 ## PostgreSQL via Docker Compose
@@ -62,7 +63,7 @@ docker-compose up -d
 Run the migrations:
 ```bash
 pnpm db:generate
-pnpm db:push
+pnpm db:migrate
 ```
 
 Finally, run Nuxt:
