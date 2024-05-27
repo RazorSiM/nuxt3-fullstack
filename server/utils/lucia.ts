@@ -1,4 +1,3 @@
-import type { UserId } from 'lucia'
 import { Lucia } from 'lucia'
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
 import { Discord, GitHub } from 'arctic'
@@ -9,7 +8,7 @@ const adapter = new DrizzlePostgreSQLAdapter(db, schemas.sessionTable, schemas.u
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
-    name: config.sessionCookieName,
+    name: config.public.sessionCookieName,
     attributes: {
       secure: !import.meta.dev,
     },
@@ -25,12 +24,11 @@ export const lucia = new Lucia(adapter, {
 export interface DatabaseUserAttributes {
   username: string
   email: string
-  id: UserId
 }
 declare module 'lucia' {
   interface Register {
     Lucia: typeof lucia
-    DatabaseUserAttributes: Omit<DatabaseUserAttributes, 'id'>
+    DatabaseUserAttributes: DatabaseUserAttributes
   }
 }
 

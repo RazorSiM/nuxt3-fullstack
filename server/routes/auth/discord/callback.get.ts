@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   try {
     const tokens = await discordAuthProvider.validateAuthorizationCode(code)
     // get the discord user
-    const discordUser: DiscordUser = await $fetch('https://discord.com/api/v10/users/@me', {
+    const discordUser = await $fetch<DiscordUser>('https://discord.com/api/v10/users/@me', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },

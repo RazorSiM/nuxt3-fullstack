@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { Button } from '@/components/ui/button'
+
 const { user } = useUser()
 
 async function handleLogout() {
@@ -52,34 +54,44 @@ const navigation = computed(() => {
         v-for="link in navigation"
         :key="link.name"
       >
-        <ULink
+        <Button
           v-if="link.show"
-          :to="link.href"
-          active-class="text-primary"
+          variant="link"
         >
-          {{ link.name }}
-        </ULink>
+          <NuxtLink
+            :to="link.href"
+            active-class="text-violet-500"
+          >
+
+            {{ link.name }}
+          </NuxtLink>
+        </Button>
       </template>
       <ClientOnly>
-        <UButton
-          :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
-          color="gray"
+        <Button
+          size="icon"
           variant="ghost"
           aria-label="Theme"
           @click="isDark = !isDark"
-        />
+        >
+          <Icon
+            :name="isDark ? 'heroicons:moon-20-solid' : 'heroicons:sun-20-solid'"
+          />
+        </Button>
         <template #fallback>
           <div class="w-8 h-8" />
         </template>
       </ClientOnly>
-      <UButton
+      <Button
         v-if="user"
-        icon="i-heroicons-arrow-left-on-rectangle-solid"
-        square
-        variant="ghost"
-        color="red"
+        size="icon"
+        variant="destructive"
         @click="handleLogout"
-      />
+      >
+        <Icon
+          name="heroicons:arrow-left-on-rectangle-solid"
+        />
+      </Button>
     </header>
   </div>
 </template>

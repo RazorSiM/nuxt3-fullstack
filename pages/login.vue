@@ -1,4 +1,13 @@
 <script lang="ts" setup>
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+
 defineOptions({
   name: 'LoginView',
 })
@@ -13,38 +22,37 @@ function loginTo(provider: string) {
 const logins = [
   {
     provider: 'github',
-    icon: 'i-mdi-github',
+    icon: 'mdi:github',
     text: 'Sign in with Github',
   },
   {
     provider: 'discord',
-    icon: 'i-ic-round-discord',
+    icon: 'ic:round-discord',
     text: 'Sign in with Discord',
-  },
-  {
-    provider: 'google',
-    icon: 'i-mdi-google',
-    text: 'Sign in with Google',
   },
 ]
 </script>
 
 <template>
-  <UCard class="mt-20 w-fit mx-auto">
-    <template #header>
-      Login with
-    </template>
-    <div class="flex flex-col gap-5 items-center justify-center mx-auto w-fit">
-      <UButton
+  <Card class="mt-20 w-fit mx-auto">
+    <CardHeader>
+      <CardTitle>Login</CardTitle>
+      <CardDescription>
+        Sign in with one of the following providers
+      </CardDescription>
+    </CardHeader>
+    <CardContent class="grid gap-4">
+      <Button
         v-for="login in logins"
         :key="login.provider"
-        :icon="login.icon"
         size="lg"
-
         @click="loginTo(login.provider)"
       >
-        {{ login.text }}
-      </UButton>
-    </div>
-  </UCard>
+        <Icon
+          :name="login.icon"
+        />{{ login.text }}
+      </Button>
+    </CardContent>
+    <!-- <div class="flex flex-col gap-5 items-center justify-center mx-auto w-fit" /> -->
+  </Card>
 </template>

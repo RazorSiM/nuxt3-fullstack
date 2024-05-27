@@ -10,10 +10,7 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@nuxt/ui', '@nuxt/eslint'],
-  ui: {
-    icons: 'all',
-  },
+  modules: ['@pinia/nuxt', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode', 'nuxt-icon', 'shadcn-nuxt', '@vueuse/nuxt'],
   eslint: {
     config: {
       stylistic: {
@@ -22,6 +19,13 @@ export default defineNuxtConfig({
         quotes: 'single',
       },
     },
+  },
+  shadcn: {
+    prefix: 'Ui',
+    componentDir: './components/ui',
+  },
+  colorMode: {
+    classSuffix: '',
   },
   runtimeConfig: {
     public: {
