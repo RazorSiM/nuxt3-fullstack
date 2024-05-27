@@ -1,11 +1,5 @@
 <script lang="ts" setup>
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { toast } from 'vue-sonner'
 
 defineOptions({
   name: 'UserView',
@@ -28,10 +22,12 @@ async function updateUsername(values: UserUpdateForm) {
         username: values.username,
       },
     })
+    toast.success('Username updated successfully')
     user.value = response
   }
   catch (error) {
-    createError({
+    toast.error(`Failed to update username: ${error}`)
+    throw createError({
       statusCode: 500,
       statusMessage: `Failed to update username: ${error}`,
     })
@@ -80,14 +76,14 @@ function isCurrentSession(session: ResponseSession, sessionCookie: string | null
 
 <template>
   <div>
-    <Card class="mt-20 max-w-lg mx-auto min-h-96">
-      <CardHeader>
-        <CardTitle>Profile</CardTitle>
-        <CardDescription>
+    <UiCard class="mt-20 max-w-lg mx-auto min-h-96">
+      <UiCardHeader>
+        <UiCardTitle>Profile</UiCardTitle>
+        <UiCardDescription>
           This is your profile, you can update your username here.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </UiCardDescription>
+      </UiCardHeader>
+      <UiCardContent>
         <FormUserUpdate
           :form-initial-values="{
             username: authenticatedUser.username,
@@ -95,8 +91,8 @@ function isCurrentSession(session: ResponseSession, sessionCookie: string | null
           :authenticated-user="authenticatedUser"
           @submit="onSubmit"
         />
-      </CardContent>
-    </Card>
+      </UiCardContent>
+    </UiCard>
     <div class="flex gap-5 mt-20 items-center">
       <p class="text-2xl font-bold">
         Sessions

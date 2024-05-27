@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { format, parseISO } from 'date-fns'
 import { useSortable } from '@vueuse/integrations/useSortable'
+import { toast } from 'vue-sonner'
 
 defineOptions({
   name: 'TodoView',
@@ -26,9 +27,14 @@ async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: nu
         newIndex,
       },
     })
+    toast.success('Todo moved successfully')
   }
-  catch (e) {
-    console.error(e)
+  catch (error) {
+    toast.error(`Failed to move todo: ${error}`)
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Failed to move todo: ${error}`,
+    })
   }
 }
 
@@ -66,9 +72,11 @@ async function handleCreateTodo(values: TodoCreateForm) {
       method: 'POST',
       body,
     })
+    toast.success('Todo created successfully')
     await refresh()
   }
   catch (error) {
+    toast.error(`Failed to create todo: ${error}`)
     throw createError({
       statusCode: 500,
       statusMessage: `Failed to create todo: ${error}`,
@@ -87,9 +95,11 @@ async function handleUpdateTodo(values: TodoUpdateForm) {
       method: 'PUT',
       body,
     })
+    toast.success('Todo updated successfully')
     await refresh()
   }
   catch (error) {
+    toast.error(`Failed to update todo: ${error}`)
     throw createError({
       statusCode: 500,
       statusMessage: `Failed to edit todo: ${error}`,
@@ -97,7 +107,10 @@ async function handleUpdateTodo(values: TodoUpdateForm) {
   }
 }
 
+const isSheetOpen = ref(false)
+
 async function onSubmit(values: TodoUpdateForm | TodoCreateForm) {
+  isSheetOpen.value = false
   if (isTodoUpdateForm(values)) {
     await handleUpdateTodo(values)
   }
@@ -105,8 +118,6 @@ async function onSubmit(values: TodoUpdateForm | TodoCreateForm) {
     await handleCreateTodo(values)
   }
 }
-
-const isSheetOpen = ref(false)
 
 const todoToUpdate = ref<TodoUpdateForm | null>(null)
 const todoFormInitialValues = computed(() => {
@@ -141,9 +152,11 @@ async function handleDeleteTodo(id: number) {
     await $fetch(`/api/todos/${id}`, {
       method: 'DELETE',
     })
+    toast.success('Todo deleted successfully')
     await refresh()
   }
   catch (error) {
+    toast.error(`Failed to delete todo: ${error}`)
     throw createError({
       statusCode: 500,
       statusMessage: `Failed to delete todo: ${error}`,
