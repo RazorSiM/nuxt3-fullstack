@@ -30,10 +30,11 @@ async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: nu
     toast.success('Todo moved successfully')
   }
   catch (error) {
-    toast.error(`Failed to move todo: ${error}`)
+    const errorMessage = `Failed to move todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to move todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }
@@ -76,10 +77,11 @@ async function handleCreateTodo(values: TodoCreateForm) {
     await refresh()
   }
   catch (error) {
-    toast.error(`Failed to create todo: ${error}`)
+    const errorMessage = `Failed to create todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to create todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }
@@ -99,10 +101,11 @@ async function handleUpdateTodo(values: TodoUpdateForm) {
     await refresh()
   }
   catch (error) {
-    toast.error(`Failed to update todo: ${error}`)
+    const errorMessage = `Failed to update todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to edit todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }
@@ -156,10 +159,11 @@ async function handleDeleteTodo(id: number) {
     await refresh()
   }
   catch (error) {
-    toast.error(`Failed to delete todo: ${error}`)
+    const errorMessage = `Failed to delete todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to delete todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }

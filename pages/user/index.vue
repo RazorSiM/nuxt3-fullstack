@@ -52,10 +52,21 @@ async function getUserSessions() {
   sessions.value = response
 }
 async function createUserSession() {
-  await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
-    method: 'POST',
-  })
-  await getUserSessions()
+  try {
+    await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
+      method: 'POST',
+    })
+    toast.success('Session created successfully')
+    await getUserSessions()
+  }
+  catch (error) {
+    const errorMessage = `Failed to create session: ${error}`
+    toast.error(errorMessage)
+    throw createError({
+      statusCode: 500,
+      statusMessage: errorMessage,
+    })
+  }
 }
 
 onMounted(async () => {
@@ -63,10 +74,21 @@ onMounted(async () => {
 })
 
 async function invalidateUserSession(sessionId: string) {
-  await $fetch(`/api/users/${authenticatedUser.value.id}/sessions/${sessionId}`, {
-    method: 'DELETE',
-  })
-  await getUserSessions()
+  try {
+    await $fetch(`/api/users/${authenticatedUser.value.id}/sessions/${sessionId}`, {
+      method: 'DELETE',
+    })
+    toast.success('Session invalidated successfully')
+    await getUserSessions()
+  }
+  catch (e) {
+    const errorMessage = `Failed to invalidate session: ${e}`
+    toast.error(errorMessage)
+    throw createError({
+      statusCode: 500,
+      statusMessage: errorMessage,
+    })
+  }
 }
 
 function isCurrentSession(session: ResponseSession, sessionCookie: string | null | undefined) {
