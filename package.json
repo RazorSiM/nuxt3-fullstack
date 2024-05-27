@@ -36,7 +36,6 @@
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@lucia-auth/adapter-postgresql": "^3.1.2",
-    "@lucia-auth/oauth": "^3.5.0",
     "@vee-validate/zod": "^4.12.8",
     "arctic": "^1.8.1",
     "class-variance-authority": "^0.7.0",
@@ -67,7 +66,7 @@
     "@vueuse/nuxt": "^10.9.0",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.21.1",
-    "eslint": "^9.2.0",
+    "eslint": "^8.56.0",
     "lefthook": "^1.6.11",
     "nuxt": "^3.11.2",
     "nuxt-icon": "^0.6.10",

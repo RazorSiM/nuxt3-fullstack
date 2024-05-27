@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   try {
     const tokens = await githubAuthProvider.validateAuthorizationCode(code)
     // get the github user
-    const githubUser: GitHubUser = await $fetch('https://api.github.com/user', {
+    const githubUser = await $fetch<GitHubUser>('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
       visibility: string
     }
     // get user emails
-    const emails: Email[] = await $fetch('https://api.github.com/user/emails', {
+    const emails = await $fetch<Email[]>('https://api.github.com/user/emails', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },

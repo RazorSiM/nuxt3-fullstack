@@ -27,8 +27,8 @@ async function updateUsername(values: UserUpdateForm) {
       body: {
         username: values.username,
       },
-    }) as User
-    user.value = { ...response }
+    })
+    user.value = response
   }
   catch (error) {
     createError({

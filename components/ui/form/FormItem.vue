@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'vue'
 
 import { provide } from 'vue'
 import { useId } from 'radix-vue'
-import { FORM_ITEM_INJECTION_KEY } from './index'
+import { FORM_ITEM_INJECTION_KEY } from './injectionKeys'
 import { cn } from '@/utils/shadcn'
 
 const props = defineProps<{
