@@ -85,16 +85,7 @@ export async function selectTodo(id: number) {
   return result[0]
 }
 
-export interface SelectTodoFromUserReturn {
-  id: number
-  title: string
-  description: string | null
-  completed: boolean
-  position: number | null
-  createdAt: Date
-  updatedAt: Date
-}
-export async function selectTodosFromUser(userId: string): Promise<SelectTodoFromUserReturn[]> {
+export async function selectTodosFromUser(userId: string) {
   const prepared = db
     .select({ id: todoTable.id, title: todoTable.title, description: todoTable.description, completed: todoTable.completed, position: todoTable.position, createdAt: todoTable.createdAt, updatedAt: todoTable.updatedAt })
     .from(todoTable)
@@ -110,6 +101,7 @@ export async function selectTodosFromUser(userId: string): Promise<SelectTodoFro
   const result = await prepared.execute({ userId })
   return result
 }
+export type SelectTodoFromUserReturn = ReturnType<typeof selectTodosFromUser>
 
 export async function createTodo(todo: TodoInsert) {
   const result = await db.transaction(async (tx) => {

@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { z } from 'zod'
-import Sortable from 'sortablejs'
 import { format, parseISO } from 'date-fns'
-import type { FormSubmitEvent } from '#ui/types'
+import { useSortable } from '@vueuse/integrations/useSortable'
+import { toast } from 'vue-sonner'
 
 defineOptions({
   name: 'TodoView',
@@ -28,140 +27,127 @@ async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: nu
         newIndex,
       },
     })
+    toast.success('Todo moved successfully')
   }
-  catch (e) {
-    console.error(e)
-  }
-}
-watch(sortableElement, () => {
-  if (sortableElement.value) {
-    Sortable.create(sortableElement.value, {
-      animation: 150,
-      handle: '.sortable-handler',
-      async onEnd(e) {
-        const newIndex = e.newIndex as number
-        const oldIndex = e.oldIndex as number
-        if (todos.value === null) {
-          return false
-        }
-        else {
-          const newPosition = todos.value[newIndex].position
-          const oldPosition = todos.value[oldIndex].position
-          if (!newPosition || !oldPosition)
-            return false
-
-          const movedItem = todos.value.splice(oldIndex, 1)[0]
-          todos.value.splice(newIndex, 0, movedItem)
-          await handleMoveTodo(movedItem.id, oldPosition, newPosition)
-        }
-      },
+  catch (error) {
+    const errorMessage = `Failed to move todo: ${error}`
+    toast.error(errorMessage)
+    throw createError({
+      statusCode: 500,
+      statusMessage: errorMessage,
     })
   }
+}
+
+// @ts-expect-error - This error is about the todos type being wrapped in a SerializeObject type
+useSortable(sortableElement, todos, {
+  handle: '.sortable-handler',
+  animation: 0,
+
+  onEnd: async (e) => {
+    const newIndex = e.newIndex as number
+    const oldIndex = e.oldIndex as number
+    if (todos.value === null) {
+      return false
+    }
+
+    const newPosition = todos.value[newIndex].position
+    const oldPosition = todos.value[oldIndex].position
+    if (!newPosition || !oldPosition)
+      return false
+
+    const movedItem = todos.value.splice(oldIndex, 1)[0]
+    todos.value.splice(newIndex, 0, movedItem)
+    await handleMoveTodo(movedItem.id, oldPosition, newPosition)
+  },
 })
 
-const todoSchema = z.object({
-  title: z.string(),
-  description: z.string().optional().or(z.literal('')),
-})
-type TodoSchema = z.output<typeof todoSchema>
-const todoState = ref({
-  title: '',
-  description: '',
-})
-
-const editTodoSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  completed: z.boolean(),
-  description: z.string().optional().or(z.literal('')),
-})
-type EditTodoSchema = z.output<typeof editTodoSchema>
-
-const isTodoFormValid = computed(() => {
-  try {
-    todoSchema.parse(todoState.value)
-    return true
-  }
-  catch {
-    return false
-  }
-})
-async function handleCreateTodo(event: FormSubmitEvent<TodoSchema>) {
+async function handleCreateTodo(values: TodoCreateForm) {
   const body = {
-    title: event.data.title,
-    description: event.data.description,
+    title: values.title,
+    description: values.description,
+    completed: values.completed,
   }
   try {
     await $fetch('/api/todos', {
       method: 'POST',
       body,
     })
+    toast.success('Todo created successfully')
     await refresh()
   }
   catch (error) {
+    const errorMessage = `Failed to create todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to create todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }
 
-async function handleEditTodo(event: FormSubmitEvent<EditTodoSchema>) {
+async function handleUpdateTodo(values: TodoUpdateForm) {
   const body = {
-    title: event.data.title,
-    completed: event.data.completed,
-    description: event.data.description,
+    title: values.title,
+    completed: values.completed,
+    description: values.description,
   }
   try {
-    await $fetch(`/api/todos/${event.data.id}`, {
+    await $fetch(`/api/todos/${values.id}`, {
       method: 'PUT',
       body,
     })
+    toast.success('Todo updated successfully')
     await refresh()
   }
   catch (error) {
+    const errorMessage = `Failed to update todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to edit todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }
 
-interface TodoEditable {
-  id: number
-  title: string
-  description: string | undefined
-  completed: boolean
+const isSheetOpen = ref(false)
+
+async function onSubmit(values: TodoUpdateForm | TodoCreateForm) {
+  isSheetOpen.value = false
+  if (isTodoUpdateForm(values)) {
+    await handleUpdateTodo(values)
+  }
+  else {
+    await handleCreateTodo(values)
+  }
 }
-const isOpen = ref(false)
-const isEditOpen = ref(false)
-const todoToEditState = ref<TodoEditable>({
-  id: 0,
-  title: '',
-  description: '',
-  completed: false,
-})
-const isEditTodoFormValid = computed(() => {
-  try {
-    editTodoSchema.parse(todoToEditState.value)
-    return true
+
+const todoToUpdate = ref<TodoUpdateForm | null>(null)
+const todoFormInitialValues = computed(() => {
+  if (todoToUpdate.value !== null) {
+    return todoToUpdate.value
   }
-  catch {
-    return false
+  else {
+    return {
+      title: '',
+      description: '',
+      completed: false,
+    }
   }
 })
-function openEditModal(id: number) {
-  isEditOpen.value = true
+
+watchDebounced(isSheetOpen, () => {
+  if (!isSheetOpen.value) {
+    todoToUpdate.value = null
+  }
+}, { debounce: 500 })
+
+function openUpdateTodo(id: number) {
   const todo = todos.value?.find(todo => todo.id === id)
   if (!todo)
     return
-
-  todoToEditState.value = {
-    id: todo.id,
-    title: todo.title,
-    description: todo.description ?? '',
-    completed: todo.completed,
-  }
+  isSheetOpen.value = true
+  todoToUpdate.value = todo
 }
 
 async function handleDeleteTodo(id: number) {
@@ -169,12 +155,15 @@ async function handleDeleteTodo(id: number) {
     await $fetch(`/api/todos/${id}`, {
       method: 'DELETE',
     })
+    toast.success('Todo deleted successfully')
     await refresh()
   }
   catch (error) {
+    const errorMessage = `Failed to delete todo: ${error}`
+    toast.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to delete todo: ${error}`,
+      statusMessage: errorMessage,
     })
   }
 }
@@ -182,177 +171,100 @@ async function handleDeleteTodo(id: number) {
 
 <template>
   <div>
-    <USlideover v-model="isOpen">
-      <UCard
-        class="flex flex-col flex-1"
-        :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }"
-      >
-        <template #header>
+    <UiSheet v-model:open="isSheetOpen">
+      <UiSheetContent>
+        <UiSheetHeader>
+          <UiSheetTitle>Todos</UiSheetTitle>
+          <UiSheetDescription>{{ todoToUpdate ? 'Update your Todo' : "Create a new Todo" }}</UiSheetDescription>
+        </UiSheetHeader>
+        <FormTodoCreateOrUpdate
+          :form-initial-values="todoFormInitialValues"
+          @submit="onSubmit"
+        />
+      </UiSheetContent>
+    </UiSheet>
+    <UiCard class="mt-10">
+      <UiCardHeader>
+        <UiCardTitle class="flex gap-4 items-center w-full justify-between">
           Todos
-        </template>
-        <UForm
-          :schema="todoSchema"
-          :state="todoState"
-          @submit="handleCreateTodo"
-        >
-          <div class="grid grid-cols-1 gap-5">
-            <UFormGroup
-              label="Title"
-              description="Todo Title"
-              name="title"
-              required
-            >
-              <UInput v-model="todoState.title" />
-            </UFormGroup>
-            <UFormGroup
-              name="description"
-              label="Description"
-              description="Todo content"
-              required
-            >
-              <UTextarea v-model="todoState.description" />
-            </UFormGroup>
-            <UButton
-              :disabled="!isTodoFormValid"
-              color="green"
-              icon="i-heroicons-pencil-square"
-              class="w-fit"
-              type="submit"
-            >
-              Add Todo
-            </UButton>
-          </div>
-        </UForm>
-      </UCard>
-    </USlideover>
-    <USlideover v-model="isEditOpen">
-      <UCard
-        class="flex flex-col flex-1"
-        :ui="{ body: { base: 'flex-1' }, ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }"
-      >
-        <template #header>
-          Todos
-        </template>
-        <UForm
-          :schema="editTodoSchema"
-          :state="todoToEditState"
-          @submit="handleEditTodo"
-        >
-          <div class="grid grid-cols-1 gap-5">
-            <UFormGroup
-              label="Title"
-              description="Todo Title"
-              name="title"
-              required
-            >
-              <UInput v-model="todoToEditState.title" />
-            </UFormGroup>
-            <UFormGroup
-              name="description"
-              label="Description"
-              description="Todo content"
-              required
-            >
-              <UTextarea v-model="todoToEditState.description" />
-            </UFormGroup>
-            <UFormGroup
-              name="completed"
-              description="Completed"
-            >
-              <UToggle v-model="todoToEditState.completed" />
-            </UFormGroup>
-            <UButton
-              :disabled="!isEditTodoFormValid"
-              color="green"
-              icon="i-heroicons-pencil-square"
-              class="w-fit"
-              type="submit"
-            >
-              Edit Todo
-            </UButton>
-          </div>
-        </UForm>
-      </UCard>
-    </USlideover>
-
-    <UCard class="mt-10">
-      <template #header>
-        <div class="flex justify-between items-center">
-          <p>Todos</p>
-          <UButton
-            color="green"
-            icon="i-heroicons-plus"
-            @click="isOpen = true"
+          <UiButton
+            size="sm"
+            variant="secondary"
+            @click="isSheetOpen = true"
           >
-            New Todo
-          </UButton>
-        </div>
-      </template>
-      <p
-        v-if="!todos || todos.length === 0"
-        ref="sortableElement"
-      >
-        No Todos available
-      </p>
-      <template v-else>
-        <div
+            <Icon name="heroicons:plus" />
+            Add
+          </UiButton>
+        </UiCardTitle>
+        <UiCardDescription>
+          List of Todos
+        </UiCardDescription>
+      </UiCardHeader>
+      <UiCardContent>
+        <p
+          v-if="!todos || todos.length === 0"
           ref="sortableElement"
-          class="divide-y dark:divide-gray-800"
         >
+          No Todos available
+        </p>
+        <template v-else>
           <div
-            v-for="todo in todos"
-            :key="todo.id"
-            class="flex items-start justify-between gap-x-6 py-5"
+            ref="sortableElement"
+            class="divide-y dark:divide-muted"
           >
-            <UButton
-              color="white"
-              square
-              variant="ghost"
-              icon="i-heroicons-bars-3"
-              class="sortable-handler"
-            />
-            <div class="min-w-0 flex-grow">
-              <div class="flex items-center gap-x-3">
-                <p class="text-sm font-semibold leading-6">
-                  {{ todo.title }}
-                </p>
-                <UBadge
-                  :color="todo.completed === true ? 'green' : 'amber'"
-                  variant="soft"
-                  size="xs"
-                  :label="todo.completed ? 'Completed' : 'In Progress'"
-                />
-              </div>
-              <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-                <p class="whitespace-nowrap">
-                  Updated on <time :datetime="todo.updatedAt">{{ format(parseISO(todo.updatedAt), 'PPpp') }}</time>
-                </p>
-              </div>
-              <p>{{ todo.description }}</p>
-            </div>
-            <div class="flex gap-2">
-              <UButton
-                color="primary"
-                square
-                size="xs"
+            <div
+              v-for="todo in todos"
+              :key="todo.id"
+              class="flex items-start justify-between gap-x-6 py-5"
+            >
+              <UiButton
                 variant="ghost"
-                icon="i-heroicons-pencil"
-                class="w-fit"
-                @click="openEditModal(todo.id)"
-              />
-              <UButton
-                color="red"
-                square
-                size="xs"
-                variant="ghost"
-                icon="i-heroicons-trash"
-                class="w-fit"
-                @click="handleDeleteTodo(todo.id)"
-              />
+                size="icon"
+                class="sortable-handler"
+              >
+                <Icon name="heroicons:bars-3" />
+              </UiButton>
+              <div class="min-w-0 flex-grow">
+                <div class="flex items-center gap-x-3">
+                  <p class="text-sm font-semibold leading-6">
+                    {{ todo.title }}
+                  </p>
+                  <UiBadge
+                    :variant="todo.completed === true ? 'secondary' : 'outline'"
+                  >
+                    {{ todo.completed ? 'Completed' : 'In Progress' }}
+                  </UiBadge>
+                </div>
+                <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-muted-foreground">
+                  <p class="whitespace-nowrap">
+                    Updated on <time :datetime="todo.updatedAt">{{ format(parseISO(todo.updatedAt), 'PPpp') }}</time>
+                  </p>
+                </div>
+                <p>{{ todo.description }}</p>
+              </div>
+              <div class="flex gap-2">
+                <UiButton
+                  size="icon"
+                  variant="ghost"
+                  @click="openUpdateTodo(todo.id)"
+                >
+                  <Icon
+                    name="heroicons:pencil"
+                    size="1rem"
+                  />
+                </UiButton>
+                <UiButton
+                  size="icon"
+                  variant="destructive"
+                  @click="handleDeleteTodo(todo.id)"
+                >
+                  <Icon name="heroicons:trash" />
+                </UiButton>
+              </div>
             </div>
           </div>
-        </div>
-      </template>
-    </UCard>
+        </template>
+      </UiCardContent>
+    </UiCard>
   </div>
 </template>

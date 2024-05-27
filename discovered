@@ -1,0 +1,234 @@
++ enp38s0 IPv6 10-31-21-1                                    FTP File Transfer    local
++ enp38s0 IPv6 fritz-box                                     FTP File Transfer    local
++ enp38s0 IPv4 10-31-21-1                                    FTP File Transfer    local
++ enp38s0 IPv4 fritz-box                                     FTP File Transfer    local
++ enp38s0 IPv4 2852a36cb38f503c                              _spotify-connect._tcp local
+= enp38s0 IPv4 2852a36cb38f503c                              _spotify-connect._tcp local
+   hostname = [2852a36cb38f503c.local]
+   address = [10.31.21.23]
+   port = [43663]
+   txt = ["Stack=SP" "VERSION=1.0" "CPath=/zc"]
++ enp38s0 IPv4 Hue Bridge - 66F5B1                           _hue._tcp            local
++ ztakpytscp IPv4 3.27.0.120-AMERLIN.161b884e-0df7-49cf-82ff-5b7b06577dae _nvstream_dbd._tcp   local
++ enp38s0 IPv6 Hue Bridge - 66F5B1                           _hue._tcp            local
++ enp38s0 IPv6 Google-Home-989d812f2dba44b3863fc00e38ca475f  _googlecast._tcp     local
++ enp38s0 IPv6 989d812f-2dba-44b3-863f-c00e38ca475f          _googlezone._tcp     local
+= enp38s0 IPv4 Hue Bridge - 66F5B1                           _hue._tcp            local
+   hostname = [00178866f5b1.local]
+   address = [10.31.21.210]
+   port = [443]
+   txt = ["modelid=BSB002" "bridgeid=001788fffe66f5b1"]
+= ztakpytscp IPv4 3.27.0.120-AMERLIN.161b884e-0df7-49cf-82ff-5b7b06577dae _nvstream_dbd._tcp   local
+   hostname = [amerlin.local]
+   address = [10.140.248.208]
+   port = [47989]
+   txt = []
+= enp38s0 IPv6 Hue Bridge - 66F5B1                           _hue._tcp            local
+   hostname = [00178866f5b1.local]
+   address = [10.31.21.210]
+   port = [443]
+   txt = ["modelid=BSB002" "bridgeid=001788fffe66f5b1"]
+= enp38s0 IPv6 Google-Home-989d812f2dba44b3863fc00e38ca475f  _googlecast._tcp     local
+   hostname = [989d812f-2dba-44b3-863f-c00e38ca475f.local]
+   address = [fd00::4ad6:d5ff:fe69:c2e8]
+   port = [8009]
+   txt = ["rs=" "nf=1" "bs=FA8FCA3EB314" "st=0" "ca=199172" "fn=Google Home" "ic=/setup/icon.png" "md=Google Home" "ve=05" "rm=CAAD24B3F39A13EF" "cd=A35BA00C383C70538098CB4D711A76E8" "id=989d812f2dba44b3863fc00e38ca475f"]
+= enp38s0 IPv6 989d812f-2dba-44b3-863f-c00e38ca475f          _googlezone._tcp     local
+   hostname = [989d812f-2dba-44b3-863f-c00e38ca475f.local]
+   address = [fd00::4ad6:d5ff:fe69:c2e8]
+   port = [10001]
+   txt = ["CGS" "UDS" "id=A35BA00C383C70538098CB4D711A76E8"]
++ enp38s0 IPv4 amzn.dmgr:B6E7514FC99DC8389EAD1C87DDB8AF77:IWtzu2uork:14268 Amazon Fire TV       local
+= enp38s0 IPv4 amzn.dmgr:B6E7514FC99DC8389EAD1C87DDB8AF77:IWtzu2uork:14268 Amazon Fire TV       local
+   hostname = [10-31-21-23.local]
+   address = [10.31.21.23]
+   port = [40551]
+   txt = ["tr=tcp" "sp=37679" "v=2" "u=B6E7514FC99DC8389EAD1C87DDB8AF77" "t=2" "s=0" "at=5BGyRO9I7v4B" "n=Simone's Fire TV" "dpv=1" "mv=2" "f=0" "pv=1" "ad=A3EVMLQTU6WL1W" "c=ae:cc:fc:25:a0:f5" "a=0"]
++ ztakpytscp IPv4 divano                                        AirPlay Remote Video local
++ ztakpytscp IPv4 BCD07444E4E2@divano                           AirTunes Remote Audio local
++ ztakpytscp IPv4 divano                                        _companion-link._tcp local
+= ztakpytscp IPv4 divano                                        AirPlay Remote Video local
+   hostname = [divano.local]
+   address = [10.140.196.34]
+   port = [7000]
+   txt = ["srcvers=760.20.1" "pk=44884e1ccda4e66785d5b5053a511c634f9d94e76e609c204bd6d14eced62415" "psi=306D91EB-E5E2-4BDD-B27E-9E2F73F7DDE1" "pi=00000000-0000-0000-0000-b85d0ab10e9c" "protovers=1.1" "at=4" "model=MacBookPro18,1" "gcgl=0" "igl=0" "gid=28FEF2FC-DF94-4AC2-9724-DD418CC0CA25" "flags=0x204" "rsf=0x8" "features=0x4A7FCFD5,0xB8174FDE" "fex=1c9/St5PF7g2IQQ" "deviceid=BC:D0:74:44:E4:E2" "acl=0" "act=2"]
+= ztakpytscp IPv4 BCD07444E4E2@divano                           AirTunes Remote Audio local
+   hostname = [divano.local]
+   address = [10.140.196.34]
+   port = [7000]
+   txt = ["vv=0" "vs=760.20.1" "vn=65537" "tp=UDP" "pk=44884e1ccda4e66785d5b5053a511c634f9d94e76e609c204bd6d14eced62415" "am=MacBookPro18,1" "md=0,1,2" "sf=0x204" "ft=0x4A7FCFD5,0xB8174FDE" "et=0,3,5" "da=true" "cn=0,1,2,3"]
+= ztakpytscp IPv4 divano                                        _companion-link._tcp local
+   hostname = [divano.local]
+   address = [10.140.196.34]
+   port = [64514]
+   txt = ["rpBA=F6:4E:22:D6:6D:3D" "rpHI=726b7aae98eb" "rpAD=d8a0fe955847" "rpVr=541.1" "rpHA=b522b670833e" "rpFl=0x20000" "rpHN=83efe01b6cac" "rpMac=0"]
++ enp38s0 IPv4 Canon G600 series                             Web Site             local
++ enp38s0 IPv4 Canon G600 series                             _uscan._tcp          local
++ enp38s0 IPv4 Canon G600 series                             _uscans._tcp         local
++ enp38s0 IPv4 Canon G600 series                             Internet Printer     local
++ enp38s0 IPv4 Canon G600 series                             Secure Internet Printer local
++ enp38s0 IPv4 Canon G600 series                             _canon-chmp._tcp     local
++ enp38s0 IPv4 Canon G600 series                             UNIX Printer         local
++ enp38s0 IPv4 Canon G600 series                             PDL Printer          local
++ enp38s0 IPv6 Canon G600 series                             Web Site             local
++ enp38s0 IPv6 Canon G600 series                             _uscan._tcp          local
++ enp38s0 IPv6 Canon G600 series                             _uscans._tcp         local
++ enp38s0 IPv6 Canon G600 series                             Internet Printer     local
++ enp38s0 IPv6 Canon G600 series                             Secure Internet Printer local
++ enp38s0 IPv6 Canon G600 series                             _canon-chmp._tcp     local
++ enp38s0 IPv6 Canon G600 series                             UNIX Printer         local
++ enp38s0 IPv6 Canon G600 series                             PDL Printer          local
+= enp38s0 IPv4 fritz-box                                     FTP File Transfer    local
+   hostname = [fritz.box]
+   address = [212.42.244.122]
+   port = [21]
+   txt = ["path=ftp://fritz.box/"]
+= enp38s0 IPv4 10-31-21-1                                    FTP File Transfer    local
+   hostname = [fritz.box]
+   address = [212.42.244.122]
+   port = [21]
+   txt = ["path=ftp://fritz.box/"]
+= enp38s0 IPv6 fritz-box                                     FTP File Transfer    local
+   hostname = [fritz.box]
+   address = [212.42.244.122]
+   port = [21]
+   txt = ["path=ftp://fritz.box/"]
+= enp38s0 IPv6 10-31-21-1                                    FTP File Transfer    local
+   hostname = [fritz.box]
+   address = [212.42.244.122]
+   port = [21]
+   txt = ["path=ftp://fritz.box/"]
++ enp38s0 IPv4 PPL079SC                                      AirPlay Remote Video local
++ enp38s0 IPv4 5CE91EC280B9@PPL079SC                         AirTunes Remote Audio local
++ enp38s0 IPv4 PPL079SC                                      _companion-link._tcp local
++ enp38s0 IPv6 PPL079SC                                      AirPlay Remote Video local
++ enp38s0 IPv6 5CE91EC280B9@PPL079SC                         AirTunes Remote Audio local
++ enp38s0 IPv6 PPL079SC                                      _companion-link._tcp local
++ ztakpytscp IPv4 Oleksii___s MacBook Pro                       AirPlay Remote Video local
++ ztakpytscp IPv4 BCD0749C4C93@Oleksii___s MacBook Pro          AirTunes Remote Audio local
++ ztakpytscp IPv4 Oleksii___s MacBook Pro                       _companion-link._tcp local
+= enp38s0 IPv4 PPL079SC                                      AirPlay Remote Video local
+   hostname = [PPL079SC.local]
+   address = [10.31.21.25]
+   port = [7000]
+   txt = ["srcvers=770.8.1" "pk=17d3d4435784e0af9b4e0b818753a8d3a0348d759001953bc7e84c9b3dc4349a" "psi=E54F27E5-1184-4066-B960-576651E5EEAA" "pi=6064d8ed-39fc-445f-856a-507d85b636c8" "protovers=1.1" "at=4" "model=Mac14,10" "gcgl=0" "igl=0" "gid=E58EA7FA-BB13-456A-9854-92FDD1C59ED0" "flags=0x204" "rsf=0x8" "features=0x4A7FCFD5,0xB8174FDE" "fex=1c9/St5PF7g2IQQ" "deviceid=5C:E9:1E:C2:80:B9" "acl=0" "act=2"]
+= enp38s0 IPv4 5CE91EC280B9@PPL079SC                         AirTunes Remote Audio local
+   hostname = [PPL079SC.local]
+   address = [10.31.21.25]
+   port = [7000]
+   txt = ["vv=0" "vs=770.8.1" "vn=65537" "tp=UDP" "pk=17d3d4435784e0af9b4e0b818753a8d3a0348d759001953bc7e84c9b3dc4349a" "am=Mac14,10" "md=0,1,2" "sf=0x204" "ft=0x4A7FCFD5,0xB8174FDE" "et=0,3,5" "da=true" "cn=0,1,2,3"]
+= enp38s0 IPv4 PPL079SC                                      _companion-link._tcp local
+   hostname = [PPL079SC.local]
+   address = [10.31.21.25]
+   port = [61288]
+   txt = ["rpVr=550.7" "rpMac=0" "rpHN=1b47e09d3d7e" "rpFl=0x20000" "rpAD=e1ecdbe0f6f3" "rpBA=C5:F0:89:1E:C9:8B"]
+= enp38s0 IPv6 PPL079SC                                      AirPlay Remote Video local
+   hostname = [PPL079SC.local]
+   address = [10.31.21.25]
+   port = [7000]
+   txt = ["srcvers=770.8.1" "pk=17d3d4435784e0af9b4e0b818753a8d3a0348d759001953bc7e84c9b3dc4349a" "psi=E54F27E5-1184-4066-B960-576651E5EEAA" "pi=6064d8ed-39fc-445f-856a-507d85b636c8" "protovers=1.1" "at=4" "model=Mac14,10" "gcgl=0" "igl=0" "gid=E58EA7FA-BB13-456A-9854-92FDD1C59ED0" "flags=0x204" "rsf=0x8" "features=0x4A7FCFD5,0xB8174FDE" "fex=1c9/St5PF7g2IQQ" "deviceid=5C:E9:1E:C2:80:B9" "acl=0" "act=2"]
+= enp38s0 IPv6 5CE91EC280B9@PPL079SC                         AirTunes Remote Audio local
+   hostname = [PPL079SC.local]
+   address = [10.31.21.25]
+   port = [7000]
+   txt = ["vv=0" "vs=770.8.1" "vn=65537" "tp=UDP" "pk=17d3d4435784e0af9b4e0b818753a8d3a0348d759001953bc7e84c9b3dc4349a" "am=Mac14,10" "md=0,1,2" "sf=0x204" "ft=0x4A7FCFD5,0xB8174FDE" "et=0,3,5" "da=true" "cn=0,1,2,3"]
+= enp38s0 IPv6 PPL079SC                                      _companion-link._tcp local
+   hostname = [PPL079SC.local]
+   address = [10.31.21.25]
+   port = [61288]
+   txt = ["rpVr=550.7" "rpMac=0" "rpHN=1b47e09d3d7e" "rpFl=0x20000" "rpAD=e1ecdbe0f6f3" "rpBA=C5:F0:89:1E:C9:8B"]
+= ztakpytscp IPv4 Oleksii___s MacBook Pro                       AirPlay Remote Video local
+   hostname = [Oleksiis-MacBook-Pro.local]
+   address = [10.140.20.4]
+   port = [7000]
+   txt = ["srcvers=760.20.1" "pk=bfa33514eabd685275ceab1e161885d5ac374dd86cf196dfb6f7c983afd0acdf" "psi=447ED46B-F593-4836-8DC0-EDE30A193ECF" "pi=385c66ec-6d34-46c4-a6b1-f736660b550f" "protovers=1.1" "at=4" "model=MacBookPro18,1" "gcgl=0" "igl=0" "gid=2A9E56BB-205C-497F-9D73-330D6689ECE7" "flags=0x204" "rsf=0x8" "features=0x4A7FCFD5,0xB8174FDE" "fex=1c9/St5PF7g2IQQ" "deviceid=BC:D0:74:9C:4C:93" "acl=0" "act=2"]
+= ztakpytscp IPv4 BCD0749C4C93@Oleksii___s MacBook Pro          AirTunes Remote Audio local
+   hostname = [Oleksiis-MacBook-Pro.local]
+   address = [10.140.20.4]
+   port = [7000]
+   txt = ["vv=0" "vs=760.20.1" "vn=65537" "tp=UDP" "pk=bfa33514eabd685275ceab1e161885d5ac374dd86cf196dfb6f7c983afd0acdf" "am=MacBookPro18,1" "md=0,1,2" "sf=0x204" "ft=0x4A7FCFD5,0xB8174FDE" "et=0,3,5" "da=true" "cn=0,1,2,3"]
+= ztakpytscp IPv4 Oleksii___s MacBook Pro                       _companion-link._tcp local
+   hostname = [Oleksiis-MacBook-Pro.local]
+   address = [10.140.20.4]
+   port = [53825]
+   txt = ["rpVr=541.1" "rpMac=0" "rpHN=fefb076b3e1f" "rpFl=0x20000" "rpAD=fcb8ef0bf166" "rpBA=75:56:EB:7C:B8:0A"]
+= enp38s0 IPv4 Canon G600 series                             Web Site             local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [80]
+   txt = ["txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             _uscan._tcp          local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [80]
+   txt = ["usb_MFG=Canon" "mopria-certified-scan=1.3" "duplex=F" "is=platen" "cs=grayscale,color" "rs=eSCL" "representation=http://c05CA4C00000.local./icon/printer_icon.png" "vers=2.63" "UUID=00000000-0000-1000-8000-0018d50279cc" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=image/jpeg,application/pdf" "ty=Canon G600 series" "txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             _uscans._tcp         local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [443]
+   txt = ["usb_MFG=Canon" "mopria-certified-scan=1.3" "duplex=F" "is=platen" "cs=grayscale,color" "rs=eSCL" "representation=http://c05CA4C00000.local./icon/printer_icon.png" "vers=2.63" "UUID=00000000-0000-1000-8000-0018d50279cc" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=image/jpeg,application/pdf" "ty=Canon G600 series" "txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             Internet Printer     local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [631]
+   txt = ["mopria-certified=2.0" "print_wfds=T" "PaperMax=legal-A4" "kind=document,envelope,photo,postcard" "Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "URF=V1.4,CP1,PQ3-5,RS600,SRGB24,W8,OB9,OFU0,IS1" "usb_CMD=URF" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=application/octet-stream,image/jpeg,image/urf,image/pwg-raster" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=15" "qtotal=1" "rp=ipp/print" "txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             Secure Internet Printer local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [631]
+   txt = ["TLS=1.2" "mopria-certified=2.0" "print_wfds=T" "PaperMax=legal-A4" "kind=document,envelope,photo,postcard" "Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "URF=V1.4,CP1,PQ3-5,RS600,SRGB24,W8,OB9,OFU0,IS1" "usb_CMD=URF" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=application/octet-stream,image/jpeg,image/urf,image/pwg-raster" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=15" "qtotal=1" "rp=ipp/print" "txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             _canon-chmp._tcp     local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [80]
+   txt = ["mpath=http://c05CA4C00000.local./canon/ij/command1/port1" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             Web Site             local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [80]
+   txt = ["txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             _uscan._tcp          local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [80]
+   txt = ["usb_MFG=Canon" "mopria-certified-scan=1.3" "duplex=F" "is=platen" "cs=grayscale,color" "rs=eSCL" "representation=http://c05CA4C00000.local./icon/printer_icon.png" "vers=2.63" "UUID=00000000-0000-1000-8000-0018d50279cc" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=image/jpeg,application/pdf" "ty=Canon G600 series" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             _uscans._tcp         local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [443]
+   txt = ["usb_MFG=Canon" "mopria-certified-scan=1.3" "duplex=F" "is=platen" "cs=grayscale,color" "rs=eSCL" "representation=http://c05CA4C00000.local./icon/printer_icon.png" "vers=2.63" "UUID=00000000-0000-1000-8000-0018d50279cc" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=image/jpeg,application/pdf" "ty=Canon G600 series" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             Internet Printer     local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [631]
+   txt = ["mopria-certified=2.0" "print_wfds=T" "PaperMax=legal-A4" "kind=document,envelope,photo,postcard" "Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "URF=V1.4,CP1,PQ3-5,RS600,SRGB24,W8,OB9,OFU0,IS1" "usb_CMD=URF" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=application/octet-stream,image/jpeg,image/urf,image/pwg-raster" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=15" "qtotal=1" "rp=ipp/print" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             Secure Internet Printer local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [631]
+   txt = ["TLS=1.2" "mopria-certified=2.0" "print_wfds=T" "PaperMax=legal-A4" "kind=document,envelope,photo,postcard" "Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "URF=V1.4,CP1,PQ3-5,RS600,SRGB24,W8,OB9,OFU0,IS1" "usb_CMD=URF" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local./index.html?page=PAGE_AAP" "note=" "pdl=application/octet-stream,image/jpeg,image/urf,image/pwg-raster" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=15" "qtotal=1" "rp=ipp/print" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             _canon-chmp._tcp     local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [80]
+   txt = ["mpath=http://c05CA4C00000.local./canon/ij/command1/port1" "txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             UNIX Printer         local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [515]
+   txt = ["Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local." "note=" "pdl=application/octet-stream" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=60" "qtotal=1" "rp=auto" "txtvers=1"]
+= enp38s0 IPv4 Canon G600 series                             PDL Printer          local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [9100]
+   txt = ["Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local." "note=" "pdl=application/octet-stream" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=30" "qtotal=1" "rp=auto" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             UNIX Printer         local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [515]
+   txt = ["Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local." "note=" "pdl=application/octet-stream" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=60" "qtotal=1" "rp=auto" "txtvers=1"]
+= enp38s0 IPv6 Canon G600 series                             PDL Printer          local
+   hostname = [c05CA4C00000.local]
+   address = [10.31.21.53]
+   port = [9100]
+   txt = ["Fax=F" "Scan=T" "Duplex=F" "Color=T" "UUID=00000000-0000-1000-8000-0018d50279cc" "usb_MDL=G600 series" "usb_MFG=Canon" "adminurl=http://c05CA4C00000.local." "note=" "pdl=application/octet-stream" "product=(Canon G600 series)" "ty=Canon G600 series" "priority=30" "qtotal=1" "rp=auto" "txtvers=1"]

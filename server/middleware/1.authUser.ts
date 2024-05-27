@@ -1,5 +1,5 @@
 import { verifyRequestOrigin } from 'lucia'
-import type { Session, User } from 'lucia'
+import type { Session } from 'lucia'
 
 export default defineEventHandler(async (event) => {
   if (event.method !== 'GET') {
@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
     // set the session and the user in the context
     event.context.session = session
-    event.context.user = user
+    event.context.user = user as User
   }
 })
 
