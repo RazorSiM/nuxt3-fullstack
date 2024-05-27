@@ -26,6 +26,7 @@
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
     "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "db:introspect": "drizzle-kit introspect",
     "db:push": "drizzle-kit push",
     "db:drop": "drizzle-kit drop",
