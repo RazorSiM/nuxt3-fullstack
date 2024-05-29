@@ -2,7 +2,7 @@
   "name": "nuxt3-fullstack",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@9.1.0+sha512.67f5879916a9293e5cf059c23853d571beaf4f753c707f40cb22bed5fb1578c6aad3b6c4107ccb3ba0b35be003eb621a16471ac836c87beb53f9d54bb4612724",
+  "packageManager": "pnpm@9.1.2+sha256.19c17528f9ca20bd442e4ca42f00f1b9808a9cb419383cd04ba32ef19322aba7",
   "description": "Nuxt3 fullstack template with database and authentication",
   "author": {
     "name": "Simone Colabufalo",
