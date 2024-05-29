@@ -11,7 +11,7 @@ definePageMeta({
   middleware: ['protected'],
 })
 
-const { data: todos, refresh } = useFetch('/api/todos', {
+const { data: todos, refresh } = await useFetch('/api/todos', {
   method: 'GET',
 })
 
