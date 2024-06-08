@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres
+    container_name: nuxt-db
+    restart: unless-stopped
+    ports:
+      - '${NUXT_POSTGRES_PORT:-5432}:5432'
+    environment:
+      POSTGRES_PASSWORD: $NUXT_POSTGRES_PASSWORD
+      POSTGRES_USER: $NUXT_POSTGRES_USER
+      POSTGRES_DB: $NUXT_POSTGRES_DATABASE
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  nuxt:
+    build: .
+    container_name: nuxt-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_POSTGRES_PASSWORD: $NUXT_POSTGRES_PASSWORD
+      NUXT_POSTGRES_USER: $NUXT_POSTGRES_USER
+      NUXT_POSTGRES_DATABASE: $NUXT_POSTGRES_DATABASE
+      NUXT_POSTGRES_HOST: $NUXT_POSTGRES_HOST
+      NUXT_POSTGRES_PORT: $NUXT_POSTGRES_PORT
+      NUXT_DISCORD_CLIENT_ID: $NUXT_DISCORD_CLIENT_ID
+      NUXT_DISCORD_CLIENT_SECRET: $NUXT_DISCORD_CLIENT_SECRET
+      NUXT_PUBLIC_SESSION_COOKIE_NAME: $NUXT_PUBLIC_SESSION_COOKIE_NAME
+    depends_on:
+      - db
+    entrypoint: ["/bin/sh", "-c", "./bin/run-migrations.sh && node .output/server/index.mjs"]
+
+volumes:
+  pgdata:
