@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   body.userId = userId
 
-  const payload = await insertTodoSchema.safeParse(body)
+  const payload = insertTodoSchema.safeParse(body)
 
   if (!payload.success) {
     const zodError = fromZodError(payload.error)
