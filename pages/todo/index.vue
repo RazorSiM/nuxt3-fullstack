@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { format, parseISO } from 'date-fns'
-import { useSortable } from '@vueuse/integrations/useSortable'
 import { toast } from 'vue-sonner'
 
 defineOptions({
@@ -14,8 +12,6 @@ definePageMeta({
 const { data: todos, refresh } = await useFetch('/api/todos', {
   method: 'GET',
 })
-
-const sortableElement = ref<HTMLElement | null>(null)
 
 async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: number) {
   try {
@@ -38,29 +34,6 @@ async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: nu
     })
   }
 }
-
-// @ts-expect-error - This error is about the todos type being wrapped in a SerializeObject type
-useSortable(sortableElement, todos, {
-  handle: '.sortable-handler',
-  animation: 0,
-
-  onEnd: async (e) => {
-    const newIndex = e.newIndex as number
-    const oldIndex = e.oldIndex as number
-    if (todos.value === null) {
-      return false
-    }
-
-    const newPosition = todos.value[newIndex].position
-    const oldPosition = todos.value[oldIndex].position
-    if (!newPosition || !oldPosition)
-      return false
-
-    const movedItem = todos.value.splice(oldIndex, 1)[0]
-    todos.value.splice(newIndex, 0, movedItem)
-    await handleMoveTodo(movedItem.id, oldPosition, newPosition)
-  },
-})
 
 async function handleCreateTodo(values: TodoCreateForm) {
   const body = {
@@ -142,6 +115,14 @@ watchDebounced(isSheetOpen, () => {
   }
 }, { debounce: 500 })
 
+function handleOpenSheet(id?: number) {
+  if (id) {
+    openUpdateTodo(id)
+  }
+  else {
+    isSheetOpen.value = true
+  }
+}
 function openUpdateTodo(id: number) {
   const todo = todos.value?.find(todo => todo.id === id)
   if (!todo)
@@ -183,88 +164,13 @@ async function handleDeleteTodo(id: number) {
         />
       </UiSheetContent>
     </UiSheet>
-    <UiCard class="mt-10">
-      <UiCardHeader>
-        <UiCardTitle class="flex gap-4 items-center w-full justify-between">
-          Todos
-          <UiButton
-            size="sm"
-            variant="secondary"
-            @click="isSheetOpen = true"
-          >
-            <Icon name="heroicons:plus" />
-            Add
-          </UiButton>
-        </UiCardTitle>
-        <UiCardDescription>
-          List of Todos
-        </UiCardDescription>
-      </UiCardHeader>
-      <UiCardContent>
-        <p
-          v-if="!todos || todos.length === 0"
-          ref="sortableElement"
-        >
-          No Todos available
-        </p>
-        <template v-else>
-          <div
-            ref="sortableElement"
-            class="divide-y dark:divide-muted"
-          >
-            <div
-              v-for="todo in todos"
-              :key="todo.id"
-              class="flex items-start justify-between gap-x-6 py-5"
-            >
-              <UiButton
-                variant="ghost"
-                size="icon"
-                class="sortable-handler"
-              >
-                <Icon name="heroicons:bars-3" />
-              </UiButton>
-              <div class="min-w-0 flex-grow">
-                <div class="flex items-center gap-x-3">
-                  <p class="text-sm font-semibold leading-6">
-                    {{ todo.title }}
-                  </p>
-                  <UiBadge
-                    :variant="todo.completed === true ? 'secondary' : 'outline'"
-                  >
-                    {{ todo.completed ? 'Completed' : 'In Progress' }}
-                  </UiBadge>
-                </div>
-                <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-muted-foreground">
-                  <p class="whitespace-nowrap">
-                    Updated on <time :datetime="todo.updatedAt">{{ format(parseISO(todo.updatedAt), 'PPpp') }}</time>
-                  </p>
-                </div>
-                <p>{{ todo.description }}</p>
-              </div>
-              <div class="flex gap-2">
-                <UiButton
-                  size="icon"
-                  variant="ghost"
-                  @click="openUpdateTodo(todo.id)"
-                >
-                  <Icon
-                    name="heroicons:pencil"
-                    size="1rem"
-                  />
-                </UiButton>
-                <UiButton
-                  size="icon"
-                  variant="destructive"
-                  @click="handleDeleteTodo(todo.id)"
-                >
-                  <Icon name="heroicons:trash" />
-                </UiButton>
-              </div>
-            </div>
-          </div>
-        </template>
-      </UiCardContent>
-    </UiCard>
+    <TodoList
+      :todos="JSON.parse(JSON.stringify(todos))"
+      :enable-controls="true"
+      :enable-sorting="true"
+      @delete-todo="handleDeleteTodo"
+      @open-sheet="handleOpenSheet"
+      @move-todo="handleMoveTodo"
+    />
   </div>
 </template>
