@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   body.userId = userId
 
-  const payload = await updateTodoPositionSchema.safeParse(body)
+  const payload = updateTodoPositionSchema.safeParse(body)
   // if body is not valid, throw an error
   if (!payload.success) {
     const zodError = fromZodError(payload.error)
