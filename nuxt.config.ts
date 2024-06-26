@@ -43,11 +43,6 @@ export default defineNuxtConfig({
     public: {
       sessionCookieName: '',
     },
-    postgresPassword: '',
-    postgresUser: '',
-    postgresDatabase: '',
-    postgresHost: '',
-    postgresPort: '',
     discordClientId: '',
     discordClientSecret: '',
     githubClientId: '',

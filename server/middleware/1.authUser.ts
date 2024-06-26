@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
       return event.node.res.writeHead(403).end()
   }
 
+  const lucia = initializeLucia(hubDatabase())
   // check if the request has an Authorization header
   const authorizationHeader = getHeader(event, 'Authorization')
   let sessionId: string | null = null

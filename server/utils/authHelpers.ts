@@ -8,6 +8,7 @@ interface AuthenticateOauthUserOptions {
 }
 
 export async function createSessionCookie(userId: string) {
+  const lucia = initializeLucia(hubDatabase())
   const session = await lucia.createSession(userId, {})
   const sessionCookie = lucia.createSessionCookie(session.id)
   return sessionCookie

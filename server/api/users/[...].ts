@@ -56,6 +56,7 @@ router.get('/:userId/sessions', defineEventHandler(async (event) => {
     })
   }
   else {
+    const lucia = initializeLucia(hubDatabase())
     const sessions = await lucia.getUserSessions(event.context.user.id)
     return sessions
   }
@@ -82,6 +83,7 @@ router.post('/:userId/sessions', defineEventHandler(async (event) => {
     })
   }
   else {
+    const lucia = initializeLucia(hubDatabase())
     const session = await lucia.createSession(userId, {})
     return session
   }
@@ -109,6 +111,7 @@ router.delete('/:userId/sessions/:sessionId', defineEventHandler(async (event) =
     })
   }
   else {
+    const lucia = initializeLucia(hubDatabase())
     await lucia.invalidateSession(sessionId)
     return {
       success: true,

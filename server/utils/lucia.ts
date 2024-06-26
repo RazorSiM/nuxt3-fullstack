@@ -1,25 +1,29 @@
 import { Lucia } from 'lucia'
-import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle'
+import { D1Adapter } from '@lucia-auth/adapter-sqlite'
 import { Discord, GitHub } from 'arctic'
-import { useDrizzle } from './database'
 
 const config = useRuntimeConfig()
-const adapter = new DrizzleSQLiteAdapter(useDrizzle(), schemas.sessionTable, schemas.userTable)
 
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    name: config.public.sessionCookieName,
-    attributes: {
-      secure: !import.meta.dev,
+export function initializeLucia(D1: D1Database) {
+  const adapter = new D1Adapter(D1, {
+    user: 'user',
+    session: 'session',
+  })
+  return new Lucia(adapter, {
+    sessionCookie: {
+      name: config.public.sessionCookieName,
+      attributes: {
+        secure: !import.meta.dev,
+      },
     },
-  },
-  getUserAttributes: (attributes) => {
-    return {
-      username: attributes.username,
-      email: attributes.email,
-    }
-  },
-})
+    getUserAttributes: (attributes) => {
+      return {
+        username: attributes.username,
+        email: attributes.email,
+      }
+    },
+  })
+}
 
 export interface DatabaseUserAttributes {
   username: string
@@ -27,7 +31,7 @@ export interface DatabaseUserAttributes {
 }
 declare module 'lucia' {
   interface Register {
-    Lucia: typeof lucia
+    Lucia: ReturnType<typeof initializeLucia>
     DatabaseUserAttributes: DatabaseUserAttributes
   }
 }

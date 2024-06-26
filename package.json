@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
+    "@lucia-auth/adapter-sqlite": "^3.0.1",
     "@vee-validate/zod": "^4.13.1",
     "@vueuse/integrations": "^10.11.0",
     "arctic": "^1.9.1",

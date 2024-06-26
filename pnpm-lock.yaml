@@ -11,6 +11,9 @@ importers:
       '@lucia-auth/adapter-drizzle':
         specifier: ^1.0.7
         version: 1.0.7(lucia@3.2.0)
+      '@lucia-auth/adapter-sqlite':
+        specifier: ^3.0.1
+        version: 3.0.1(lucia@3.2.0)
       '@vee-validate/zod':
         specifier: ^4.13.1
         version: 4.13.1(vue@3.4.30(typescript@5.5.2))
@@ -1234,6 +1237,18 @@ packages:
     resolution: {integrity: sha512-X/V7fLBca8EC/gPXCntwbQpb0+F9oEuRoHElvsi9rCrdnGhCMNxHgwAvgiQ6pes+rIYpyvx4n3hvjqo/fPo03A==}
     peerDependencies:
       lucia: 3.x
+
+  '@lucia-auth/adapter-sqlite@3.0.1':
+    resolution: {integrity: sha512-bzr8+HALrbiYMb/+oL1SAnjbgFqlPs/Kj4lO57t/VvbXzmbpQEKk5Nv6hMpvWSkGAR9LbxYeQAtecikpKZVB0w==}
+    peerDependencies:
+      '@libsql/client': ^0.3.0
+      better-sqlite3: 8.x - 9.x
+      lucia: 3.x
+    peerDependenciesMeta:
+      '@libsql/client':
+        optional: true
+      better-sqlite3:
+        optional: true
 
   '@mapbox/node-pre-gyp@1.0.11':
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
@@ -6928,6 +6943,10 @@ snapshots:
   '@kwsites/promise-deferred@1.1.1': {}
 
   '@lucia-auth/adapter-drizzle@1.0.7(lucia@3.2.0)':
+    dependencies:
+      lucia: 3.2.0
+
+  '@lucia-auth/adapter-sqlite@3.0.1(lucia@3.2.0)':
     dependencies:
       lucia: 3.2.0
 
