@@ -3,15 +3,15 @@ import { z } from 'zod'
 import { generateIdFromEntropySize } from 'lucia'
 import type { User } from './schema'
 import { oauthAccountTable, todoTable, userTable } from './schema'
-import { db } from './index'
+import { useDrizzle } from './index'
 
 export async function createOauthAccount(providerId: string, providerUserId: string, userId: string) {
-  const result = await db.insert(oauthAccountTable).values({ providerId, providerUserId, userId })
+  const result = await useDrizzle().insert(oauthAccountTable).values({ providerId, providerUserId, userId }).returning()
   return result[0]
 }
 
 export async function getExistingOauthAccount(providerId: string, userId: string) {
-  const prepared = db
+  const prepared = useDrizzle()
     .select()
     .from(oauthAccountTable)
     .where(
@@ -20,7 +20,7 @@ export async function getExistingOauthAccount(providerId: string, userId: string
         eq(oauthAccountTable.userId, sql.placeholder('userId')),
       ),
     )
-    .prepare('getExistingOauthAccount')
+    .prepare()
 
   const result = await prepared.execute({ providerId, userId })
   if (result.length === 0)
@@ -31,16 +31,16 @@ export async function getExistingOauthAccount(providerId: string, userId: string
 
 export async function createUser(username: string, email: string) {
   const id = generateIdFromEntropySize(10)
-  const result = await db.insert(userTable).values({ id, username, email }).returning()
+  const result = await useDrizzle().insert(userTable).values({ id, username, email }).returning()
   return result[0]
 }
 
 export async function selectUserByEmail(email: string) {
-  const prepared = db
+  const prepared = useDrizzle()
     .select()
     .from(userTable)
     .where(eq(userTable.email, sql.placeholder('email')))
-    .prepare('selectUserByEmail')
+    .prepare()
 
   const result = await prepared.execute({ email })
   if (result.length === 0)
@@ -50,11 +50,11 @@ export async function selectUserByEmail(email: string) {
 }
 
 export async function selectUserByID(id: string) {
-  const prepared = db
+  const prepared = useDrizzle()
     .select()
     .from(userTable)
     .where(eq(userTable.id, sql.placeholder('id')))
-    .prepare('selectUserByID')
+    .prepare()
 
   const result = await prepared.execute({ id })
   if (result.length === 0)
@@ -64,21 +64,21 @@ export async function selectUserByID(id: string) {
 }
 
 export async function modifyUsername(userId: string, username: string): Promise<User> {
-  const result = await db.update(userTable).set({ username }).where(eq(userTable.id, userId)).returning()
+  const result = await useDrizzle().update(userTable).set({ username }).where(eq(userTable.id, userId)).returning()
   return result[0]
 }
 
 export async function deleteTodoFromUser(id: number, userId: string) {
-  const result = await db.update(todoTable).set({ deleted: true, deletedAt: new Date() }).where(
+  const result = await useDrizzle().update(todoTable).set({ deleted: true, deletedAt: new Date().toISOString() }).where(
     and(
-      eq(todoTable.id, id),
+      eq(todoTable.id, id.toString()),
       eq(todoTable.userId, userId),
     ),
   ).returning()
   return result[0]
 }
 export async function selectTodo(id: number) {
-  const result = await db.select().from(todoTable).where(eq(todoTable.id, id))
+  const result = await useDrizzle().select().from(todoTable).where(eq(todoTable.id, id.toString()))
   if (result.length === 0)
     return null
 
@@ -86,7 +86,7 @@ export async function selectTodo(id: number) {
 }
 
 export async function selectTodosFromUser(userId: string) {
-  const prepared = db
+  const prepared = useDrizzle()
     .select({ id: todoTable.id, title: todoTable.title, description: todoTable.description, completed: todoTable.completed, position: todoTable.position, createdAt: todoTable.createdAt, updatedAt: todoTable.updatedAt })
     .from(todoTable)
     .where(
@@ -96,7 +96,7 @@ export async function selectTodosFromUser(userId: string) {
       ),
     )
     .orderBy(asc(todoTable.position))
-    .prepare('selectTodosFromUser')
+    .prepare()
 
   const result = await prepared.execute({ userId })
   return result
@@ -104,7 +104,7 @@ export async function selectTodosFromUser(userId: string) {
 export type SelectTodoFromUserReturn = ReturnType<typeof selectTodosFromUser>
 
 export async function createTodo(todo: TodoInsert) {
-  const result = await db.transaction(async (tx) => {
+  const result = await useDrizzle().transaction(async (tx) => {
     const findNextPosition = tx.select({ position: sql<number>`coalesce(max(${todoTable.position}), 0) + 1` }).from(todoTable).where(eq(todoTable.userId, todo.userId))
     const nextPositionQueryResult = await findNextPosition.execute()
     const nextPosition = nextPositionQueryResult[0].position
@@ -130,14 +130,14 @@ export async function updateTodoPosition(payload: UpdateTodoPositionSchema) {
       updateAffectedPositions: [],
     }
   }
-  const result = await db.transaction(async (tx) => {
-    const updatedCurrentPosition = await tx.update(todoTable).set({ position: payload.newIndex }).where(and(eq(todoTable.id, payload.id), eq(todoTable.userId, payload.userId))).returning()
+  const result = await useDrizzle().transaction(async (tx) => {
+    const updatedCurrentPosition = await tx.update(todoTable).set({ position: payload.newIndex }).where(and(eq(todoTable.id, payload.id.toString()), eq(todoTable.userId, payload.userId))).returning()
     let updatedAffectedPosition = null
     if (payload.newIndex < payload.currentIndex) {
       updatedAffectedPosition = await tx.update(todoTable).set({ position: sql<number>`${todoTable.position} + 1` }).where(
         and(
           eq(todoTable.userId, payload.userId),
-          ne(todoTable.id, payload.id),
+          ne(todoTable.id, payload.id.toString()),
           gte(todoTable.position, payload.newIndex),
         ),
       ).returning()
@@ -146,7 +146,7 @@ export async function updateTodoPosition(payload: UpdateTodoPositionSchema) {
       updatedAffectedPosition = await tx.update(todoTable).set({ position: sql<number>`${todoTable.position} - 1` }).where(
         and(
           eq(todoTable.userId, payload.userId),
-          ne(todoTable.id, payload.id),
+          ne(todoTable.id, payload.id.toString()),
           ne(todoTable.position, 1),
           lte(todoTable.position, payload.newIndex),
         ),
@@ -170,9 +170,9 @@ export const updateTodoSchema = z.object({
 export type UpdateTodoSchema = z.infer<typeof updateTodoSchema>
 export async function updateTodo(todo: UpdateTodoSchema, userId: string) {
   try {
-    const result = db.update(todoTable).set({ ...todo, updatedAt: new Date() }).where(
+    const result = useDrizzle().update(todoTable).set({ ...todo, id: todo.id.toString(), updatedAt: new Date().toISOString() }).where(
       and(
-        eq(todoTable.id, todo.id),
+        eq(todoTable.id, todo.id.toString()),
         eq(todoTable.userId, userId),
       ),
     ).returning()

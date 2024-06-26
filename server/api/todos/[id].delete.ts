@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   }
   const userId = event.context.user?.id
 
-  const id = await getRouterParam(event, 'id')
+  const id = getRouterParam(event, 'id')
   if (!id) {
     throw createError({
       statusCode: 400,

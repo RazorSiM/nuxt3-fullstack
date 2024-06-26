@@ -1,10 +1,10 @@
 import { Lucia } from 'lucia'
 import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle'
 import { Discord, GitHub } from 'arctic'
-import { db, schemas } from './database'
+import { useDrizzle } from './database'
 
 const config = useRuntimeConfig()
-const adapter = new DrizzleSQLiteAdapter(db, schemas.sessionTable, schemas.userTable)
+const adapter = new DrizzleSQLiteAdapter(useDrizzle(), schemas.sessionTable, schemas.userTable)
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
