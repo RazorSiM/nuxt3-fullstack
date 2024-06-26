@@ -1,26 +1,23 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
-import { boolean, integer, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import { integer, sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
-export const userTable = pgTable('user', {
+export const userTable = sqliteTable('user', {
   id: text('id').primaryKey(),
   username: text('username').notNull().unique(),
   email: text('email').notNull().unique(),
 })
 
-export const sessionTable = pgTable('session', {
+export const sessionTable = sqliteTable('session', {
   id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
-  expiresAt: timestamp('expires_at', {
-    withTimezone: true,
-    mode: 'date',
-  }).notNull(),
+  expiresAt: integer('expires_at').notNull(),
 })
 
-export const oauthAccountTable = pgTable('oauth_account', {
+export const oauthAccountTable = sqliteTable('oauth_account', {
   providerId: text('provider_id').notNull(),
   providerUserId: text('provider_user_id').notNull(),
   userId: text('user_id').notNull().references(() => userTable.id),
@@ -30,17 +27,17 @@ export const oauthAccountTable = pgTable('oauth_account', {
   }
 })
 
-export const todoTable = pgTable('todo', {
-  id: serial('id').primaryKey(),
+export const todoTable = sqliteTable('todo', {
+  id: text('id').primaryKey(),
   position: integer('position'),
   userId: text('user_id').references(() => userTable.id).notNull(),
   title: text('title').notNull().unique(),
   description: text('description'),
-  completed: boolean('completed').notNull().default(false),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  deleted: boolean('deleted').notNull().default(false),
-  deletedAt: timestamp('deleted_at'),
+  completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
+  createdAt: text('created_at').notNull().default(sql`(CURRENT_TIME)`),
+  updatedAt: text('updated_at').notNull().default(sql`(CURRENT_TIME)`),
+  deleted: integer('deleted', { mode: 'boolean' }).notNull().default(false),
+  deletedAt: text('deleted_at'),
 })
 
 export const todoRelations = relations(todoTable, ({ one }) => ({

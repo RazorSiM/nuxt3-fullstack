@@ -32,11 +32,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  routeRules: {
-    '/': {
-      prerender: true,
-    },
-  },
   shadcn: {
     prefix: 'Ui',
     componentDir: './components/ui',
