@@ -10,7 +10,24 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode', 'nuxt-icon', 'shadcn-nuxt', '@vueuse/nuxt'],
+  modules: [
+    '@pinia/nuxt',
+    '@nuxt/eslint',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
+    'nuxt-icon',
+    'shadcn-nuxt',
+    '@vueuse/nuxt',
+    process.env.NUXT_HUB_ENABLED ? '@nuxtjs/hub' : '',
+  ],
+  ...(process.env.NUXT_HUB_ENABLED
+    ? {
+        hub: {
+          database: true,
+        },
+      }
+    : {}
+  ),
   eslint: {
     config: {
       stylistic: {

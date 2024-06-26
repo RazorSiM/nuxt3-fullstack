@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useSortable } from '@vueuse/integrations/useSortable'
 import { format, parseISO } from 'date-fns'
+import { useSortable } from '@vueuse/integrations/useSortable'
 
 defineOptions({
   name: 'TodoList',
