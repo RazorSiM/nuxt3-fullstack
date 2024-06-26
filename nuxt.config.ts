@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     'nuxt-icon',
     'shadcn-nuxt',
     '@vueuse/nuxt',
-    process.env.NUXT_HUB_ENABLED ? '@nuxtjs/hub' : '',
+    process.env.NUXT_HUB_ENABLED ? '@nuxthub/core' : '',
   ],
   ...(process.env.NUXT_HUB_ENABLED
     ? {
