@@ -42,7 +42,7 @@ useSortable(sortableElement, todos, {
 
     const movedItem = todos.value.splice(oldIndex, 1)[0]
     todos.value.splice(newIndex, 0, movedItem)
-    emit('moveTodo', movedItem.id, oldPosition, newPosition)
+    emit('moveTodo', Number.parseInt(movedItem.id), oldPosition, newPosition)
   },
 })
 </script>
@@ -99,8 +99,7 @@ useSortable(sortableElement, todos, {
               </div>
               <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-muted-foreground">
                 <p class="whitespace-nowrap">
-                  Updated on <time :datetime="todo.updatedAt.toString()">{{ format(parseISO(todo.updatedAt.toString()),
-                                                                                   'PPpp') }}</time>
+                  Updated on <time :datetime="todo.updatedAt.toString()">{{ format(parseISO(todo.updatedAt.toString()), 'PPpp') }}</time>
                 </p>
               </div>
               <p>{{ todo.description }}</p>
@@ -112,7 +111,7 @@ useSortable(sortableElement, todos, {
               <UiButton
                 size="icon"
                 variant="ghost"
-                @click="emit('openSheet', todo.id)"
+                @click="emit('openSheet', Number.parseInt(todo.id))"
               >
                 <Icon
                   name="heroicons:pencil"
@@ -122,7 +121,7 @@ useSortable(sortableElement, todos, {
               <UiButton
                 size="icon"
                 variant="destructive"
-                @click="emit('deleteTodo', todo.id)"
+                @click="emit('deleteTodo', Number.parseInt(todo.id))"
               >
                 <Icon name="heroicons:trash" />
               </UiButton>

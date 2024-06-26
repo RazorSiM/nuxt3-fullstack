@@ -124,11 +124,11 @@ function handleOpenSheet(id?: number) {
   }
 }
 function openUpdateTodo(id: number) {
-  const todo = todos.value?.find(todo => todo.id === id)
+  const todo = todos.value?.find(todo => Number.parseInt(todo.id) === id)
   if (!todo)
     return
   isSheetOpen.value = true
-  todoToUpdate.value = todo
+  todoToUpdate.value = { ...todo, id: Number.parseInt(todo.id) }
 }
 
 async function handleDeleteTodo(id: number) {
