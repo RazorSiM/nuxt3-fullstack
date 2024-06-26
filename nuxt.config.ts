@@ -18,16 +18,11 @@ export default defineNuxtConfig({
     'nuxt-icon',
     'shadcn-nuxt',
     '@vueuse/nuxt',
-    process.env.NUXT_HUB_ENABLED ? '@nuxthub/core' : '',
+    '@nuxthub/core',
   ],
-  ...(process.env.NUXT_HUB_ENABLED
-    ? {
-        hub: {
-          database: true,
-        },
-      }
-    : {}
-  ),
+  hub: {
+    database: true,
+  },
   eslint: {
     config: {
       stylistic: {
