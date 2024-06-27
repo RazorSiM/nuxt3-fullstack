@@ -6,6 +6,8 @@ export default defineEventHandler(async (event) => {
   const state = query.state?.toString() ?? null
   const storedState = getCookie(event, 'github_oauth_state') ?? null
 
+  const config = useRuntimeConfig()
+  console.log('useRuntimeConfig >>>>>>>>>', config)
   console.log('github code and state >>>>>>>>>>', {
     code,
     state,
