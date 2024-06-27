@@ -1,5 +1,4 @@
 import type { H3Event } from 'h3'
-import { verifyRequestOrigin } from 'lucia'
 
 interface AuthenticateOauthUserOptions {
   providerName: 'github' | 'discord'
@@ -75,16 +74,6 @@ export async function getUserAndSession(event: H3Event) {
 }
 
 export async function requireUserSession(event: H3Event) {
-  // CSRF protection
-  if (event.method !== 'GET') {
-    const originHeader = getHeader(event, 'Origin') ?? null
-    const hostHeader = getHeader(event, 'Host') ?? null
-    if (!originHeader || !hostHeader || !verifyRequestOrigin(originHeader, [hostHeader]))
-      throw createError({
-        statusCode: 403,
-        message: 'Forbidden',
-      })
-  }
   const { user, session, lucia } = await getUserAndSession(event)
   // if there is no session, throw an error
   if (!session || !user) {

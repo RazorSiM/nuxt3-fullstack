@@ -28,16 +28,16 @@ export const oauthAccountTable = sqliteTable('oauth_account', {
 })
 
 export const todoTable = sqliteTable('todo', {
-  id: text('id').primaryKey(),
+  id: integer('id').primaryKey(),
   position: integer('position'),
   userId: text('user_id').references(() => userTable.id).notNull(),
   title: text('title').notNull().unique(),
   description: text('description'),
   completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
-  createdAt: text('created_at').notNull().default(sql`(CURRENT_TIME)`),
-  updatedAt: text('updated_at').notNull().default(sql`(CURRENT_TIME)`),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   deleted: integer('deleted', { mode: 'boolean' }).notNull().default(false),
-  deletedAt: text('deleted_at'),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 })
 
 export const todoRelations = relations(todoTable, ({ one }) => ({

@@ -14,16 +14,16 @@ CREATE TABLE `session` (
 );
 --> statement-breakpoint
 CREATE TABLE `todo` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY NOT NULL,
 	`position` integer,
 	`user_id` text NOT NULL,
 	`title` text NOT NULL,
 	`description` text,
 	`completed` integer DEFAULT false NOT NULL,
-	`created_at` text DEFAULT (CURRENT_TIME) NOT NULL,
-	`updated_at` text DEFAULT (CURRENT_TIME) NOT NULL,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
 	`deleted` integer DEFAULT false NOT NULL,
-	`deleted_at` text,
+	`deleted_at` integer,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
