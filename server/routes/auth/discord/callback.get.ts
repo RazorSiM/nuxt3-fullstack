@@ -1,26 +1,34 @@
 import { OAuth2RequestError } from 'arctic'
 
 export default defineEventHandler(async (event) => {
+  console.log('auth/discord/callback >>>>>>>>>>>>>>>>>>')
   const query = getQuery(event)
   const code = query.code?.toString() ?? null
   const state = query.state?.toString() ?? null
   const storedState = getCookie(event, 'discord_oauth_state') ?? null
 
+  console.log({
+    code,
+    state,
+    storedState,
+  })
   if (!code || !state || !storedState || state !== storedState) {
     throw createError({
       status: 400,
+      message: 'Invalid state or code.',
     })
   }
 
   try {
     const tokens = await discordAuthProvider.validateAuthorizationCode(code)
+    console.log('tokens >>>>>>>>>>>>>>>>>>', tokens)
     // get the discord user
     const discordUser = await $fetch<DiscordUser>('https://discord.com/api/v10/users/@me', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     })
-
+    console.log('discordUser >>>>>>>>>>>>>>>>>>', discordUser)
     if (!discordUser.verified) {
       throw createError({
         status: 400,
@@ -34,6 +42,7 @@ export default defineEventHandler(async (event) => {
       providerUsername: discordUser.username,
       providerUserId: discordUser.id,
     }, event)
+    console.log(' after authenticateOauthUser >>>>>>>>>>>>>>>>>>')
 
     return sendRedirect(event, '/user')
   }

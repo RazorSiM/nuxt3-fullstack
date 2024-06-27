@@ -6,21 +6,28 @@ export default defineEventHandler(async (event) => {
   const state = query.state?.toString() ?? null
   const storedState = getCookie(event, 'github_oauth_state') ?? null
 
+  console.log('github code and state >>>>>>>>>>', {
+    code,
+    state,
+    storedState,
+  })
   if (!code || !state || !storedState || state !== storedState) {
     throw createError({
       status: 400,
+      message: 'Invalid state or code.',
     })
   }
 
   try {
     const tokens = await githubAuthProvider.validateAuthorizationCode(code)
+    console.log('github tokens >>>>>>>>>>>>>>>>>>', tokens)
     // get the github user
     const githubUser = await $fetch<GitHubUser>('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     })
-
+    console.log('githubUser >>>>>>>>>>>>>>>>>>', githubUser)
     interface Email {
       email: string
       verified: boolean

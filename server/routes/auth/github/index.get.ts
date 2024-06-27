@@ -17,6 +17,8 @@ export default defineEventHandler(async (event) => {
     scopes: ['user:email'],
   })
 
+  console.log('url >>>>>>>', url.toString())
+
   setCookie(event, 'github_oauth_state', state, {
     path: '/',
     secure: !import.meta.dev,
