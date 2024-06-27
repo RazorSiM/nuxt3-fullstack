@@ -2,7 +2,8 @@ import { generateState } from 'arctic'
 
 export default defineEventHandler(async (event) => {
   const lucia = initializeLucia(hubDatabase())
-  console.log(useRuntimeConfig())
+  const config = useRuntimeConfig()
+  console.log('useRuntimeConfig >>>>>>>>>', config)
   // check if the user is already logged in
   const sessionId = getCookie(event, lucia.sessionCookieName) ?? null
   if (sessionId) {
