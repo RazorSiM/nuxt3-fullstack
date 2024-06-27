@@ -1,3 +1,4 @@
-export default defineEventHandler((event) => {
-  return event.context.user
+export default defineEventHandler(async (event) => {
+  const { user } = await getUserAndSession(event)
+  return user
 })

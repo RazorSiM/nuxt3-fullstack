@@ -7,14 +7,10 @@ const usernameSchema = z.object({
   username: z.string().min(3).max(20),
 })
 router.put('/:userId', defineEventHandler(async (event) => {
-  if (!event.context.user || !event.context.session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
+  const { session } = await requireUserSession(event)
+
   const userId = getRouterParam(event, 'userId')
-  if (userId !== event.context.session.userId) {
+  if (userId !== session.userId) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
@@ -29,7 +25,7 @@ router.put('/:userId', defineEventHandler(async (event) => {
   }
   else {
     try {
-      const newUser = await modifyUsername(event.context.session.userId, body.data.username)
+      const newUser = await modifyUsername(session.userId, body.data.username)
       return newUser
     }
     catch (e) {
@@ -42,33 +38,24 @@ router.put('/:userId', defineEventHandler(async (event) => {
 }))
 
 router.get('/:userId/sessions', defineEventHandler(async (event) => {
-  if (!event.context.user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
+  const { user, lucia } = await requireUserSession(event)
+
   const userId = getRouterParam(event, 'userId')
-  if (userId !== event.context.user?.id) {
+  if (userId !== user.id) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
     })
   }
   else {
-    const lucia = initializeLucia(hubDatabase())
-    const sessions = await lucia.getUserSessions(event.context.user.id)
+    const sessions = await lucia.getUserSessions(user.id)
     return sessions
   }
 }))
 
 router.post('/:userId/sessions', defineEventHandler(async (event) => {
-  if (!event.context.user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
+  const { user, lucia } = await requireUserSession(event)
+
   const userId = getRouterParam(event, 'userId')
   if (!userId) {
     throw createError({
@@ -76,14 +63,13 @@ router.post('/:userId/sessions', defineEventHandler(async (event) => {
       statusMessage: 'Bad Request',
     })
   }
-  if (userId !== event.context.user?.id) {
+  if (userId !== user.id) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
     })
   }
   else {
-    const lucia = initializeLucia(hubDatabase())
     const session = await lucia.createSession(userId, {})
     return session
   }
@@ -98,20 +84,15 @@ router.delete('/:userId/sessions/:sessionId', defineEventHandler(async (event) =
       statusMessage: 'Bad Request',
     })
   }
-  if (!event.context.user || !event.context.session) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
-  if (userId !== event.context.user.id) {
+  const { user, lucia } = await requireUserSession(event)
+
+  if (userId !== user.id) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
     })
   }
   else {
-    const lucia = initializeLucia(hubDatabase())
     await lucia.invalidateSession(sessionId)
     return {
       success: true,

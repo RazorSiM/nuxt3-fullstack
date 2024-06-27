@@ -1,11 +1,5 @@
 export default defineEventHandler(async (event) => {
-  if (!event.context.session || !event.context.user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
-  const userId = event.context.user?.id
+  const { user } = await requireUserSession(event)
 
   const id = getRouterParam(event, 'id')
   if (!id) {
@@ -16,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const deletedTodo = await deleteTodoFromUser(Number.parseInt(id), userId)
+    const deletedTodo = await deleteTodoFromUser(Number.parseInt(id), user.id)
     return deletedTodo
   }
   catch (e) {
