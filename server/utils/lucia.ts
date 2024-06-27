@@ -37,6 +37,7 @@ declare module 'lucia' {
 }
 
 const discordRedirectUri = `${config.origin}/auth/discord/callback`
+console.log('discordRedirectUri >>>>>>>>>>>>>>>>>>', discordRedirectUri)
 
 export const githubAuthProvider = new GitHub(config.githubClientId, config.githubClientSecret)
 export const discordAuthProvider = new Discord(config.discordClientId, config.discordClientSecret, discordRedirectUri)
