@@ -34,7 +34,14 @@ declare module 'lucia' {
   }
 }
 
-const discordRedirectUri = `${process.env.NUXT_ORIGIN}/auth/discord/callback`
+const githubRedirectUri = `${process.env.NUXT_ORIGIN}/auth/github/callback`
+const githubClientId = process.env.NUXT_GITHUB_CLIENT_ID ?? ''
+const githubClientSecret = process.env.NUXT_GITHUB_CLIENT_SECRET ?? ''
+export const githubAuthProvider = new GitHub(githubClientId, githubClientSecret, {
+  redirectURI: githubRedirectUri,
+})
 
-export const githubAuthProvider = new GitHub(process.env.NUXT_GITHUB_CLIENT_ID ?? '', process.env.NUXT_GITHUB_CLIENT_SECRET ?? '')
-export const discordAuthProvider = new Discord(process.env.NUXT_DISCORD_CLIENT_ID ?? '', process.env.NUXT_DISCORD_CLIENT_SECRET ?? '', discordRedirectUri)
+const discordRedirectUri = `${process.env.NUXT_ORIGIN}/auth/discord/callback`
+const discordClientId = process.env.NUXT_DISCORD_CLIENT_ID ?? ''
+const discordClientSecret = process.env.NUXT_DISCORD_CLIENT_SECRET ?? ''
+export const discordAuthProvider = new Discord(discordClientId, discordClientSecret, discordRedirectUri)
