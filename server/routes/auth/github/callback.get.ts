@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const tokens = await githubAuthProvider.validateAuthorizationCode(code)
+    console.log('github tokens >>>>>>>>>>>', tokens)
     // get the github user
     const githubUser = await $fetch<GitHubUser>('https://api.github.com/user', {
       headers: {
@@ -47,11 +48,12 @@ export default defineEventHandler(async (event) => {
         message: 'Primary email address is not verified.',
       })
     }
+    console.log('githubUser.id >>>>>>>>>>>', githubUser.id)
     await authenticateOauthUser({
       providerName: 'github',
       providerUserEmail: primaryEmail.email,
       providerUsername: githubUser.login,
-      providerUserId: githubUser.id,
+      providerUserId: githubUser.id.toString(),
     }, event)
 
     return sendRedirect(event, '/user')
@@ -73,6 +75,6 @@ export default defineEventHandler(async (event) => {
 })
 
 interface GitHubUser {
-  id: string
+  id: number
   login: string
 }
