@@ -2,8 +2,6 @@ import { generateState } from 'arctic'
 
 export default defineEventHandler(async (event) => {
   const lucia = initializeLucia(hubDatabase())
-  const config = useRuntimeConfig()
-  console.log('useRuntimeConfig >>>>>>>>>', config)
   // check if the user is already logged in
   const sessionId = getCookie(event, lucia.sessionCookieName) ?? null
   if (sessionId) {
@@ -15,7 +13,6 @@ export default defineEventHandler(async (event) => {
 
   const state = generateState()
   const url = await discordAuthProvider.createAuthorizationURL(state, { scopes: ['identify', 'email'] })
-  console.log('url >>>>>>>', url.toString())
   setCookie(event, 'discord_oauth_state', state, {
     path: '/',
     secure: !import.meta.dev,

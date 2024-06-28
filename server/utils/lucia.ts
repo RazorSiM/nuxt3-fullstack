@@ -2,8 +2,6 @@ import { Lucia } from 'lucia'
 import { D1Adapter } from '@lucia-auth/adapter-sqlite'
 import { Discord, GitHub } from 'arctic'
 
-const config = useRuntimeConfig()
-
 export function initializeLucia(D1: D1Database) {
   const adapter = new D1Adapter(D1, {
     user: 'user',
@@ -11,7 +9,7 @@ export function initializeLucia(D1: D1Database) {
   })
   return new Lucia(adapter, {
     sessionCookie: {
-      name: config.public.sessionCookieName,
+      name: process.env.NUXT_SESSION_COOKIE_NAME,
       attributes: {
         secure: !import.meta.dev,
       },
@@ -36,8 +34,7 @@ declare module 'lucia' {
   }
 }
 
-const discordRedirectUri = `${config.origin}/auth/discord/callback`
-console.log('discordRedirectUri >>>>>>>>>>>>>>>>>>', discordRedirectUri)
+const discordRedirectUri = `${process.env.NUXT_ORIGIN}/auth/discord/callback`
 
-export const githubAuthProvider = new GitHub(config.githubClientId, config.githubClientSecret)
-export const discordAuthProvider = new Discord(config.discordClientId, config.discordClientSecret, discordRedirectUri)
+export const githubAuthProvider = new GitHub(process.env.NUXT_GITHUB_CLIENT_ID ?? '', process.env.NUXT_GITHUB_CLIENT_SECRET ?? '')
+export const discordAuthProvider = new Discord(process.env.NUXT_DISCORD_CLIENT_ID ?? '', process.env.NUXT_DISCORD_CLIENT_SECRET ?? '', discordRedirectUri)
