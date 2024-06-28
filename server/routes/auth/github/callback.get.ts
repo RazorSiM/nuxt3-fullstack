@@ -6,6 +6,8 @@ export default defineEventHandler(async (event) => {
   const state = query.state?.toString() ?? null
   const storedState = getCookie(event, 'github_oauth_state') ?? null
 
+  console.log('github code >>>>>>>>>>>', code)
+  console.log('github state >>>>>>>>>>>', state)
   if (!code || !state || !storedState || state !== storedState) {
     throw createError({
       status: 400,
@@ -14,6 +16,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    console.log('github try catch start >>>>>>>>')
     const tokens = await githubAuthProvider.validateAuthorizationCode(code)
     console.log('github tokens >>>>>>>>>>>', tokens)
     // get the github user
