@@ -33,9 +33,7 @@ export default defineNuxtConfig({
     },
   },
   icon: {
-    serverBundle: {
-      collections: ['heroicons', 'mdi', 'ic'],
-    },
+    serverBundle: 'remote',
   },
   shadcn: {
     prefix: 'Ui',
