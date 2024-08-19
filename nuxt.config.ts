@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    'nuxt-icon',
+    '@nuxt/icon',
     'shadcn-nuxt',
     '@vueuse/nuxt',
     '@nuxthub/core',
@@ -30,6 +30,11 @@ export default defineNuxtConfig({
         semi: false,
         quotes: 'single',
       },
+    },
+  },
+  icon: {
+    serverBundle: {
+      collections: ['heroicons', 'mdi', 'ic'],
     },
   },
   shadcn: {
@@ -49,4 +54,6 @@ export default defineNuxtConfig({
     githubClientSecret: '',
     origin: '',
   },
+
+  compatibilityDate: '2024-08-19',
 })

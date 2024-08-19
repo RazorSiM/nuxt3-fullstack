@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
     // get the github user
     const githubUser = await $fetch<GitHubUser>('https://api.github.com/user', {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+        'Authorization': `Bearer ${tokens.accessToken}`,
+        'User-Agent': 'request',
       },
     })
     interface Email {
@@ -30,7 +31,8 @@ export default defineEventHandler(async (event) => {
     // get user emails
     const emails = await $fetch<Email[]>('https://api.github.com/user/emails', {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+        'Authorization': `Bearer ${tokens.accessToken}`,
+        'User-Agent': 'request',
       },
     })
 
