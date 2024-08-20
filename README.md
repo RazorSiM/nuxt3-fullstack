@@ -2,8 +2,9 @@
 Simple starter with Nuxt 3, PostgreSQL, and OAuth for the authentication layer.
 
 ## Stack
-- [Nuxt 3](https://v3.nuxtjs.org/) deals with frontend and backend.
-- [PostgreSQL](https://postgresql.org/) as a database.
+- [Nuxt 3](https://nuxt.com/) deals with frontend and backend.
+- [Nuxt Hub](https://hub.nuxt.com/) to deploy everyting on Cloudflare, serverless.
+- **Cloudflare D1** (sqlite) as a database.
 - [Drizzle ORM](https://orm.drizzle.team/) as an ORM, migrator and query builder.
 - [Zod](https://zod.dev/) for schema validation and type safety, both on the frontend and backend.
 - [Lucia Auth](https://lucia-auth.com/) for the authentication layer.
@@ -12,27 +13,14 @@ Simple starter with Nuxt 3, PostgreSQL, and OAuth for the authentication layer.
 
 ## Prerequisites
 In order to run the project, you need:
-- Node.js 18+ (20.5.0 is what I'm using to develop this project);
-- PostgreSQL 13+;
-- pnpm 8+;
-
-Optional:
-- Docker to run PostgreSQL via Docker Compose.
+- Node.js 20+ (20.16.0 is what I'm using to develop this project);
+- corepack enabled to install the required pnpm version;
 
 To install pnpm, you can use corepack:
 ```bash
 corepack enable
 corepack install
 ```
-
-## PostgreSQL via Docker Compose
-The project has a `docker-compose` file that you can use to run PostgreSQL in a container. To do so, you need to have Docker installed and run:
-
-```bash
-docker-compose up -d
-```
-
-Remember to fill out your .env file with the correct values.
 
 ## Getting Started
 
@@ -55,10 +43,9 @@ cp .env.example .env
 ```
 And edit the `.env` file to match your environment.
 
-Startup postgresql:
-```bash
-docker-compose up -d
-```
+You need to create a new Nuxt Hub project to be able to run this repo. To do so, you can follow the instructions on the [Nuxt Hub documentation](https://hub.nuxt.com/docs/getting-started/deploy).
+
+After you're set up, you can deploy a preview branch and connect your local environment to the development database. You can follow the instructions on the [Nuxt Hub documentation](https://hub.nuxt.com/docs/getting-started/remote-storage#local-development).
 
 Run the migrations:
 ```bash
@@ -68,7 +55,7 @@ pnpm db:migrate
 
 Finally, run Nuxt:
 ```bash
-pnpm dev
+pnpm dev --remote=preview
 ```
 
 ## Setup OAuth
