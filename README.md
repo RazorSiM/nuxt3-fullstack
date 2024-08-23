@@ -3,6 +3,7 @@ Simple [Nuxt Hub](https://hub.nuxt.com) starter with Nuxt 3, Cloudflare D1, and 
 Demo preview: https://nuxt3-fullstack.nuxt.dev
 
 If you want a quick start, here's a magic button:
+
 [![Deploy to NuxtHub](https://hub.nuxt.com/button.svg)](https://hub.nuxt.com/new?repo=razorsim/nuxt3-fullstack)
 
 ## Stack
