@@ -1,14 +1,9 @@
 import { fromZodError } from 'zod-validation-error'
 
 export default defineEventHandler(async (event) => {
-  if (!event.context.session || !event.context.user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
+  const { user } = await requireUserSession(event)
 
-  const id = await getRouterParam(event, 'id')
+  const id = getRouterParam(event, 'id')
   if (!id) {
     throw createError({
       statusCode: 400,
@@ -16,11 +11,9 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const userId = event.context.user.id
-
   const body = await readBody(event)
   body.id = Number.parseInt(id)
-  body.userId = userId
+  body.userId = user.id
 
   const payload = updateTodoSchema.safeParse(body)
 
@@ -33,7 +26,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const updatedTodo = await updateTodo(payload.data, userId)
+    const updatedTodo = await updateTodo(payload.data, user.id)
     return updatedTodo
   }
   catch (e) {

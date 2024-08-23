@@ -10,7 +10,19 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ['@pinia/nuxt', '@nuxt/eslint', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode', 'nuxt-icon', 'shadcn-nuxt', '@vueuse/nuxt'],
+  modules: [
+    '@pinia/nuxt',
+    '@nuxt/eslint',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
+    '@nuxt/icon',
+    'shadcn-nuxt',
+    '@vueuse/nuxt',
+    '@nuxthub/core',
+  ],
+  hub: {
+    database: true,
+  },
   eslint: {
     config: {
       stylistic: {
@@ -20,10 +32,8 @@ export default defineNuxtConfig({
       },
     },
   },
-  routeRules: {
-    '/': {
-      prerender: true,
-    },
+  icon: {
+    serverBundle: 'remote',
   },
   shadcn: {
     prefix: 'Ui',
@@ -36,15 +46,12 @@ export default defineNuxtConfig({
     public: {
       sessionCookieName: '',
     },
-    postgresPassword: '',
-    postgresUser: '',
-    postgresDatabase: '',
-    postgresHost: '',
-    postgresPort: '',
     discordClientId: '',
     discordClientSecret: '',
     githubClientId: '',
     githubClientSecret: '',
     origin: '',
   },
+
+  compatibilityDate: '2024-08-19',
 })

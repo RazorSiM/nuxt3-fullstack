@@ -1,8 +1,9 @@
 export default defineEventHandler(async (event) => {
-  if (!event.context.session)
+  const { session, lucia } = await getUserAndSession(event)
+  if (!session)
     return sendRedirect(event, '/login')
 
-  await lucia.invalidateSession(event.context.session?.id)
+  await lucia.invalidateSession(session.id)
 
   return sendRedirect(event, '/login')
 })

@@ -128,7 +128,7 @@ function openUpdateTodo(id: number) {
   if (!todo)
     return
   isSheetOpen.value = true
-  todoToUpdate.value = todo
+  todoToUpdate.value = { ...todo, id: todo.id }
 }
 
 async function handleDeleteTodo(id: number) {

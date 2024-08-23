@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
   if (!code || !state || !storedState || state !== storedState) {
     throw createError({
       status: 400,
+      message: 'Invalid state or code.',
     })
   }
 
@@ -20,7 +21,6 @@ export default defineEventHandler(async (event) => {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     })
-
     if (!discordUser.verified) {
       throw createError({
         status: 400,

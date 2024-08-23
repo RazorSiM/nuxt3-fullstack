@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
   if (!code || !state || !storedState || state !== storedState) {
     throw createError({
       status: 400,
+      message: 'Invalid state or code.',
     })
   }
 
@@ -17,10 +18,10 @@ export default defineEventHandler(async (event) => {
     // get the github user
     const githubUser = await $fetch<GitHubUser>('https://api.github.com/user', {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+        'Authorization': `Bearer ${tokens.accessToken}`,
+        'User-Agent': 'request',
       },
     })
-
     interface Email {
       email: string
       verified: boolean
@@ -30,7 +31,8 @@ export default defineEventHandler(async (event) => {
     // get user emails
     const emails = await $fetch<Email[]>('https://api.github.com/user/emails', {
       headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+        'Authorization': `Bearer ${tokens.accessToken}`,
+        'User-Agent': 'request',
       },
     })
 
@@ -51,7 +53,7 @@ export default defineEventHandler(async (event) => {
       providerName: 'github',
       providerUserEmail: primaryEmail.email,
       providerUsername: githubUser.login,
-      providerUserId: githubUser.id,
+      providerUserId: githubUser.id.toString(),
     }, event)
 
     return sendRedirect(event, '/user')
@@ -73,6 +75,6 @@ export default defineEventHandler(async (event) => {
 })
 
 interface GitHubUser {
-  id: string
+  id: number
   login: string
 }

@@ -1,25 +1,27 @@
 import { Lucia } from 'lucia'
-import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
+import { D1Adapter } from '@lucia-auth/adapter-sqlite'
 import { Discord, GitHub } from 'arctic'
-import { db, schemas } from './database'
 
-const config = useRuntimeConfig()
-const adapter = new DrizzlePostgreSQLAdapter(db, schemas.sessionTable, schemas.userTable)
-
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    name: config.public.sessionCookieName,
-    attributes: {
-      secure: !import.meta.dev,
+export function initializeLucia(D1: D1Database) {
+  const adapter = new D1Adapter(D1, {
+    user: 'user',
+    session: 'session',
+  })
+  return new Lucia(adapter, {
+    sessionCookie: {
+      name: process.env.NUXT_SESSION_COOKIE_NAME,
+      attributes: {
+        secure: !import.meta.dev,
+      },
     },
-  },
-  getUserAttributes: (attributes) => {
-    return {
-      username: attributes.username,
-      email: attributes.email,
-    }
-  },
-})
+    getUserAttributes: (attributes) => {
+      return {
+        username: attributes.username,
+        email: attributes.email,
+      }
+    },
+  })
+}
 
 export interface DatabaseUserAttributes {
   username: string
@@ -27,12 +29,19 @@ export interface DatabaseUserAttributes {
 }
 declare module 'lucia' {
   interface Register {
-    Lucia: typeof lucia
+    Lucia: ReturnType<typeof initializeLucia>
     DatabaseUserAttributes: DatabaseUserAttributes
   }
 }
 
-const discordRedirectUri = `${config.origin}/auth/discord/callback`
+const githubRedirectUri = `${process.env.NUXT_ORIGIN}/auth/github/callback`
+const githubClientId = process.env.NUXT_GITHUB_CLIENT_ID ?? ''
+const githubClientSecret = process.env.NUXT_GITHUB_CLIENT_SECRET ?? ''
+export const githubAuthProvider = new GitHub(githubClientId, githubClientSecret, {
+  redirectURI: githubRedirectUri,
+})
 
-export const githubAuthProvider = new GitHub(config.githubClientId, config.githubClientSecret)
-export const discordAuthProvider = new Discord(config.discordClientId, config.discordClientSecret, discordRedirectUri)
+const discordRedirectUri = `${process.env.NUXT_ORIGIN}/auth/discord/callback`
+const discordClientId = process.env.NUXT_DISCORD_CLIENT_ID ?? ''
+const discordClientSecret = process.env.NUXT_DISCORD_CLIENT_SECRET ?? ''
+export const discordAuthProvider = new Discord(discordClientId, discordClientSecret, discordRedirectUri)

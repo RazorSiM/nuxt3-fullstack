@@ -8,9 +8,10 @@ interface AuthenticateOauthUserOptions {
 }
 
 export async function createSessionCookie(userId: string) {
+  const lucia = initializeLucia(hubDatabase())
   const session = await lucia.createSession(userId, {})
   const sessionCookie = lucia.createSessionCookie(session.id)
-  return sessionCookie
+  return { sessionCookie, lucia }
 }
 
 export async function authenticateOauthUser(options: AuthenticateOauthUserOptions, event: H3Event) {
@@ -24,14 +25,67 @@ export async function authenticateOauthUser(options: AuthenticateOauthUserOption
       await createOauthAccount(options.providerName, options.providerUserId, existingUser.id)
     }
     // create a session cookie for the user
-    const sessionCookie = await createSessionCookie(existingUser.id)
+    const { sessionCookie } = await createSessionCookie(existingUser.id)
     // set the session cookie
     setCookie(event, sessionCookie.name, sessionCookie.value)
   }
   else {
     const user = await createUser(options.providerUsername, options.providerUserEmail)
     await createOauthAccount(options.providerName, options.providerUserId, user.id)
-    const sessionCookie = await createSessionCookie(user.id)
+    const { sessionCookie } = await createSessionCookie(user.id)
     setCookie(event, sessionCookie.name, sessionCookie.value)
+  }
+}
+
+export async function getUserAndSession(event: H3Event) {
+  const lucia = initializeLucia(hubDatabase())
+  // check if the request has an Authorization header
+  const authorizationHeader = getHeader(event, 'Authorization')
+  let sessionId: string | null = null
+  if (authorizationHeader) {
+    // get the session id from the Authorization header
+    sessionId = lucia.readBearerToken(authorizationHeader)
+  }
+  else {
+    // if there is no Authorization header, get the session id from the session cookie
+    sessionId = getCookie(event, lucia.sessionCookieName) ?? null
+  }
+  // if there is no session id, return early
+  if (!sessionId) {
+    return { user: null, sessionId: null }
+  }
+  // validate the session id and get the user and session
+  const { user, session } = await lucia.validateSession(sessionId)
+
+  // if the session is there and it's fresh, create a new session cookie from the session id and set it in the response headers
+  if (session && session.fresh) {
+    appendResponseHeader(
+      event,
+      'Set-Cookie',
+      lucia.createSessionCookie(session.id).serialize(),
+    )
+  }
+  // if there is no session, create a new blank session cookie and set it in the response headers
+  // this basically delete the existing session cookie
+  if (!session)
+    appendResponseHeader(event, 'Set-Cookie', lucia.createBlankSessionCookie().serialize())
+
+  return { user, session, lucia }
+}
+
+export async function requireUserSession(event: H3Event) {
+  const { user, session, lucia } = await getUserAndSession(event)
+  // if there is no session, throw an error
+  if (!session || !user) {
+    throw createError({
+      statusCode: 401,
+      message: 'Unauthorized',
+    })
+  }
+
+  return {
+    session,
+    user,
+    lucia,
   }
 }

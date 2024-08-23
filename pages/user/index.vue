@@ -121,7 +121,6 @@ function isCurrentSession(session: ResponseSession, sessionCookie: string | null
       </p>
       <UiButton
         size="xs"
-        icon="i-heroicons-plus-circle"
         @click="createUserSession"
       >
         <Icon name="heroicons:plus-circle" />

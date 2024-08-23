@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useSortable } from '@vueuse/integrations/useSortable'
 import { format, parseISO } from 'date-fns'
+import { useSortable } from '@vueuse/integrations/useSortable'
 
 defineOptions({
   name: 'TodoList',
@@ -21,27 +21,31 @@ const emit = defineEmits<{
   openSheet: [id?: number]
 }>()
 
-const todos = ref(props.todos)
+const syncedTodos = computed(() => props.todos)
+const refTodos = ref(unref(syncedTodos))
+watch(syncedTodos, (todos) => {
+  refTodos.value = todos
+})
 
 const sortableElement = ref<HTMLElement | null>(null)
-useSortable(sortableElement, todos, {
+useSortable(sortableElement, refTodos, {
   handle: '.sortable-handler',
   animation: 0,
 
   onEnd: async (e) => {
     const newIndex = e.newIndex as number
     const oldIndex = e.oldIndex as number
-    if (todos.value === null) {
+    if (refTodos.value === null) {
       return false
     }
 
-    const newPosition = todos.value[newIndex].position
-    const oldPosition = todos.value[oldIndex].position
+    const newPosition = refTodos.value[newIndex].position
+    const oldPosition = refTodos.value[oldIndex].position
     if (!newPosition || !oldPosition)
       return false
 
-    const movedItem = todos.value.splice(oldIndex, 1)[0]
-    todos.value.splice(newIndex, 0, movedItem)
+    const movedItem = refTodos.value.splice(oldIndex, 1)[0]
+    refTodos.value.splice(newIndex, 0, movedItem)
     emit('moveTodo', movedItem.id, oldPosition, newPosition)
   },
 })
@@ -76,7 +80,7 @@ useSortable(sortableElement, todos, {
           class="divide-y dark:divide-muted"
         >
           <div
-            v-for="todo in props.todos"
+            v-for="todo in refTodos"
             :key="todo.id"
             class="flex items-start justify-between gap-x-6 py-5"
           >
@@ -99,8 +103,7 @@ useSortable(sortableElement, todos, {
               </div>
               <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-muted-foreground">
                 <p class="whitespace-nowrap">
-                  Updated on <time :datetime="todo.updatedAt.toString()">{{ format(parseISO(todo.updatedAt.toString()),
-                                                                                   'PPpp') }}</time>
+                  Updated on <time :datetime="todo.updatedAt.toString()">{{ format(parseISO(todo.updatedAt.toString()), 'PPpp') }}</time>
                 </p>
               </div>
               <p>{{ todo.description }}</p>
