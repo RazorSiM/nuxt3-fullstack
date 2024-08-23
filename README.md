@@ -1,5 +1,9 @@
 # Nuxt 3 Full-Stack
 Simple starter with Nuxt 3, PostgreSQL, and OAuth for the authentication layer.
+Demo preview: https://nuxt3-fullstack.nuxt.dev
+
+If you want a quick start, here's a magic button:
+[![Deploy to NuxtHub](https://hub.nuxt.com/button.svg)](https://hub.nuxt.com/new?repo=razorsim/nuxt3-fullstack)
 
 ## Stack
 - [Nuxt 3](https://nuxt.com/) deals with frontend and backend.
