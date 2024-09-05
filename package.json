@@ -49,7 +49,7 @@
     "lucia": "^3.2.0",
     "postgres": "^3.4.4",
     "radix-vue": "^1.9.5",
-    "sortablejs": "^1.15.1",
+    "sortablejs": "^1.15.3",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vee-validate": "^4.13.2",
@@ -58,11 +58,11 @@
     "zod-validation-error": "^3.3.1"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "^1.12.1",
+    "@dotenvx/dotenvx": "^1.14.0",
     "@nuxt/devtools": "1.4.1",
     "@nuxt/eslint": "^0.5.5",
-    "@nuxt/icon": "^1.5.0",
-    "@nuxthub/core": "^0.7.8",
+    "@nuxt/icon": "^1.5.1",
+    "@nuxthub/core": "^0.7.9",
     "@nuxtjs/color-mode": "^3.4.4",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.4",
@@ -72,11 +72,11 @@
     "@vueuse/nuxt": "^11.0.3",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.24.2",
-    "eslint": "^8.56.0",
-    "lefthook": "^1.7.14",
-    "nuxt": "^3.13.0",
+    "eslint": "^9.9.1",
+    "lefthook": "^1.7.15",
+    "nuxt": "^3.13.1",
     "shadcn-nuxt": "^0.10.4",
     "typescript": "^5.5.4",
-    "wrangler": "^3.73.0"
+    "wrangler": "^3.74.0"
   }
 }
