@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v1.0.1
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.0.0...v1.0.1)
+
+### 🏡 Chore
+
+- Add .data to .gitignore ([8db4c66](https://github.com/RazorSiM/nuxt3-fullstack/commit/8db4c66))
+- Remove .data from repo ([157bd3a](https://github.com/RazorSiM/nuxt3-fullstack/commit/157bd3a))
+
+### ❤️ Contributors
+
+- Raz ([@RazorSiM](http://github.com/RazorSiM))
+
 ## v1.0.0
 
 
