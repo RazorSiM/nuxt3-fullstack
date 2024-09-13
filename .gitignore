@@ -25,3 +25,5 @@ logs
 .dataFpos
 discovered
 .discovered
+
+.data/

@@ -58,15 +58,15 @@
     "zod-validation-error": "^3.3.1"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "^1.14.0",
-    "@nuxt/devtools": "1.4.1",
-    "@nuxt/eslint": "^0.5.5",
+    "@dotenvx/dotenvx": "^1.14.1",
+    "@nuxt/devtools": "1.4.2",
+    "@nuxt/eslint": "^0.5.7",
     "@nuxt/icon": "^1.5.1",
-    "@nuxthub/core": "^0.7.9",
-    "@nuxtjs/color-mode": "^3.4.4",
+    "@nuxthub/core": "^0.7.14",
+    "@nuxtjs/color-mode": "^3.5.0",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.4",
-    "@types/node": "^20.14.9",
+    "@types/node": "^22.5.4",
     "@types/sortablejs": "^1.15.8",
     "@vueuse/core": "^11.0.3",
     "@vueuse/nuxt": "^11.0.3",
@@ -76,8 +76,8 @@
     "lefthook": "^1.7.15",
     "nuxt": "^3.13.1",
     "shadcn-nuxt": "^0.10.4",
-    "typescript": "^5.5.4",
-    "wrangler": "^3.74.0"
+    "typescript": "^5.6.2",
+    "wrangler": "^3.77.0"
   },
   "version": "1.0.0"
 }
