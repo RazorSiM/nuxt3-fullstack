@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v1.0.2
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.0.1...v1.0.2)
+
+### 🏡 Chore
+
+- **release:** V1.0.1 ([5b40a99](https://github.com/RazorSiM/nuxt3-fullstack/commit/5b40a99))
+- Dependencies update ([47a0dbd](https://github.com/RazorSiM/nuxt3-fullstack/commit/47a0dbd))
+
+### ❤️ Contributors
+
+- Raz ([@RazorSiM](http://github.com/RazorSiM))
+
 ## v1.0.1
 
 [compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.0.0...v1.0.1)
