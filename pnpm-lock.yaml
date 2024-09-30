@@ -105,6 +105,9 @@ importers:
       '@vueuse/nuxt':
         specifier: ^11.1.0
         version: 11.1.0(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240925.0)(@opentelemetry/api@1.9.0)(postgres@3.4.4))(encoding@0.1.13)(eslint@9.11.1(jiti@2.0.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.5)(terser@5.34.1)(typescript@5.6.2)(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1))(webpack-sources@3.2.3))(rollup@4.22.5)(vue@3.5.10(typescript@5.6.2))(webpack-sources@3.2.3)
+      changelogen:
+        specifier: ^0.5.7
+        version: 0.5.7(magicast@0.3.5)
       dotenv:
         specifier: ^16.3.1
         version: 16.4.5
