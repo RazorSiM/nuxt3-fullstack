@@ -42,7 +42,7 @@ async function handleSignup(values: UserSignupForm) {
     formData.append('email', values.email)
     formData.append('password', values.password)
 
-    await fetch('/auth/signup', {
+    await $fetch('/auth/signup', {
       method: 'POST',
       body: formData,
     })

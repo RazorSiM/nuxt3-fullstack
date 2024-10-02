@@ -21,7 +21,7 @@ async function handlePasswordLogin(values: UserLoginForm) {
     formData.append('email', values.email)
     formData.append('password', values.password)
 
-    await fetch('/auth/login', {
+    await $fetch('/auth/login', {
       method: 'POST',
       body: formData,
     })
