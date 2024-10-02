@@ -51,6 +51,16 @@ export default defineNuxtConfig({
     githubClientId: '',
     githubClientSecret: '',
     origin: '',
+    hash: {
+      scrypt: {
+        cost: 16384,
+        blockSize: 8,
+        parallelization: 1,
+        saltSize: 16,
+        maxMemory: 32 * 1024 * 1024,
+        keyLength: 64,
+      },
+    },
   },
 
   compatibilityDate: '2024-08-19',

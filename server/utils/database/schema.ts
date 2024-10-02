@@ -1,12 +1,24 @@
 import { relations, sql } from 'drizzle-orm'
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
-import { integer, sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core'
+import {
+  integer,
+  sqliteTable,
+  primaryKey,
+  text,
+} from 'drizzle-orm/sqlite-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const userTable = sqliteTable('user', {
   id: text('id').primaryKey(),
   username: text('username').notNull().unique(),
   email: text('email').notNull().unique(),
+  passwordHash: text('password_hash'),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
 
 export const sessionTable = sqliteTable('session', {
@@ -15,27 +27,45 @@ export const sessionTable = sqliteTable('session', {
     .notNull()
     .references(() => userTable.id),
   expiresAt: integer('expires_at').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
 
-export const oauthAccountTable = sqliteTable('oauth_account', {
-  providerId: text('provider_id').notNull(),
-  providerUserId: text('provider_user_id').notNull(),
-  userId: text('user_id').notNull().references(() => userTable.id),
-}, (table) => {
-  return {
-    pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
-  }
-})
+export const oauthAccountTable = sqliteTable(
+  'oauth_account',
+  {
+    providerId: text('provider_id').notNull(),
+    providerUserId: text('provider_user_id').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => userTable.id),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.providerId, table.providerUserId] }),
+    }
+  },
+)
 
 export const todoTable = sqliteTable('todo', {
   id: integer('id').primaryKey(),
   position: integer('position'),
-  userId: text('user_id').references(() => userTable.id).notNull(),
+  userId: text('user_id')
+    .references(() => userTable.id)
+    .notNull(),
   title: text('title').notNull().unique(),
   description: text('description'),
   completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
   deleted: integer('deleted', { mode: 'boolean' }).notNull().default(false),
   deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 })

@@ -14,6 +14,39 @@ export async function createSessionCookie(userId: string) {
   return { sessionCookie, lucia }
 }
 
+export async function createNewPasswordUser(email: string, plainPassword: string, event: H3Event) {
+  const user = await selectUserByEmail(email)
+  if (user) {
+    throw createError({
+      statusCode: 409,
+      message: 'Conflict',
+    })
+  }
+  const passwordHash = await hashPassword(plainPassword)
+  const newUser = await createUser(email, email, passwordHash)
+  const { sessionCookie } = await createSessionCookie(newUser.id)
+  setCookie(event, sessionCookie.name, sessionCookie.value)
+}
+
+export async function authenticatePasswordUser(email: string, plainPassword: string, event: H3Event) {
+  const user = await selectUserByEmail(email)
+  if (!user || !user.passwordHash) {
+    throw createError({
+      statusCode: 401,
+      message: 'Unauthorized',
+    })
+  }
+  const isValid = await verifyPassword(user.passwordHash, plainPassword)
+  if (!isValid) {
+    throw createError({
+      statusCode: 401,
+      message: 'Unauthorized',
+    })
+  }
+  const { sessionCookie } = await createSessionCookie(user.id)
+  setCookie(event, sessionCookie.name, sessionCookie.value)
+}
+
 export async function authenticateOauthUser(options: AuthenticateOauthUserOptions, event: H3Event) {
   // check if user exists in the database
   const existingUser = await selectUserByEmail(options.providerUserEmail)
@@ -21,7 +54,7 @@ export async function authenticateOauthUser(options: AuthenticateOauthUserOption
     // check if the user has an existing oauth account
     const existingOauthAccount = await getExistingOauthAccount(options.providerName, existingUser.id)
     if (!existingOauthAccount) {
-      // if the user already exists, create an oauth account with the user id and github provider info
+      // if the user does not have an existing oauth account, create one
       await createOauthAccount(options.providerName, options.providerUserId, existingUser.id)
     }
     // create a session cookie for the user

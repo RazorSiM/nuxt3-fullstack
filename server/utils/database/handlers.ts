@@ -1,6 +1,7 @@
 import { and, asc, eq, gte, lte, ne, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { generateIdFromEntropySize } from 'lucia'
+import { uniqueNamesGenerator, colors, adjectives, starWars } from 'unique-names-generator'
 import type { User } from './schema'
 import { oauthAccountTable, todoTable, userTable } from './schema'
 import { useDrizzle } from './index'
@@ -29,9 +30,23 @@ export async function getExistingOauthAccount(providerId: string, userId: string
   return result[0]
 }
 
-export async function createUser(username: string, email: string) {
+export async function createUser(username: string, email: string, passwordHash?: string) {
+  let _username = username
+  // check if the username already exists
+  const existingUsername = await selectUserByUsername(username)
+  // if the username already exists, generate a new random username
+
+  if (existingUsername) {
+    _username = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, starWars],
+      separator: '',
+      style: 'capital',
+      length: 3,
+    })
+  }
+
   const id = generateIdFromEntropySize(10)
-  const result = await useDrizzle().insert(userTable).values({ id, username, email }).returning()
+  const result = await useDrizzle().insert(userTable).values({ id, username: _username, email, passwordHash }).returning()
   return result[0]
 }
 
@@ -63,8 +78,33 @@ export async function selectUserByID(id: string) {
   return result[0]
 }
 
+export async function selectUserByUsername(username: string) {
+  const prepared = useDrizzle()
+    .select()
+    .from(userTable)
+    .where(eq(userTable.username, sql.placeholder('username')),
+    )
+    .prepare()
+
+  const result = await prepared.execute({ username })
+  if (result.length === 0)
+    return null
+
+  return result[0]
+}
+
 export async function modifyUsername(userId: string, username: string): Promise<User> {
   const result = await useDrizzle().update(userTable).set({ username }).where(eq(userTable.id, userId)).returning()
+  return result[0]
+}
+
+export async function updatePassword(userId: string, passwordHash: string) {
+  const result = await useDrizzle().update(userTable).set({ passwordHash }).where(eq(userTable.id, userId)).returning()
+  return result[0]
+}
+
+export async function updateUser(user: User) {
+  const result = await useDrizzle().update(userTable).set({ ...user }).where(eq(userTable.id, user.id)).returning()
   return result[0]
 }
 
@@ -87,7 +127,7 @@ export async function selectTodo(id: number) {
 
 export async function selectTodosFromUser(userId: string) {
   const prepared = useDrizzle()
-    .select({ id: todoTable.id, title: todoTable.title, description: todoTable.description, completed: todoTable.completed, position: todoTable.position, createdAt: todoTable.createdAt, updatedAt: todoTable.updatedAt })
+    .select()
     .from(todoTable)
     .where(
       and(

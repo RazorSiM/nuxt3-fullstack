@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 defineOptions({
   name: 'LoginView',
 })
+
 const { user } = useUser()
 if (user.value)
   await navigateTo('/user') // redirect to profile page
@@ -52,7 +53,17 @@ const logins = [
           :name="login.icon"
         />{{ login.text }}
       </Button>
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <span class="w-full border-t" />
+        </div>
+        <div class="relative flex justify-center text-xs uppercase">
+          <span class="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+      </div>
+      <FormAuthSignupOrLogin />
     </CardContent>
-    <!-- <div class="flex flex-col gap-5 items-center justify-center mx-auto w-fit" /> -->
   </Card>
 </template>

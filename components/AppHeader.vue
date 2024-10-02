@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 const { user } = useUser()
 
 async function handleLogout() {
-  await $fetch('/logout', {
+  await $fetch('/auth/logout', {
     method: 'POST',
     redirect: 'manual',
   })
