@@ -52,12 +52,16 @@ async function handleSignup(values: UserSignupForm) {
     toast.error(errorMessage)
   }
 }
+
+const onSubmit = handleSubmit(async (values) => {
+  await handleSignup(values)
+})
 </script>
 
 <template>
   <form
     class="space-y-4"
-    @submit="handleSubmit(handleSignup)"
+    @submit="onSubmit"
   >
     <UiFormField
       v-slot="{ componentField }"

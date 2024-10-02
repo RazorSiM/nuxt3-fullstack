@@ -31,12 +31,16 @@ async function handlePasswordLogin(values: UserLoginForm) {
     toast.error(errorMessage)
   }
 }
+
+const onSubmit = handleSubmit(async (values) => {
+  await handlePasswordLogin(values)
+})
 </script>
 
 <template>
   <form
     class="space-y-4"
-    @submit="handleSubmit(handlePasswordLogin)"
+    @submit="onSubmit"
   >
     <UiFormField
       v-slot="{ componentField }"
