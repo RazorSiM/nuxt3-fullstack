@@ -20,6 +20,11 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxthub/core',
   ],
+  nitro: {
+    unenv: {
+      external: ['node:crypto'],
+    },
+  },
   hub: {
     database: true,
   },
