@@ -32,6 +32,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-08-19',
   hub: {
     database: true,
+    databaseMigrationsDirs: [
+      './drizzle',
+    ],
   },
   typescript: {
     shim: false,
