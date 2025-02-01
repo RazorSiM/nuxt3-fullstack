@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const { user } = await requireUserSession(event)
+  const session = await requireUserSession(event)
 
   const id = getRouterParam(event, 'id')
   if (!id) {
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const deletedTodo = await deleteTodoFromUser(Number.parseInt(id), user.id)
+    const deletedTodo = await deleteTodoFromUser(Number.parseInt(id), session.user.id)
     return deletedTodo
   }
   catch (e) {

@@ -1,15 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  telemetry: false,
-  devtools: {
-    enabled: true,
-    timeline: {
-      enabled: true,
-    },
-  },
-  typescript: {
-    shim: false,
-  },
   modules: [
     '@pinia/nuxt',
     '@nuxt/eslint',
@@ -19,10 +9,34 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@vueuse/nuxt',
     '@nuxthub/core',
+    'nuxt-auth-utils',
+    'unplugin-turbo-console/nuxt',
   ],
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true,
+    },
+  },
+  colorMode: {
+    classSuffix: '',
+  },
+  runtimeConfig: {
+    discordClientId: '',
+    discordClientSecret: '',
+    githubClientId: '',
+    githubClientSecret: '',
+    origin: '',
+  },
+
+  compatibilityDate: '2024-08-19',
   hub: {
     database: true,
   },
+  typescript: {
+    shim: false,
+  },
+  telemetry: false,
   eslint: {
     config: {
       stylistic: {
@@ -39,19 +53,4 @@ export default defineNuxtConfig({
     prefix: 'Ui',
     componentDir: './components/ui',
   },
-  colorMode: {
-    classSuffix: '',
-  },
-  runtimeConfig: {
-    public: {
-      sessionCookieName: '',
-    },
-    discordClientId: '',
-    discordClientSecret: '',
-    githubClientId: '',
-    githubClientSecret: '',
-    origin: '',
-  },
-
-  compatibilityDate: '2024-08-19',
 })

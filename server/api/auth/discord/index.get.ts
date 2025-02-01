@@ -7,7 +7,7 @@ export default defineOAuthDiscordEventHandler({
       providerName: 'discord',
       providerUserEmail: user.email,
       providerUsername: user.username,
-      providerUserId: user.id,
+      providerUserId: user.id.toString(),
     }, event)
     return sendRedirect(event, '/user')
   },

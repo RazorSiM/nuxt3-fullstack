@@ -1,10 +1,10 @@
 import { fromZodError } from 'zod-validation-error'
 
 export default defineEventHandler(async (event) => {
-  const { user } = await requireUserSession(event)
+  const session = await requireUserSession(event)
 
   const body = await readBody(event)
-  body.userId = user.id
+  body.userId = session.user.id
 
   const payload = updateTodoPositionSchema.safeParse(body)
   // if body is not valid, throw an error

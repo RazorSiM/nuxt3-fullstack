@@ -9,21 +9,17 @@ definePageMeta({
   middleware: ['protected'],
 })
 
-const config = useRuntimeConfig()
-const sessionCookie = useCookie(config.public.sessionCookieName)
-
-const { user, authenticatedUser } = useUser()
+const { user, loggedIn } = useUserSession()
 
 async function updateUsername(values: UserUpdateForm) {
   try {
-    const response = await $fetch(`/api/users/${authenticatedUser.value.id}`, {
+    await $fetch(`/api/users/${user.value?.id}`, {
       method: 'PUT',
       body: {
         username: values.username,
       },
     })
     toast.success('Username updated successfully')
-    user.value = response
   }
   catch (error) {
     toast.error(`Failed to update username: ${error}`)
@@ -46,54 +42,15 @@ interface ResponseSession {
 }
 const sessions = ref<ResponseSession[]>([])
 async function getUserSessions() {
-  const response = await $fetch<ResponseSession[]>(`/api/users/${authenticatedUser.value.id}/sessions`, {
+  const response = await $fetch<ResponseSession[]>(`/api/users/${user.value?.id}/sessions`, {
     method: 'GET',
   })
   sessions.value = response
-}
-async function createUserSession() {
-  try {
-    await $fetch(`/api/users/${authenticatedUser.value.id}/sessions`, {
-      method: 'POST',
-    })
-    toast.success('Session created successfully')
-    await getUserSessions()
-  }
-  catch (error) {
-    const errorMessage = `Failed to create session: ${error}`
-    toast.error(errorMessage)
-    throw createError({
-      statusCode: 500,
-      statusMessage: errorMessage,
-    })
-  }
 }
 
 onMounted(async () => {
   await getUserSessions()
 })
-
-async function invalidateUserSession(sessionId: string) {
-  try {
-    await $fetch(`/api/users/${authenticatedUser.value.id}/sessions/${sessionId}`, {
-      method: 'DELETE',
-    })
-    toast.success('Session invalidated successfully')
-    await getUserSessions()
-  }
-  catch (e) {
-    const errorMessage = `Failed to invalidate session: ${e}`
-    toast.error(errorMessage)
-    throw createError({
-      statusCode: 500,
-      statusMessage: errorMessage,
-    })
-  }
-}
-
-function isCurrentSession(session: ResponseSession, sessionCookie: string | null | undefined) {
-  return session.id === sessionCookie
-}
 </script>
 
 <template>
@@ -107,34 +64,14 @@ function isCurrentSession(session: ResponseSession, sessionCookie: string | null
       </UiCardHeader>
       <UiCardContent>
         <FormUserUpdate
+          v-if="loggedIn && user"
           :form-initial-values="{
-            username: authenticatedUser.username,
+            username: user?.username,
           }"
-          :authenticated-user="authenticatedUser"
+          :authenticated-user="user"
           @submit="onSubmit"
         />
       </UiCardContent>
     </UiCard>
-    <div class="flex gap-5 mt-20 items-center">
-      <p class="text-2xl font-bold">
-        Sessions
-      </p>
-      <UiButton
-        size="xs"
-        @click="createUserSession"
-      >
-        <Icon name="heroicons:plus-circle" />
-        Create Session
-      </UiButton>
-    </div>
-    <div class="grid lg:grid-cols-3 gap-10 mt-10 sm:grid-cols-2 grid-cols-1 items-stretch">
-      <SessionCard
-        v-for="(session) in sessions"
-        :key="session.id"
-        v-bind="session"
-        :is-current-session="isCurrentSession(session, sessionCookie)"
-        @invalidate-user-session="invalidateUserSession"
-      />
-    </div>
   </div>
 </template>

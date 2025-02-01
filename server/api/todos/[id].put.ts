@@ -1,7 +1,7 @@
 import { fromZodError } from 'zod-validation-error'
 
 export default defineEventHandler(async (event) => {
-  const { user } = await requireUserSession(event)
+  const session = await requireUserSession(event)
 
   const id = getRouterParam(event, 'id')
   if (!id) {
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   body.id = Number.parseInt(id)
-  body.userId = user.id
+  body.userId = session.userId
 
   const payload = updateTodoSchema.safeParse(body)
 
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const updatedTodo = await updateTodo(payload.data, user.id)
+    const updatedTodo = await updateTodo(payload.data, session.user.id)
     return updatedTodo
   }
   catch (e) {

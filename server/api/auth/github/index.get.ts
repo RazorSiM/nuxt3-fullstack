@@ -1,13 +1,13 @@
-export default defineOAuthDiscordEventHandler({
+export default defineOAuthGitHubEventHandler({
   config: {
     emailRequired: true,
   },
   async onSuccess(event, { user }) {
     await authenticateOauthUser({
-      providerName: 'discord',
+      providerName: 'github',
       providerUserEmail: user.email,
-      providerUsername: user.username,
-      providerUserId: user.id,
+      providerUsername: user.login,
+      providerUserId: user.id.toString(),
     }, event)
     return sendRedirect(event, '/user')
   },
