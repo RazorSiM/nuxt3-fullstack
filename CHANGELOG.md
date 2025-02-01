@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v1.1.0
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.0.2...v1.1.0)
+
+### 🚀 Enhancements
+
+- Implement nuxt-auth-utils ([#10](https://github.com/RazorSiM/nuxt3-fullstack/pull/10))
+
+### 🩹 Fixes
+
+- Update migration folder in nuxt.config ([#11](https://github.com/RazorSiM/nuxt3-fullstack/pull/11))
+
+### 🏡 Chore
+
+- Dependencies update ([47a0dbd](https://github.com/RazorSiM/nuxt3-fullstack/commit/47a0dbd))
+- **release:** V1.0.2 ([08d1cab](https://github.com/RazorSiM/nuxt3-fullstack/commit/08d1cab))
+- Add changelogen and release script ([dd10caf](https://github.com/RazorSiM/nuxt3-fullstack/commit/dd10caf))
+
+### ❤️ Contributors
+
+- Simone Colabufalo ([@RazorSiM](http://github.com/RazorSiM))
+- Raz ([@RazorSiM](http://github.com/RazorSiM))
+
 ## v1.0.2
 
 [compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.0.1...v1.0.2)
