@@ -22,9 +22,6 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
   runtimeConfig: {
-    public: {
-      sessionCookieName: '',
-    },
     discordClientId: '',
     discordClientSecret: '',
     githubClientId: '',
