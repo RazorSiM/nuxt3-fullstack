@@ -22,7 +22,7 @@ defineOptions({
       <li><a href="https://developers.cloudflare.com/d1//">Cloudflare D1</a> as a database.</li>
       <li><a href="https://orm.drizzle.team/">Drizzle ORM</a> as an ORM, migrator and query builder.</li>
       <li><a href="https://zod.dev/">Zod</a> for schema validation and type safety, both on the frontend and backend.</li>
-      <li><a href="https://lucia-auth.com/">Lucia Auth</a> for the authentication layer.</li>
+      <li><a href="https://github.com/atinux/nuxt-auth-utils">Nuxt Auth Utils</a> for the authentication layer.</li>
       <li><a href="https://www.shadcn-vue.com/">Shadcn</a> for styles and components.</li>
       <li><a href="https://hub.nuxt.com">Nuxt Hub</a> to handle serverless deployment over Cloudflare.</li>
     </ul>

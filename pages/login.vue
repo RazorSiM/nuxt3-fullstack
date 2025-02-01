@@ -53,6 +53,5 @@ const logins = [
         />{{ login.text }}
       </Button>
     </CardContent>
-    <!-- <div class="flex flex-col gap-5 items-center justify-center mx-auto w-fit" /> -->
   </Card>
 </template>
