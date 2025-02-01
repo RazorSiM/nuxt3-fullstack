@@ -1,15 +1,13 @@
 <script lang="ts" setup>
 import { Button } from '@/components/ui/button'
 
-const { user } = useUser()
+const { user, clear, loggedIn } = useUserSession()
 
-async function handleLogout() {
-  await $fetch('/logout', {
-    method: 'POST',
-    redirect: 'manual',
-  })
-  await navigateTo('/login')
-}
+watch(loggedIn, () => {
+  if (!loggedIn.value) {
+    navigateTo('/')
+  }
+})
 
 const colorMode = useColorMode()
 const isDark = computed({
@@ -83,10 +81,10 @@ const navigation = computed(() => {
         </template>
       </ClientOnly>
       <Button
-        v-if="user"
+        v-if="loggedIn"
         size="icon"
         variant="destructive"
-        @click="handleLogout"
+        @click="clear"
       >
         <Icon
           name="heroicons:arrow-left-on-rectangle-solid"

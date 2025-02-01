@@ -1,8 +1,8 @@
 import { drizzle } from 'drizzle-orm/d1'
-import { sessionTable, todoTable, userTable } from './schema'
+import { todoTable, userTable } from './schema'
 
 export function useDrizzle() {
-  return drizzle(hubDatabase(), { schema: { ...userTable, ...todoTable, ...sessionTable } })
+  return drizzle(hubDatabase(), { schema: { ...userTable, ...todoTable } })
 }
 
 export * as handlers from './handlers'

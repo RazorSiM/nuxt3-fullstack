@@ -12,8 +12,7 @@ If you want a quick start, here's a magic button:
 - **Cloudflare D1** (sqlite) as a database.
 - [Drizzle ORM](https://orm.drizzle.team/) as an ORM, migrator and query builder.
 - [Zod](https://zod.dev/) for schema validation and type safety, both on the frontend and backend.
-- [Lucia Auth](https://lucia-auth.com/) for the authentication layer.
-- [Arctic](https://arctic.js.org/) for the OAuth api layer.
+- [Nuxt Auth Utils](https://github.com/atinux/nuxt-auth-utils) for the authentication layer.
 - [Shadcn Vue](https://www.shadcn-vue.com/) for the component library.
 
 ## Prerequisites
@@ -70,11 +69,18 @@ This project supports OAuth via Discord and Github. To set it up, you need to cr
 1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
 2. Create a new application.
 3. Go to the OAuth2 section.
-4. Add `http://localhost:3000/auth/discord/callback` as a redirect URL.
+4. Add `http://localhost:3000/api/auth/discord` as a redirect URL.
 5. Copy the client ID and client secret to the `.env` file.
 
 ### Github
 1. Go to the [Github Developer Settings/OAuth Apps](https://github.com/settings/developers)
 2. Create a new OAuth App.
-3. Add `http://localhost:3000/auth/github/callback` as a callback URL.
+3. Add `http://localhost:3000/api/auth/github` as a callback URL.
 4. Copy the client ID and client secret to the `.env` file.
+
+## What's next?
+
+I'm planning to add more features to this project, such as:
+- Database Sessions;
+- API Key authentication;
+- Role-based access control;

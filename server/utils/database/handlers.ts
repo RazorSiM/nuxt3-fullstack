@@ -1,6 +1,5 @@
 import { and, asc, eq, gte, lte, ne, sql } from 'drizzle-orm'
 import { z } from 'zod'
-import { generateIdFromEntropySize } from 'lucia'
 import type { User } from './schema'
 import { oauthAccountTable, todoTable, userTable } from './schema'
 import { useDrizzle } from './index'
@@ -30,7 +29,7 @@ export async function getExistingOauthAccount(providerId: string, userId: string
 }
 
 export async function createUser(username: string, email: string) {
-  const id = generateIdFromEntropySize(10)
+  const id = crypto.randomUUID()
   const result = await useDrizzle().insert(userTable).values({ id, username, email }).returning()
   return result[0]
 }

@@ -1,8 +1,8 @@
 export default defineEventHandler(async (event) => {
-  const { user } = await requireUserSession(event)
+  const session = await requireUserSession(event)
 
   try {
-    const todos = await selectTodosFromUser(user.id)
+    const todos = await selectTodosFromUser(session.user.id)
     return todos
   }
   catch (e) {

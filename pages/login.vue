@@ -11,12 +11,12 @@ import { Button } from '@/components/ui/button'
 defineOptions({
   name: 'LoginView',
 })
-const { user } = useUser()
+const { user } = useUserSession()
 if (user.value)
   await navigateTo('/user') // redirect to profile page
 
 function loginTo(provider: string) {
-  window.location.href = `/auth/${provider}`
+  window.location.href = `/api/auth/${provider}`
 }
 
 const logins = [
