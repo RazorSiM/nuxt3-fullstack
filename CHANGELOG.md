@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.1.1
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.1.0...v1.1.1)
+
+### 🏡 Chore
+
+- Update packages ([39ca6c1](https://github.com/RazorSiM/nuxt3-fullstack/commit/39ca6c1))
+
+### ❤️ Contributors
+
+- Simone Colabufalo <s.colabufalo@peter-park.de>
+
 ## v1.1.0
 
 [compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.0.2...v1.1.0)
