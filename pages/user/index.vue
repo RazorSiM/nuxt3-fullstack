@@ -47,7 +47,12 @@ async function getUserSessions() {
   })
   sessions.value = response
 }
-
+async function deleteSession(sessionId: string) {
+  await $fetch(`/api/users/${user.value?.id}/sessions/${sessionId}`, {
+    method: 'DELETE',
+  })
+  await getUserSessions()
+}
 onMounted(async () => {
   await getUserSessions()
 })
@@ -82,7 +87,7 @@ onMounted(async () => {
         :expires-at="_session.expiresAt"
         :user-id="_session.userId"
         :is-current-session="_session.id === session.sessionToken"
-        @invalidate-user-session="getUserSessions"
+        @invalidate-user-session="deleteSession"
       />
     </div>
   </div>

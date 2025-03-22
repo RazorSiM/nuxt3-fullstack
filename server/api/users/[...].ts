@@ -58,5 +58,34 @@ router.get('/:userId/sessions', defineEventHandler(async (event) => {
     })
   }
 }))
+router.delete('/:userId/sessions/:sessionId', defineEventHandler(async (event) => {
+  const session = await requireUserSession(event)
+
+  const userId = getRouterParam(event, 'userId')
+  const sessionId = getRouterParam(event, 'sessionId')
+
+  if (userId !== session.user.id) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+    })
+  }
+  if (!sessionId) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+    })
+  }
+  try {
+    await deleteSession(sessionId)
+    return {}
+  }
+  catch (e) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Internal Server Error: ${e}`,
+    })
+  }
+}))
 
 export default useBase('/api/users', router.handler)
