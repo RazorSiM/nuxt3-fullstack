@@ -36,5 +36,27 @@ router.put('/:userId', defineEventHandler(async (event) => {
     }
   }
 }))
+router.get('/:userId/sessions', defineEventHandler(async (event) => {
+  const session = await requireUserSession(event)
+
+  const userId = getRouterParam(event, 'userId')
+
+  if (userId !== session.user.id) {
+    console.log('here')
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+    })
+  }
+  try {
+    return await getUserSessions(session.user.id)
+  }
+  catch (e) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: `Internal Server Error: ${e}`,
+    })
+  }
+}))
 
 export default useBase('/api/users', router.handler)

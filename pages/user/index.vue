@@ -9,7 +9,7 @@ definePageMeta({
   middleware: ['protected'],
 })
 
-const { user, loggedIn } = useUserSession()
+const { user, loggedIn, session } = useUserSession()
 
 async function updateUsername(values: UserUpdateForm) {
   try {
@@ -73,5 +73,17 @@ onMounted(async () => {
         />
       </UiCardContent>
     </UiCard>
+    <div class="mt-10 grid grid-cols-2 gap-4">
+      <SessionCard
+        v-for="_session in sessions"
+        :id="_session.id"
+        :key="_session.id"
+        class="mt-5"
+        :expires-at="_session.expiresAt"
+        :user-id="_session.userId"
+        :is-current-session="_session.id === session.sessionToken"
+        @invalidate-user-session="getUserSessions"
+      />
+    </div>
   </div>
 </template>

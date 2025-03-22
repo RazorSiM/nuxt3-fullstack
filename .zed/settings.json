@@ -1,0 +1,41 @@
+{
+  "format_on_save": "on",
+  "formatter": {
+    "code_actions": {
+      // Use ESLint's --fix:
+      "source.fixAll.eslint": true
+    }
+  },
+  "languages": {
+    "JavaScript": {
+      "formatter": {
+        "code_actions": {
+          "source.fixAll.eslint": true
+        }
+      }
+    },
+    "TypeScript": {
+      "formatter": {
+        "code_actions": {
+          "source.fixAll.eslint": true
+        }
+      }
+    },
+    "Vue.js": {
+      "formatter": {
+        "code_actions": {
+          "source.fixAll.eslint": true
+        }
+      }
+    }
+  },
+  "inlay_hints": {
+    "enabled": false,
+    // "show_type_hints": true,
+    // "show_parameter_hints": true,
+    // "show_other_hints": true,
+    "show_background": true,
+    "edit_debounce_ms": 700,
+    "scroll_debounce_ms": 50
+  }
+}

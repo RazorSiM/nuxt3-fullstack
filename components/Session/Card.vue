@@ -19,9 +19,9 @@ const emit = defineEmits<{
     class="flex flex-col h-full justify-between"
   >
     <UiCardHeader>
-      <UiCardTitle>{{ isCurrentSession ? 'Current Session' : 'Api Session' }}</UiCardTitle>
+      <UiCardTitle>{{ isCurrentSession ? 'Current Session' : 'Other Session' }}</UiCardTitle>
       <UiCardDescription>
-        {{ isCurrentSession ? 'This is your current browser session, to delete this one, logout.' : 'This is an active API session id.' }}
+        {{ isCurrentSession ? 'This is your current browser session, to delete this one, logout.' : 'This is an active session from another device.' }}
       </UiCardDescription>
     </UiCardHeader>
     <UiCardContent class="grid grid-cols-1">
