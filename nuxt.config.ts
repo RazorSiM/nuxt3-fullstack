@@ -30,6 +30,15 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2024-08-19',
+  nitro: {
+    experimental: {
+      tasks: true,
+    },
+    scheduledTasks: {
+      // Run the `sessions:clean` task every day at 3 AM
+      '0 3 * * *': 'sessions:clean',
+    },
+  },
   hub: {
     database: true,
     databaseMigrationsDirs: [
