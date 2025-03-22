@@ -15,7 +15,7 @@ export const userTable = sqliteTable('user', {
 })
 
 export const sessionTable = sqliteTable('session', {
-  sessionId: text('session_id').primaryKey(),
+  id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
@@ -24,6 +24,13 @@ export const sessionTable = sqliteTable('session', {
     .default(sql`(unixepoch())`),
   expiresAt: integer('expires_at', { mode: 'timestamp' }),
 })
+
+export const sessionRelations = relations(sessionTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [sessionTable.userId],
+    references: [userTable.id],
+  }),
+}))
 
 export const oauthAccountTable = sqliteTable(
   'oauth_account',
@@ -77,3 +84,6 @@ export const usersRelations = relations(userTable, ({ many }) => ({
 
 export type User = InferSelectModel<typeof userTable>
 export type UserInsert = InferInsertModel<typeof userTable>
+
+export type Session = InferSelectModel<typeof sessionTable>
+export type SessionInsert = InferInsertModel<typeof sessionTable>

@@ -1,6 +1,6 @@
 import { and, asc, eq, gte, lte, ne, sql, lt, gt } from 'drizzle-orm'
 import { z } from 'zod'
-import type { User, TodoInsert } from './schema'
+import type { User, TodoInsert, Session } from './schema'
 import { oauthAccountTable, todoTable, userTable, sessionTable } from './schema'
 import { useDrizzle } from './index'
 
@@ -11,7 +11,7 @@ export async function createSession(userId: string, sessionToken: string) {
   const result = await useDrizzle()
     .insert(sessionTable)
     .values({
-      sessionId: sessionToken,
+      id: sessionToken,
       userId,
       expiresAt,
     })
@@ -26,7 +26,7 @@ export async function validateSession(sessionToken: string): Promise<boolean> {
     .from(sessionTable)
     .where(
       and(
-        eq(sessionTable.sessionId, sql.placeholder('sessionToken')),
+        eq(sessionTable.id, sql.placeholder('sessionToken')),
         gt(sessionTable.expiresAt, new Date()),
       ),
     )
@@ -39,13 +39,44 @@ export async function validateSession(sessionToken: string): Promise<boolean> {
 export async function deleteSession(sessionToken: string) {
   await useDrizzle()
     .delete(sessionTable)
-    .where(eq(sessionTable.sessionId, sessionToken))
+    .where(eq(sessionTable.id, sessionToken))
 }
 
 export async function cleanupExpiredSessions() {
   await useDrizzle()
     .delete(sessionTable)
     .where(lt(sessionTable.expiresAt, new Date()))
+}
+
+export async function getUserSessions(userId: string): Promise<Session[]> {
+  const prepared = useDrizzle()
+    .select()
+    .from(sessionTable)
+    .where(
+      and(
+        eq(sessionTable.userId, sql.placeholder('userId')),
+        gt(sessionTable.expiresAt, new Date()),
+      ),
+    )
+    .orderBy(sql`${sessionTable.createdAt} DESC`)
+    .prepare()
+
+  const result = await prepared.execute({ userId })
+  return result
+}
+
+export async function getCurrentSession(sessionToken: string): Promise<Session | null> {
+  const prepared = useDrizzle()
+    .select()
+    .from(sessionTable)
+    .where(eq(sessionTable.id, sql.placeholder('sessionToken')))
+    .prepare()
+
+  const result = await prepared.execute({ sessionToken })
+  if (result.length === 0)
+    return null
+
+  return result[0]
 }
 
 export async function createOauthAccount(providerId: string, providerUserId: string, userId: string) {
