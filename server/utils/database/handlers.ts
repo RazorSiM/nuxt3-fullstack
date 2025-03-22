@@ -1,8 +1,52 @@
-import { and, asc, eq, gte, lte, ne, sql } from 'drizzle-orm'
+import { and, asc, eq, gte, lte, ne, sql, lt, gt } from 'drizzle-orm'
 import { z } from 'zod'
-import type { User } from './schema'
-import { oauthAccountTable, todoTable, userTable } from './schema'
+import type { User, TodoInsert } from './schema'
+import { oauthAccountTable, todoTable, userTable, sessionTable } from './schema'
 import { useDrizzle } from './index'
+
+export async function createSession(userId: string, sessionToken: string) {
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() + 30) // 30 days
+
+  const result = await useDrizzle()
+    .insert(sessionTable)
+    .values({
+      sessionId: sessionToken,
+      userId,
+      expiresAt,
+    })
+    .returning()
+
+  return result[0]
+}
+
+export async function validateSession(sessionToken: string): Promise<boolean> {
+  const prepared = useDrizzle()
+    .select()
+    .from(sessionTable)
+    .where(
+      and(
+        eq(sessionTable.sessionId, sql.placeholder('sessionToken')),
+        gt(sessionTable.expiresAt, new Date()),
+      ),
+    )
+    .prepare()
+
+  const result = await prepared.execute({ sessionToken })
+  return result.length > 0
+}
+
+export async function deleteSession(sessionToken: string) {
+  await useDrizzle()
+    .delete(sessionTable)
+    .where(eq(sessionTable.sessionId, sessionToken))
+}
+
+export async function cleanupExpiredSessions() {
+  await useDrizzle()
+    .delete(sessionTable)
+    .where(lt(sessionTable.expiresAt, new Date()))
+}
 
 export async function createOauthAccount(providerId: string, providerUserId: string, userId: string) {
   const result = await useDrizzle().insert(oauthAccountTable).values({ providerId, providerUserId, userId }).returning()

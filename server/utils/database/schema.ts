@@ -1,6 +1,11 @@
 import { relations, sql } from 'drizzle-orm'
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
-import { integer, sqliteTable, primaryKey, text } from 'drizzle-orm/sqlite-core'
+import {
+  integer,
+  sqliteTable,
+  primaryKey,
+  text,
+} from 'drizzle-orm/sqlite-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 
 export const userTable = sqliteTable('user', {
@@ -9,23 +14,46 @@ export const userTable = sqliteTable('user', {
   email: text('email').notNull().unique(),
 })
 
-export const oauthAccountTable = sqliteTable('oauth_account', {
-  providerId: text('provider_id').notNull(),
-  providerUserId: text('provider_user_id').notNull(),
-  userId: text('user_id').notNull().references(() => userTable.id),
-}, table => [
-  primaryKey({ columns: [table.providerId, table.providerUserId] }),
-])
+export const sessionTable = sqliteTable('session', {
+  sessionId: text('session_id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => userTable.id),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
+})
+
+export const oauthAccountTable = sqliteTable(
+  'oauth_account',
+  {
+    providerId: text('provider_id').notNull(),
+    providerUserId: text('provider_user_id').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => userTable.id),
+  },
+  table => [
+    primaryKey({ columns: [table.providerId, table.providerUserId] }),
+  ],
+)
 
 export const todoTable = sqliteTable('todo', {
   id: integer('id').primaryKey(),
   position: integer('position'),
-  userId: text('user_id').references(() => userTable.id).notNull(),
+  userId: text('user_id')
+    .references(() => userTable.id)
+    .notNull(),
   title: text('title').notNull().unique(),
   description: text('description'),
   completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
   deleted: integer('deleted', { mode: 'boolean' }).notNull().default(false),
   deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 })

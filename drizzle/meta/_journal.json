@@ -8,6 +8,13 @@
       "when": 1738437355693,
       "tag": "0000_common_scourge",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1738952055210,
+      "tag": "0001_bitter_iron_patriot",
+      "breakpoints": true
     }
   ]
 }

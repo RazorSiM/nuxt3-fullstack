@@ -4,5 +4,13 @@ declare module '#auth-utils' {
     email: string
     id: string
   }
+  interface UserSession {
+    user?: {
+      id: string
+      username: string
+      email: string
+    }
+    sessionToken?: string
+  }
 }
 export {}
