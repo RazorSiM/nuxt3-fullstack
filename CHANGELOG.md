@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.1.1...v1.2.0)
+
+### 🚀 Enhancements
+
+- Implement session management and cleanup functionality ([#12](https://github.com/RazorSiM/nuxt3-fullstack/pull/12))
+
+### ❤️ Contributors
+
+- Simone Colabufalo ([@RazorSiM](https://github.com/RazorSiM))
+
 ## v1.1.1
 
 [compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.1.0...v1.1.1)
