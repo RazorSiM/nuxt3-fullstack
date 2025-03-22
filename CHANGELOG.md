@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.1
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.2.0...v1.2.1)
+
+### 🩹 Fixes
+
+- Add missing delete session endpoint and implementation in the session card ([0143039](https://github.com/RazorSiM/nuxt3-fullstack/commit/0143039))
+
+### ❤️ Contributors
+
+- Raz ([@RazorSiM](https://github.com/RazorSiM))
+
 ## v1.2.0
 
 [compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.1.1...v1.2.0)
