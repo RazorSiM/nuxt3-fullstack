@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v2.0.0
+
+[compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.2.1...v2.0.0)
+
+### 🚀 Enhancements
+
+- Move to Nuxt UI ([#13](https://github.com/RazorSiM/nuxt3-fullstack/pull/13))
+
+### ❤️ Contributors
+
+- Simone Colabufalo ([@RazorSiM](https://github.com/RazorSiM))
+
 ## v1.2.1
 
 [compare changes](https://github.com/RazorSiM/nuxt3-fullstack/compare/v1.2.0...v1.2.1)

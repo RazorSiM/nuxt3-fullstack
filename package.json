@@ -69,5 +69,5 @@
     "unplugin-turbo-console": "^1.11.3",
     "wrangler": "^4.7.0"
   },
-  "version": "1.2.1"
+  "version": "2.0.0"
 }
