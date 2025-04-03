@@ -13,7 +13,7 @@ If you want a quick start, here's a magic button:
 - [Drizzle ORM](https://orm.drizzle.team/) as an ORM, migrator and query builder.
 - [Zod](https://zod.dev/) for schema validation and type safety, both on the frontend and backend.
 - [Nuxt Auth Utils](https://github.com/atinux/nuxt-auth-utils) for the authentication layer.
-- [Shadcn Vue](https://www.shadcn-vue.com/) for the component library.
+- [Nuxt UI](https://ui.nuxt.com/) for the component library.
 
 ## Prerequisites
 In order to run the project, you need:
