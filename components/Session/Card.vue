@@ -12,22 +12,20 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <UiCard
+  <UCard
 
     :key="id"
-    :class="isCurrentSession ? 'border-green-700' : ''"
-    class="flex flex-col h-full justify-between"
   >
-    <UiCardHeader>
-      <UiCardTitle>{{ isCurrentSession ? 'Current Session' : 'Other Session' }}</UiCardTitle>
-      <UiCardDescription>
+    <template #header>
+      <p>{{ isCurrentSession ? 'Current Session' : 'Other Session' }}</p>
+      <p>
         {{ isCurrentSession ? 'This is your current browser session, to delete this one, logout.' : 'This is an active session from another device.' }}
-      </UiCardDescription>
-    </UiCardHeader>
-    <UiCardContent class="grid grid-cols-1">
+      </p>
+    </template>
+    <div class="grid grid-cols-1">
       <div class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground break-all">
-        <Icon
-          name="ph:hash-fill"
+        <UIcon
+          name="i-ph:hash-fill"
           size="2rem"
         />
         <div class="space-y-1">
@@ -40,8 +38,8 @@ const emit = defineEmits<{
         </div>
       </div>
       <div class="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-        <Icon
-          name="pajamas:expire"
+        <UIcon
+          name="i-pajamas:expire"
           size="2rem"
         />
         <div class="space-y-1">
@@ -53,16 +51,18 @@ const emit = defineEmits<{
           </p>
         </div>
       </div>
-    </UiCardContent>
-    <UiCardFooter>
-      <UiButton
+    </div>
+    <template #footer>
+      <UButton
         :disabled="isCurrentSession"
-        variant="destructive"
+        variant="solid"
+        color="error"
         size="xs"
+        icon="i-heroicons:trash"
         @click="emit('invalidateUserSession', id)"
       >
-        <Icon name="heroicons:trash" /> Invalidate Session
-      </UiButton>
-    </UiCardFooter>
-  </UiCard>
+        Invalidate Session
+      </UButton>
+    </template>
+  </UCard>
 </template>

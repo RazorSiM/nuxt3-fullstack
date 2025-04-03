@@ -52,25 +52,25 @@ useSortable(sortableElement, refTodos, {
 </script>
 
 <template>
-  <UiCard class="mt-10">
-    <UiCardHeader>
-      <UiCardTitle class="flex gap-4 items-center w-full justify-between">
+  <UCard class="mt-10">
+    <template #header>
+      <div class="flex gap-4 items-center w-full justify-between">
         Todos
-        <UiButton
+        <UButton
           v-if="props.enableControls"
           size="sm"
-          variant="secondary"
+          icon="i-heroicons:plus"
+          color="secondary"
           @click="emit('openSheet')"
         >
-          <Icon name="heroicons:plus" />
           Add
-        </UiButton>
-      </UiCardTitle>
-      <UiCardDescription>
+        </UButton>
+      </div>
+      <p>
         List of Todos
-      </UiCardDescription>
-    </UiCardHeader>
-    <UiCardContent>
+      </p>
+    </template>
+    <div>
       <p v-if="!props.todos || props.todos.length === 0">
         No Todos available
       </p>
@@ -84,22 +84,26 @@ useSortable(sortableElement, refTodos, {
             :key="todo.id"
             class="flex items-start justify-between gap-x-6 py-5"
           >
-            <UiButton
+            <UButton
               v-if="props.enableSorting"
               variant="ghost"
-              size="icon"
+              size="sm"
+              color="neutral"
               class="sortable-handler"
             >
-              <Icon name="heroicons:bars-3" />
-            </UiButton>
+              <UIcon name="i-heroicons:bars-3" />
+            </UButton>
             <div class="min-w-0 flex-grow">
               <div class="flex items-center gap-x-3">
                 <p class="text-sm font-semibold leading-6">
                   {{ todo.title }}
                 </p>
-                <UiBadge :variant="todo.completed === true ? 'secondary' : 'outline'">
+                <UBadge
+                  :color="todo.completed ? 'success' : 'warning'"
+                  :variant="todo.completed === true ? 'soft' : 'outline'"
+                >
                   {{ todo.completed ? 'Completed' : 'In Progress' }}
-                </UiBadge>
+                </UBadge>
               </div>
               <div class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-muted-foreground">
                 <p class="whitespace-nowrap">
@@ -112,27 +116,24 @@ useSortable(sortableElement, refTodos, {
               v-if="props.enableControls"
               class="flex gap-2"
             >
-              <UiButton
-                size="icon"
-                variant="ghost"
+              <UButton
+                size="sm"
+                variant="subtle"
+                color="warning"
+                icon="heroicons:pencil"
                 @click="emit('openSheet', todo.id)"
-              >
-                <Icon
-                  name="heroicons:pencil"
-                  size="1rem"
-                />
-              </UiButton>
-              <UiButton
-                size="icon"
-                variant="destructive"
+              />
+              <UButton
+                size="sm"
+                color="error"
+                variant="subtle"
+                icon="i-heroicons:trash"
                 @click="emit('deleteTodo', todo.id)"
-              >
-                <Icon name="heroicons:trash" />
-              </UiButton>
+              />
             </div>
           </div>
         </div>
       </template>
-    </UiCardContent>
-  </UiCard>
+    </div>
+  </UCard>
 </template>

@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   body.id = Number.parseInt(id)
-  body.userId = session.userId
+  body.userId = session.user.id
 
   const payload = updateTodoSchema.safeParse(body)
 

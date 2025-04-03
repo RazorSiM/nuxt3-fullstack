@@ -1,13 +1,4 @@
 <script lang="ts" setup>
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-
 defineOptions({
   name: 'LoginView',
 })
@@ -22,36 +13,37 @@ function loginTo(provider: string) {
 const logins = [
   {
     provider: 'github',
-    icon: 'mdi:github',
+    icon: 'i-mdi:github',
     text: 'Sign in with Github',
   },
   {
     provider: 'discord',
-    icon: 'ic:round-discord',
+    icon: 'i-ic:round-discord',
     text: 'Sign in with Discord',
   },
 ]
 </script>
 
 <template>
-  <Card class="mt-20 w-fit mx-auto">
-    <CardHeader>
-      <CardTitle>Login</CardTitle>
-      <CardDescription>
+  <UCard class="mt-20 w-fit mx-auto">
+    <template #header>
+      <p>Login</p>
+      <p>
         Sign in with one of the following providers
-      </CardDescription>
-    </CardHeader>
-    <CardContent class="grid gap-4">
-      <Button
+      </p>
+    </template>
+    <div class="grid gap-4">
+      <UButton
         v-for="login in logins"
         :key="login.provider"
         size="lg"
+        :icon="login.icon"
+        variant="subtle"
+        color="neutral"
         @click="loginTo(login.provider)"
       >
-        <Icon
-          :name="login.icon"
-        />{{ login.text }}
-      </Button>
-    </CardContent>
-  </Card>
+        {{ login.text }}
+      </UButton>
+    </div>
+  </UCard>
 </template>

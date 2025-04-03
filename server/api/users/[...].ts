@@ -6,11 +6,14 @@ const router = createRouter()
 const usernameSchema = z.object({
   username: z.string().min(3).max(20),
 })
-router.put('/:userId', defineEventHandler(async (event) => {
+router.patch('/:userId', defineEventHandler(async (event) => {
   const session = await requireUserSession(event)
 
   const userId = getRouterParam(event, 'userId')
-  if (userId !== session.userId) {
+  console.log('userId', userId)
+  console.log('session.user.id', session.user.id)
+  if (userId !== session.user.id) {
+    console.log('here')
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
@@ -26,7 +29,14 @@ router.put('/:userId', defineEventHandler(async (event) => {
   else {
     try {
       const newUser = await modifyUsername(session.user.id, body.data.username)
-      return newUser
+      await replaceUserSession(event, {
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+          email: newUser.email,
+        },
+      })
+      return { message: 'Username updated successfully' }
     }
     catch (e) {
       throw createError({
