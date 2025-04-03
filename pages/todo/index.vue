@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { toast } from 'vue-sonner'
-
 defineOptions({
   name: 'TodoView',
 })
@@ -9,6 +7,7 @@ definePageMeta({
   middleware: ['protected'],
 })
 
+const toast = useToast()
 const { data: todos, refresh } = await useFetch('/api/todos', {
   method: 'GET',
 })
@@ -23,11 +22,15 @@ async function handleMoveTodo(todoId: number, currentIndex: number, newIndex: nu
         newIndex,
       },
     })
-    toast.success('Todo moved successfully')
+    toast.add({
+      title: 'Todo moved successfully',
+    })
   }
   catch (error) {
     const errorMessage = `Failed to move todo: ${error}`
-    toast.error(errorMessage)
+    toast.add({
+      title: errorMessage,
+    })
     throw createError({
       statusCode: 500,
       statusMessage: errorMessage,
@@ -46,12 +49,15 @@ async function handleCreateTodo(values: TodoCreateForm) {
       method: 'POST',
       body,
     })
-    toast.success('Todo created successfully')
+    toast.add({
+
+      title: 'Todo created successfully',
+    })
     await refresh()
   }
   catch (error) {
     const errorMessage = `Failed to create todo: ${error}`
-    toast.error(errorMessage)
+    toast.add({ title: errorMessage })
     throw createError({
       statusCode: 500,
       statusMessage: errorMessage,
@@ -70,12 +76,14 @@ async function handleUpdateTodo(values: TodoUpdateForm) {
       method: 'PUT',
       body,
     })
-    toast.success('Todo updated successfully')
+    toast.add({
+      title: 'Todo updated successfully',
+    })
     await refresh()
   }
   catch (error) {
     const errorMessage = `Failed to update todo: ${error}`
-    toast.error(errorMessage)
+    toast.add({ title: errorMessage })
     throw createError({
       statusCode: 500,
       statusMessage: errorMessage,
@@ -96,18 +104,6 @@ async function onSubmit(values: TodoUpdateForm | TodoCreateForm) {
 }
 
 const todoToUpdate = ref<TodoUpdateForm | null>(null)
-const todoFormInitialValues = computed(() => {
-  if (todoToUpdate.value !== null) {
-    return todoToUpdate.value
-  }
-  else {
-    return {
-      title: '',
-      description: '',
-      completed: false,
-    }
-  }
-})
 
 watchDebounced(isSheetOpen, () => {
   if (!isSheetOpen.value) {
@@ -136,12 +132,14 @@ async function handleDeleteTodo(id: number) {
     await $fetch(`/api/todos/${id}`, {
       method: 'DELETE',
     })
-    toast.success('Todo deleted successfully')
+    toast.add({
+      title: 'Todo deleted successfully',
+    })
     await refresh()
   }
   catch (error) {
     const errorMessage = `Failed to delete todo: ${error}`
-    toast.error(errorMessage)
+    toast.add({ title: errorMessage })
     throw createError({
       statusCode: 500,
       statusMessage: errorMessage,
@@ -152,18 +150,24 @@ async function handleDeleteTodo(id: number) {
 
 <template>
   <div>
-    <UiSheet v-model:open="isSheetOpen">
-      <UiSheetContent>
-        <UiSheetHeader>
-          <UiSheetTitle>Todos</UiSheetTitle>
-          <UiSheetDescription>{{ todoToUpdate ? 'Update your Todo' : "Create a new Todo" }}</UiSheetDescription>
-        </UiSheetHeader>
-        <FormTodoCreateOrUpdate
-          :form-initial-values="todoFormInitialValues"
+    <USlideover
+      v-model:open="isSheetOpen"
+      title="Todos"
+      :description="todoToUpdate ? 'Update your Todo' : 'Create a new Todo'"
+    >
+      <template #body>
+        <FormTodoCreate
+          v-if="!todoToUpdate"
+          :form-initial-values="{ completed: false, title: '', description: '' }"
           @submit="onSubmit"
         />
-      </UiSheetContent>
-    </UiSheet>
+        <FormTodoUpdate
+          v-if="todoToUpdate"
+          :form-initial-values="todoToUpdate"
+          @submit="onSubmit"
+        />
+      </template>
+    </USlideover>
     <TodoList
       :todos="JSON.parse(JSON.stringify(todos))"
       :enable-controls="true"

@@ -6,7 +6,7 @@ export const userUpdateFormSchema = z.object({
 export type UserUpdateForm = z.infer<typeof userUpdateFormSchema>
 
 export const todoCreateFormSchema = z.object({
-  title: z.string(),
+  title: z.string().nonempty(),
   description: z.string().nullable(),
   completed: z.boolean(),
 })

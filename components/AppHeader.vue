@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { Button } from '@/components/ui/button'
-
 const { user, clear, loggedIn } = useUserSession()
 
 watch(loggedIn, () => {
@@ -52,9 +50,10 @@ const navigation = computed(() => {
         v-for="link in navigation"
         :key="link.name"
       >
-        <Button
+        <UButton
           v-if="link.show"
           variant="link"
+          color="neutral"
         >
           <NuxtLink
             :to="link.href"
@@ -63,33 +62,29 @@ const navigation = computed(() => {
 
             {{ link.name }}
           </NuxtLink>
-        </Button>
+        </UButton>
       </template>
       <ClientOnly>
-        <Button
-          size="icon"
+        <UButton
+          size="sm"
           variant="ghost"
           aria-label="Theme"
+          :icon="isDark ? 'i-heroicons:moon-20-solid' : 'i-heroicons:sun-20-solid'"
+          color="neutral"
           @click="isDark = !isDark"
-        >
-          <Icon
-            :name="isDark ? 'heroicons:moon-20-solid' : 'heroicons:sun-20-solid'"
-          />
-        </Button>
+        />
         <template #fallback>
           <div class="w-8 h-8" />
         </template>
       </ClientOnly>
-      <Button
+      <UButton
         v-if="loggedIn"
-        size="icon"
-        variant="destructive"
+        size="sm"
+        color="error"
+        variant="subtle"
+        icon="i-heroicons:arrow-left-on-rectangle-solid"
         @click="clear"
-      >
-        <Icon
-          name="heroicons:arrow-left-on-rectangle-solid"
-        />
-      </Button>
+      />
     </header>
   </div>
 </template>

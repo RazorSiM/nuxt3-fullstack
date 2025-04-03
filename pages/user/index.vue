@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { toast } from 'vue-sonner'
-
 defineOptions({
   name: 'UserView',
 })
@@ -10,19 +8,22 @@ definePageMeta({
 })
 
 const { user, loggedIn, session } = useUserSession()
+const toast = useToast()
 
 async function updateUsername(values: UserUpdateForm) {
   try {
     await $fetch(`/api/users/${user.value?.id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       body: {
         username: values.username,
       },
     })
-    toast.success('Username updated successfully')
+    toast.add({
+      title: 'Username updated successfully',
+    })
   }
   catch (error) {
-    toast.error(`Failed to update username: ${error}`)
+    toast.add({ title: `Failed to update username: ${error}` })
     throw createError({
       statusCode: 500,
       statusMessage: `Failed to update username: ${error}`,
@@ -60,14 +61,14 @@ onMounted(async () => {
 
 <template>
   <div>
-    <UiCard class="mt-20 max-w-lg mx-auto min-h-96">
-      <UiCardHeader>
-        <UiCardTitle>Profile</UiCardTitle>
-        <UiCardDescription>
+    <UCard class="mt-20 max-w-lg mx-auto min-h-96">
+      <template #header>
+        <p>Profile</p>
+        <p>
           This is your profile, you can update your username here.
-        </UiCardDescription>
-      </UiCardHeader>
-      <UiCardContent>
+        </p>
+      </template>
+      <div>
         <FormUserUpdate
           v-if="loggedIn && user"
           :form-initial-values="{
@@ -76,8 +77,8 @@ onMounted(async () => {
           :authenticated-user="user"
           @submit="onSubmit"
         />
-      </UiCardContent>
-    </UiCard>
+      </div>
+    </UCard>
     <div class="mt-10 grid grid-cols-2 gap-4">
       <SessionCard
         v-for="_session in sessions"

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
+import type { FormSubmitEvent } from '@nuxt/ui'
+import type { z } from 'zod'
 
 const props = defineProps<{
   formInitialValues: UserUpdateForm
@@ -11,70 +11,61 @@ const emit = defineEmits<{
   submit: [values: UserUpdateForm]
 }>()
 
-const formSchema = toTypedSchema(userUpdateFormSchema)
+type Schema = z.output<typeof userUpdateFormSchema>
 
-const { meta, handleSubmit } = useForm({
-  validationSchema: formSchema,
-  initialValues: props.formInitialValues,
+const state = reactive<Partial<Schema>>({
+  username: props.formInitialValues.username,
 })
 
-const onSubmit = handleSubmit((values) => {
-  emit('submit', values)
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  emit('submit', event.data)
+}
+
+const formDisabled = computed(() => {
+  return !userUpdateFormSchema.safeParse(state).success
 })
 </script>
 
 <template>
-  <form
+  <UForm
+    :schema="userUpdateFormSchema"
+    :state="state"
     class="space-y-6"
     @submit="onSubmit"
   >
-    <UiFormField name="userid">
-      <UiFormItem>
-        <UiFormLabel>User ID</UiFormLabel>
-        <UiFormControl>
-          <UiInput
-            type="text"
-            placeholder="user id"
-            :default-value="authenticatedUser.id"
-            :disabled="true"
-          />
-        </UiFormControl>
-      </UiFormItem>
-    </UiFormField>
-    <UiFormField name="email">
-      <UiFormItem>
-        <UiFormLabel>E-Mail</UiFormLabel>
-        <UiFormControl>
-          <UiInput
-            type="text"
-            placeholder="email"
-            :default-value="authenticatedUser.email"
-            :disabled="true"
-          />
-        </UiFormControl>
-      </UiFormItem>
-    </UiFormField>
-    <UiFormField
-      v-slot="{ componentField }"
-      name="username"
+    <UFormField
+      label="User ID"
+      name="userid"
     >
-      <UiFormItem>
-        <UiFormLabel>Username</UiFormLabel>
-        <UiFormControl>
-          <UiInput
-            type="text"
-            placeholder="Username"
-            v-bind="componentField"
-          />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </UiFormField>
-    <UiButton
+      <UInput
+        :value="authenticatedUser.id"
+        disabled
+      />
+    </UFormField>
+    <UFormField
+      label="E-Mail"
+      name="email"
+    >
+      <UInput
+        :value="authenticatedUser.email"
+        disabled
+      />
+    </UFormField>
+    <UFormField
+      name="username"
+      label="Username"
+    >
+      <UInput
+        v-model="state.username"
+        type="text"
+        placeholder="Username"
+      />
+    </UFormField>
+    <UButton
       type="submit"
-      :disabled="!meta.valid"
+      :disabled="formDisabled"
     >
       Submit
-    </UiButton>
-  </form>
+    </UButton>
+  </UForm>
 </template>

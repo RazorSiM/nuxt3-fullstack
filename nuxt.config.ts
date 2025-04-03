@@ -3,10 +3,9 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxt/eslint',
-    '@nuxtjs/tailwindcss',
+    '@nuxt/ui',
     '@nuxtjs/color-mode',
     '@nuxt/icon',
-    'shadcn-nuxt',
     '@vueuse/nuxt',
     '@nuxthub/core',
     'nuxt-auth-utils',
@@ -18,6 +17,7 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+  css: ['~/assets/css/main.css'],
   colorMode: {
     classSuffix: '',
   },
@@ -60,9 +60,5 @@ export default defineNuxtConfig({
   },
   icon: {
     serverBundle: 'remote',
-  },
-  shadcn: {
-    prefix: 'Ui',
-    componentDir: './components/ui',
   },
 })
